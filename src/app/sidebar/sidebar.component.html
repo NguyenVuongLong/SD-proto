@@ -1,0 +1,43 @@
+<div class="app-sidebar">
+  <div class="app-sidebar__brand">
+    <img class="app-sidebar__title" src="../../../assets/images/logo/dongamoneytransfer.png" alt="logo" />
+  </div>
+
+  <ul nz-menu nzMode="inline" nzTheme="light" class="app-sidebar__menu">
+    <li class="ant-menu-item"
+        routerLinkActive="ant-menu-item-selected"
+        [routerLinkActiveOptions]="{ exact: true }">
+      <a [routerLink]="['/dashboard']" class="flex items-center gap-2">
+        <i nz-icon nzType="dashboard" nzTheme="outline"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+
+    <li class="ant-menu-item"
+        routerLinkActive="ant-menu-item-selected"
+        [routerLinkActiveOptions]="{ exact: true }">
+      <a [routerLink]="['/my-tickets']" class="flex items-center gap-2">
+        <i nz-icon nzType="form" nzTheme="outline"></i>
+        <span>My Tickets</span>
+      </a>
+    </li>
+
+    <li class="ant-menu-item"
+        routerLinkActive="ant-menu-item-selected"
+        [routerLinkActiveOptions]="{ exact: true }">
+      <a [routerLink]="['/manage-tickets']" class="flex items-center gap-2">
+        <i nz-icon nzType="customer-service" nzTheme="outline"></i>
+        <span>Quản lý Ticket</span>
+      </a>
+    </li>
+
+    <li class="ant-menu-item"
+        routerLinkActive="ant-menu-item-selected"
+        [routerLinkActiveOptions]="{ exact: true }">
+      <a [routerLink]="['/manage-topic']" class="flex items-center gap-2">
+        <i nz-icon nzType="appstore" nzTheme="outline"></i>
+        <span>Quản lý Chủ đề</span>
+      </a>
+    </li>
+  </ul>
+</div>

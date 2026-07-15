@@ -1,0 +1,51 @@
+<div class="login-page">
+  <div class="login-page__admin">
+    <div class="login-page__logo">
+      <img class="login-page__logo-dark" src="../../../assets/images/logo/dongamoneytransfer.png" alt="logo" />
+    </div>
+    <div nz-row class="login-row">
+      <div nz-col nzXs="24" nzSm="18" nzMd="12" nzXl="8" nzXXl="6">
+        <div class="login-card">
+          <div class="login-card__header">
+            <h2 class="login-card__title">Đăng nhập</h2>
+          </div>
+          <div class="login-card__body">
+            <form nz-form [formGroup]="validateForm" nzLayout="vertical" class="login-form" (ngSubmit)="submitForm()">
+              <nz-form-item class="login-form__item">
+                <nz-form-label class="login-form__label" nzRequired nzFor="userName">Tên đăng nhập</nz-form-label>
+                <nz-form-control class="login-form__control" nzErrorTip="Vui lòng nhập tên đăng nhập!">
+                  <input
+                    class="login-form__input"
+                    nz-input formControlName="userName" placeholder="Tên đăng nhập" id="userName" />
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item class="login-form__item login-form__item--spaced">
+                <nz-form-label class="login-form__label" nzRequired nzFor="password">Mật khẩu</nz-form-label>
+                <nz-form-control class="login-form__control" nzErrorTip="Vui lòng nhập mật khẩu!">
+                  <nz-input-group class="login-input-group" [nzSuffix]="suffixTemplate"
+                    [class.login-input-group--error]="validateForm.get('password')?.invalid && validateForm.get('password')?.dirty">
+                    <input nz-input formControlName="password" [type]="passwordVisible ? 'text' : 'password'"
+                      id="password" placeholder="Mật khẩu" class="login-form__input login-form__input--password" />
+                  </nz-input-group>
+                  <ng-template #suffixTemplate>
+                    <span class="login-input-group__suffix" nz-icon [nzType]="passwordVisible ? 'eye' : 'eye-invisible'"
+                      (click)="passwordVisible = !passwordVisible"></span>
+                  </ng-template>
+                </nz-form-control>
+              </nz-form-item>
+              <div class="login-form__actions">
+                <label nz-checkbox formControlName="remember" class="login-form__checkbox">
+                  <span>Giữ tôi đăng nhập</span>
+                </label>
+              </div>
+              <button nz-button type="submit" class="login-form__submit">
+                <i class="fas fa-cog fa-spin" [hidden]="!isLoading"></i>
+                Đăng nhập
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

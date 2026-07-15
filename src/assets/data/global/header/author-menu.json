@@ -1,0 +1,19 @@
+{
+  "appAuthorMenu": [
+    {
+      "label": "Dashboard",
+      "icon": "menu",
+      "url": "./dashboard"
+    },
+    {
+      "label": "My tickets",
+      "icon": "headphones",
+      "url": "./my-tickets"
+    },
+    {
+      "label": "Quản lý ticket",
+      "icon": "headphones",
+      "url": "./manage-tickets"
+    }
+  ]
+}

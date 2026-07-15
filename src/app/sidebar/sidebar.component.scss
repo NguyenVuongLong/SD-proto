@@ -1,0 +1,54 @@
+:host {
+  display: block;
+  height: 100vh;
+  background: #ffffff;
+}
+
+.app-sidebar {
+  height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: width 0.25s ease, opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.app-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 24px;
+}
+
+.app-sidebar__logo {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  background: #2563eb;
+  color: #ffffff;
+  border-radius: 0.75rem;
+}
+
+.app-sidebar__title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+:host-context(.app-shell--collapsed) .app-sidebar__title {
+  display: none;
+}
+
+.app-sidebar__menu {
+  flex: 1;
+  margin: 0;
+}
+
+.app-sidebar__collapse {
+  width: calc(100% - 32px);
+  margin: 24px 16px;
+}

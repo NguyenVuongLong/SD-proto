@@ -1,0 +1,26 @@
+[
+    {
+        "id": "1",
+        "topicName": "Hỗ trợ ứng dụng",
+        "topicDescription": "Hỗ trợ các vấn đề liên quan đến ứng dụng",
+        "status": "active",
+        "assignedEmployee": "Nguyễn Văn A",
+        "SLA": ["24", "48", "72", "96"]
+    },
+    {
+        "id": "2",
+        "topicName": "Hỗ trợ kĩ thuật",
+        "topicDescription": "Hỗ trợ các vấn đề liên quan đến kĩ thuật",
+        "status": "active",
+        "assignedEmployee": "Trần Thị B",
+        "SLA": ["24", "48", "72", "96"]
+    },
+    {
+        "id": "3",
+        "topicName": "Hỗ trợ mạng",
+        "topicDescription": "Hỗ trợ các vấn đề liên quan đến mạng",
+        "status": "inactive",
+        "assignedEmployee": "Lê Văn C",
+        "SLA": ["24", "48", "72", "96"]
+    }
+]

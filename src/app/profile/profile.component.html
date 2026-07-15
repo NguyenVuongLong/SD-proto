@@ -1,0 +1,216 @@
+<!-- skeleton -->
+<ng-template #loadingSkeleton>
+  <nz-skeleton class="s-skeleton" [nzAvatar]="true" nzShape="circle" [nzActive]="true" [nzParagraph]="{ rows: 5 }"></nz-skeleton>
+</ng-template>
+
+<!-- Main Layout -->
+<div nz-row nzGutter="25">
+  <div nz-col nzXXl="6" nzLg="8" nzMd="10" nzXs="24" class="mb-[25px]">
+    <ng-container *ngIf="showContent; else loadingSkeleton">
+      <!-- Profile Avatar -->
+      <div class="s-card">
+        <div class="s-header">
+          <figure class="s-figure">
+            <nz-avatar [nzSize]="120" nzIcon="user" [nzSrc]="avatarUrl"></nz-avatar>
+            <span class="s-avatar-action">
+              <nz-upload nzName="avatar" [nzShowUploadList]="false" (nzChange)="handleChange($event)">
+                <span class="s-camera" nz-icon nzType="camera" nzTheme="outline"></span>
+              </nz-upload>
+            </span>
+          </figure>
+          <figcaption>
+            <h1 class="mb-0 text-lg font-semibold text-dark dark:text-white/[.87]">Duran Clayton</h1>
+            <p class="mb-0 text-light dark:text-white/60 text-15">UI/UX Designer</p>
+          </figcaption>
+        </div>
+        <nav class="s-nav">
+          <ul class="s-nav-list">
+            <li
+              [class]="listItemClass + ' ' + (selectedTab === 'editProfile' ? 'active' : '')"
+              (click)="selectTab('editProfile', 'Edit Profile', 'Set Up Your Personal Information')">
+              <span nz-icon nzType="user" nzTheme="outline"></span>
+              <span>Edit Profile</span>
+            </li>
+            <li
+              [class]="listItemClass + ' ' + (selectedTab === 'accountSettings' ? 'active' : '')"
+              (click)="selectTab('accountSettings', 'Account Settings', 'Update your username and manage your account')">
+              <span nz-icon nzType="setting" nzTheme="outline"></span>
+              <span>Account Settings</span>
+            </li>
+            <li
+              [class]="listItemClass + ' ' + (selectedTab === 'changePassword' ? 'active' : '')"
+              (click)="selectTab('changePassword', 'Password Settings', 'Change or reset your account password')">
+              <span nz-icon nzType="key" nzTheme="outline"></span>
+              <span>Password Settings</span>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </ng-container>
+  </div>
+
+  <div nz-col nzXXl="18" nzLg="16" nzMd="14" nzXs="24" class="mb-[25px]">
+    <ng-container *ngIf="showContent; else loadingSkeleton">
+      <!-- Profile Cover -->
+      <div class="s-cover-wrap mb-[30px]">
+        <div class="relative">
+          <nz-avatar class="s-cover" nzIcon="user" [nzSrc]="avatarCoverUrl"></nz-avatar>
+          <nz-upload class="s-upload-btn" nzName="avatar" [nzShowUploadList]="false" (nzChange)="handleCoverChange($event)">
+            <span nz-icon nzType="camera" nzTheme="outline"></span>
+            <span>Change Cover</span>
+          </nz-upload>
+        </div>
+      </div>
+
+      <!-- Content Panel -->
+      <div class="s-panel">
+        <div class="s-panel__head">
+          <h1 class="mb-0 text-lg font-medium text-dark dark:text-white/[.87]">{{ tabTitle }}</h1>
+          <span class="mb-0.5 text-light dark:text-white/60 text-13 font-normal">{{ subTitle }}</span>
+        </div>
+
+        <div class="s-panel__body">
+          <!-- Edit Profile Tab -->
+          <div *ngIf="selectedTab === 'editProfile'">
+            <div nz-row nzGutter="25" nzJustify="center">
+              <div nz-col nzXXl="12" nzLg="16" nzXs="24">
+                <form class="max-w-full" nz-form [formGroup]="editProfileForm" (ngSubmit)="submitEditProfileForm()">
+                  <nz-form-control class="mb-[20px]">
+                    <nz-form-label class="s-form-label" nzFor="name">Name</nz-form-label>
+                    <input class="s-input" nz-input formControlName="name" id="name" placeholder="Duran Clayton" />
+                  </nz-form-control>
+
+                  <nz-form-control class="mb-[20px]">
+                    <nz-form-label class="s-form-label" nzFor="phoneNumberPrefix">Phone Number</nz-form-label>
+                    <input class="s-input" nz-input formControlName="phoneNumberPrefix" id="phoneNumberPrefix" placeholder="+86" />
+                  </nz-form-control>
+
+                  <nz-form-control class="mb-[20px]">
+                    <nz-form-label class="s-form-label" nzFor="country">Country</nz-form-label>
+                    <nz-select formControlName="country" class="s-select" [nzOptions]="listOfOption"></nz-select>
+                  </nz-form-control>
+
+                  <nz-form-control class="mb-[20px]">
+                    <nz-form-label class="s-form-label" nzFor="city">City</nz-form-label>
+                    <input class="s-input" nz-input formControlName="city" id="city" placeholder="Enter City" />
+                  </nz-form-control>
+
+                  <nz-form-control class="mb-[20px]">
+                    <nz-form-label class="s-form-label" nzFor="cmName">Company Name</nz-form-label>
+                    <input class="s-input" nz-input formControlName="cmName" id="cmName" placeholder="Example" />
+                  </nz-form-control>
+
+                  <nz-form-control class="mb-[20px]">
+                    <nz-form-label class="s-form-label" nzFor="website">Website</nz-form-label>
+                    <input class="s-input" nz-input formControlName="website" id="website" placeholder="www.example.com" />
+                  </nz-form-control>
+
+                  <nz-form-control class="mb-[20px]">
+                    <nz-form-label class="s-form-label" nzFor="bio">User Bio</nz-form-label>
+                    <textarea class="s-input s-textarea" nz-input id="bio" placeholder="Autosize height based on content lines"></textarea>
+                  </nz-form-control>
+
+                  <nz-form-control class="mb-[20px]">
+                    <nz-form-label class="s-form-label" nzFor="skills">Skills</nz-form-label>
+                    <textarea class="s-input s-textarea" nz-input id="skills" placeholder="Autosize height based on content lines"></textarea>
+                  </nz-form-control>
+
+                  <nz-form-control class="s-form-actions">
+                    <div class="inline-flex items-center">
+                      <button class="s-btn s-btn--primary" nz-button nzType="primary">
+                        <span>Update Profile</span>
+                      </button>
+                      <button class="s-btn s-btn--muted" nz-button type="button">
+                        <span>Cancel</span>
+                      </button>
+                    </div>
+                  </nz-form-control>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Account Settings Tab -->
+          <div *ngIf="selectedTab === 'accountSettings'">
+            <div nz-row nzGutter="25" nzJustify="center">
+              <div nz-col nzXXl="12" nzLg="16" nzXs="24">
+                <form class="max-w-full" nz-form [formGroup]="accountSettingsForm" (ngSubmit)="submitAccountSettingsForm()">
+                  <nz-form-control class="mb-[20px]">
+                    <nz-form-label class="s-form-label" nzFor="username">Username</nz-form-label>
+                    <input class="s-input" nz-input formControlName="username" id="username" placeholder="Duran Clayton" />
+                    <p class="mt-[14px] text-light dark:text-white/60">Your Dashboard URL: <a class="text-info" href="http://dashboard.com/clayton">http://dashboard.com/<span class="font-semibold">clayton</span></a></p>
+                  </nz-form-control>
+
+                  <nz-form-control class="mb-[20px]">
+                    <nz-form-label class="s-form-label" nzFor="email">Email</nz-form-label>
+                    <input class="s-input" nz-input formControlName="email" id="email" placeholder="contact@example.com" />
+                  </nz-form-control>
+
+                  <div class="flex items-center justify-between gap-[15px] pt-[30px] border-t border-regular dark:border-white/10 mb-[48px]">
+                    <div>
+                      <h1 class="text-base font-semibold text-dark dark:text-white/[.87]">Close Account</h1>
+                      <p class="mb-0 text-body dark:text-white/60">Delete Your Account and Account data</p>
+                    </div>
+                    <div>
+                      <button class="s-btn s-btn--danger" nz-button type="button">
+                        <span>Close Account</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <nz-form-control class="s-form-actions">
+                    <div class="inline-flex items-center">
+                      <button class="s-btn s-btn--primary" nz-button nzType="primary">
+                        <span>Update Profile</span>
+                      </button>
+                      <button class="s-btn s-btn--muted" nz-button type="button">
+                        <span>Cancel</span>
+                      </button>
+                    </div>
+                  </nz-form-control>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Password Settings Tab -->
+          <div *ngIf="selectedTab === 'changePassword'">
+            <div nz-row nzGutter="25" nzJustify="center">
+              <div nz-col nzXXl="12" nzLg="16" nzXs="24">
+                <form class="max-w-full" nz-form [formGroup]="passwordForm" (ngSubmit)="submitPasswordForm()">
+                  <nz-form-control class="mb-[20px]">
+                    <nz-form-label class="s-form-label" nzFor="password">Old Password</nz-form-label>
+                    <input class="s-input" nz-input formControlName="password" id="password" type="password" placeholder="Old Password" />
+                  </nz-form-control>
+
+                  <nz-form-control class="mb-[20px]">
+                    <nz-form-label class="s-form-label" nzFor="newPassword">New Password</nz-form-label>
+                    <nz-input-group class="s-input-group" [nzSuffix]="suffixTemplate">
+                      <input id="newPassword" formControlName="newPassword" class="s-input" [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Input password" />
+                      <ng-template #suffixTemplate>
+                        <span class="cursor-pointer text-light-extra dark:text-white/60 w-[15px] h-[15px]" nz-icon [nzType]="passwordVisible ? 'eye' : 'eye-invisible'" (click)="passwordVisible = !passwordVisible"></span>
+                      </ng-template>
+                    </nz-input-group>
+                    <p class="mt-[14px] text-light dark:text-white/60 text-[13px]">Minimum 6 characters</p>
+                  </nz-form-control>
+
+                  <nz-form-control class="s-form-actions">
+                    <div class="inline-flex items-center">
+                      <button class="s-btn s-btn--primary" nz-button nzType="primary">
+                        <span>Change Password</span>
+                      </button>
+                      <button class="s-btn s-btn--muted" nz-button type="button">
+                        <span>Cancel</span>
+                      </button>
+                    </div>
+                  </nz-form-control>
+                </form>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

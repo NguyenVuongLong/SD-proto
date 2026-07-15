@@ -1,1 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
+// Theme variables, must be included before the libraries to allow overriding defaults
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// 3rd party libraries
+
+// Theme customization
+@import './assets/scss/app.scss';
+
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap');
+
+html,
+body {
+  font-family: 'Google Sans', sans-serif;
+  margin: 0;
+}
+
