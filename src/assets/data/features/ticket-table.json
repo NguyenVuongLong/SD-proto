@@ -18,7 +18,8 @@
     "createdDate": "16/07/2023",
     "dueDate": "20/07/2023",
     "closedDate": "",
-    "response": "Looked into the contact-save issue — a validation error on the phone field was silently blocking the save button. Deployed a fix; please try adding the contact again and let us know if it saves correctly."
+    "response": "Looked into the contact-save issue — a validation error on the phone field was silently blocking the save button. Deployed a fix; please try adding the contact again and let us know if it saves correctly.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "02",
@@ -39,7 +40,8 @@
     "createdDate": "16/07/2023",
     "dueDate": "20/07/2023",
     "closedDate": "",
-    "response": "Shared the list of currently supported payment methods along with a link to update billing details. Following up to confirm everything looks correct before closing."
+    "response": "Shared the list of currently supported payment methods along with a link to update billing details. Following up to confirm everything looks correct before closing.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "03",
@@ -60,7 +62,8 @@
     "createdDate": "16/07/2023",
     "dueDate": "20/07/2023",
     "closedDate": "",
-    "response": "Reset the account password and sent a new secure login link. Monitoring the account for further sign-in attempts to confirm access has been restored."
+    "response": "Reset the account password and sent a new secure login link. Monitoring the account for further sign-in attempts to confirm access has been restored.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "04",
@@ -81,7 +84,8 @@
     "createdDate": "16/07/2023",
     "dueDate": "20/07/2023",
     "closedDate": "19/07/2023",
-    "response": "Followed up with the courier and confirmed the package was delivered on 19/07. Ticket closed as resolved."
+    "response": "Followed up with the courier and confirmed the package was delivered on 19/07. Ticket closed as resolved.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "05",
@@ -102,7 +106,8 @@
     "createdDate": "16/07/2023",
     "dueDate": "20/07/2023",
     "closedDate": "",
-    "response": "Reviewing the invoice with billing to confirm which subscription tier applies to the disputed charge. Will update once the discrepancy is confirmed or corrected."
+    "response": "Reviewing the invoice with billing to confirm which subscription tier applies to the disputed charge. Will update once the discrepancy is confirmed or corrected.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "06",
@@ -123,7 +128,8 @@
     "createdDate": "16/07/2023",
     "dueDate": "20/07/2023",
     "closedDate": "",
-    "response": "Identified a null-pointer error triggered by expired discount codes and pushed a hotfix to the checkout service. Verifying the fix holds before closing the ticket."
+    "response": "Identified a null-pointer error triggered by expired discount codes and pushed a hotfix to the checkout service. Verifying the fix holds before closing the ticket.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "07",
@@ -144,7 +150,8 @@
     "createdDate": "12/07/2023",
     "dueDate": "20/07/2023",
     "closedDate": "",
-    "response": "Confirmed the missing item with the warehouse team and a replacement is being shipped out. Will update with tracking details once it ships."
+    "response": "Confirmed the missing item with the warehouse team and a replacement is being shipped out. Will update with tracking details once it ships.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "08",
@@ -165,7 +172,8 @@
     "createdDate": "11/07/2023",
     "dueDate": "20/07/2023",
     "closedDate": "14/07/2023",
-    "response": "Found that email notifications had been disabled during a settings reset; re-enabled them and confirmed delivery is working again. Ticket closed."
+    "response": "Found that email notifications had been disabled during a settings reset; re-enabled them and confirmed delivery is working again. Ticket closed.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "09",
@@ -186,7 +194,8 @@
     "createdDate": "10/07/2023",
     "dueDate": "20/07/2023",
     "closedDate": "",
-    "response": "Traced the startup crash to a bad dependency introduced in the latest build and shipped a patched release. Awaiting confirmation the crash no longer occurs."
+    "response": "Traced the startup crash to a bad dependency introduced in the latest build and shipped a patched release. Awaiting confirmation the crash no longer occurs.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "10",
@@ -207,7 +216,8 @@
     "createdDate": "10/07/2023",
     "dueDate": "20/07/2023",
     "closedDate": "",
-    "response": "Applied the same fix released for ticket #09 to the second machine; startup crash no longer reproduces on either device."
+    "response": "Applied the same fix released for ticket #09 to the second machine; startup crash no longer reproduces on either device.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "11",
@@ -228,7 +238,8 @@
     "createdDate": "10/07/2023",
     "dueDate": "20/07/2023",
     "closedDate": "",
-    "response": "Extended the startup-crash fix to the mobile build after reviewing the screen recording. Monitoring for further reports before closing."
+    "response": "Extended the startup-crash fix to the mobile build after reviewing the screen recording. Monitoring for further reports before closing.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "12",
@@ -249,7 +260,8 @@
     "createdDate": "05/07/2023",
     "dueDate": "04/07/2023",
     "closedDate": "",
-    "response": "Reviewed the account's API usage and increased the rate limit tier; please monitor for further errors."
+    "response": "Reviewed the account's API usage and increased the rate limit tier; please monitor for further errors.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "13",
@@ -270,7 +282,8 @@
     "createdDate": "01/07/2023",
     "dueDate": "03/07/2023",
     "closedDate": "",
-    "response": "Regenerated the invoice PDF using the corrected template; the new file should open without issues."
+    "response": "Regenerated the invoice PDF using the corrected template; the new file should open without issues.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "14",
@@ -291,7 +304,8 @@
     "createdDate": "18/07/2023",
     "dueDate": "07/07/2023",
     "closedDate": "18/07/2023",
-    "response": "Restarted the notification queue service which had stalled and confirmed notifications are now real-time."
+    "response": "Restarted the notification queue service which had stalled and confirmed notifications are now real-time.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "15",
@@ -312,7 +326,8 @@
     "createdDate": "01/07/2023",
     "dueDate": "06/07/2023",
     "closedDate": "14/07/2023",
-    "response": "Identified a broken script reference causing the blank page and corrected it; please clear your cache and retry."
+    "response": "Identified a broken script reference causing the blank page and corrected it; please clear your cache and retry.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "16",
@@ -333,7 +348,8 @@
     "createdDate": "04/07/2023",
     "dueDate": "03/07/2023",
     "closedDate": "",
-    "response": "Reset the 2FA configuration on the account and resent a test code; please confirm delivery."
+    "response": "Reset the 2FA configuration on the account and resent a test code; please confirm delivery.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "17",
@@ -354,7 +370,8 @@
     "createdDate": "09/07/2023",
     "dueDate": "02/07/2023",
     "closedDate": "",
-    "response": "Manually processed the cancellation request and confirmed no further charges will occur."
+    "response": "Manually processed the cancellation request and confirmed no further charges will occur.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "18",
@@ -375,7 +392,8 @@
     "createdDate": "18/07/2023",
     "dueDate": "10/07/2023",
     "closedDate": "",
-    "response": "Corrected the tax rate table for the affected region and reprocessed the calculation; please verify the new total."
+    "response": "Corrected the tax rate table for the affected region and reprocessed the calculation; please verify the new total.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "19",
@@ -396,7 +414,8 @@
     "createdDate": "03/07/2023",
     "dueDate": "02/07/2023",
     "closedDate": "",
-    "response": "Regenerated the invoice PDF using the corrected template; the new file should open without issues."
+    "response": "Regenerated the invoice PDF using the corrected template; the new file should open without issues.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "20",
@@ -417,7 +436,8 @@
     "createdDate": "13/07/2023",
     "dueDate": "09/07/2023",
     "closedDate": "",
-    "response": "Identified an unoptimized query causing the slowdown and added proper indexing; load times should now be normal."
+    "response": "Identified an unoptimized query causing the slowdown and added proper indexing; load times should now be normal.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "21",
@@ -438,7 +458,8 @@
     "createdDate": "07/07/2023",
     "dueDate": "09/07/2023",
     "closedDate": "",
-    "response": "Fixed a bug in the export module that was truncating the file stream; export should now work correctly."
+    "response": "Fixed a bug in the export module that was truncating the file stream; export should now work correctly.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "22",
@@ -459,7 +480,8 @@
     "createdDate": "08/07/2023",
     "dueDate": "06/07/2023",
     "closedDate": "15/07/2023",
-    "response": "Fixed a bug in the export module that was truncating the file stream; export should now work correctly."
+    "response": "Fixed a bug in the export module that was truncating the file stream; export should now work correctly.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "23",
@@ -480,7 +502,8 @@
     "createdDate": "11/07/2023",
     "dueDate": "02/07/2023",
     "closedDate": "",
-    "response": "Added a merge contacts feature to the latest release; please check the contacts page for the new option."
+    "response": "Added a merge contacts feature to the latest release; please check the contacts page for the new option.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "24",
@@ -501,7 +524,8 @@
     "createdDate": "03/07/2023",
     "dueDate": "07/07/2023",
     "closedDate": "",
-    "response": "Identified a memory leak in the notifications view and shipped a fix in the latest app update."
+    "response": "Identified a memory leak in the notifications view and shipped a fix in the latest app update.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "25",
@@ -522,7 +546,8 @@
     "createdDate": "13/07/2023",
     "dueDate": "15/07/2023",
     "closedDate": "05/07/2023",
-    "response": "Confirmed the duplicate charge and processed a refund for the extra transaction; refund should appear within 5 business days."
+    "response": "Confirmed the duplicate charge and processed a refund for the extra transaction; refund should appear within 5 business days.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "26",
@@ -543,7 +568,8 @@
     "createdDate": "18/07/2023",
     "dueDate": "09/07/2023",
     "closedDate": "19/07/2023",
-    "response": "Resolved a frontend event binding issue preventing the upload button from working; please try again."
+    "response": "Resolved a frontend event binding issue preventing the upload button from working; please try again.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "27",
@@ -564,7 +590,8 @@
     "createdDate": "05/07/2023",
     "dueDate": "17/07/2023",
     "closedDate": "",
-    "response": "Updated the default shipping address in the system and flagged the order for redelivery to the correct address."
+    "response": "Updated the default shipping address in the system and flagged the order for redelivery to the correct address.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "28",
@@ -585,7 +612,8 @@
     "createdDate": "06/07/2023",
     "dueDate": "14/07/2023",
     "closedDate": "",
-    "response": "Increased the upload size limit and redeployed the file service; please retry the upload and confirm."
+    "response": "Increased the upload size limit and redeployed the file service; please retry the upload and confirm.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "29",
@@ -606,7 +634,8 @@
     "createdDate": "15/07/2023",
     "dueDate": "17/07/2023",
     "closedDate": "",
-    "response": "Updated the default shipping address in the system and flagged the order for redelivery to the correct address."
+    "response": "Updated the default shipping address in the system and flagged the order for redelivery to the correct address.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "30",
@@ -627,7 +656,8 @@
     "createdDate": "04/07/2023",
     "dueDate": "18/07/2023",
     "closedDate": "09/07/2023",
-    "response": "Resolved the delivery issue by whitelisting the sender domain and resent the reset email; please confirm receipt."
+    "response": "Resolved the delivery issue by whitelisting the sender domain and resent the reset email; please confirm receipt.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "31",
@@ -648,7 +678,8 @@
     "createdDate": "15/07/2023",
     "dueDate": "01/07/2023",
     "closedDate": "",
-    "response": "Reindexed the search database and adjusted the relevance scoring; please retest your search queries."
+    "response": "Reindexed the search database and adjusted the relevance scoring; please retest your search queries.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "32",
@@ -669,7 +700,8 @@
     "createdDate": "10/07/2023",
     "dueDate": "17/07/2023",
     "closedDate": "20/07/2023",
-    "response": "Fixed a bug in the export module that was truncating the file stream; export should now work correctly."
+    "response": "Fixed a bug in the export module that was truncating the file stream; export should now work correctly.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "33",
@@ -690,7 +722,8 @@
     "createdDate": "17/07/2023",
     "dueDate": "01/07/2023",
     "closedDate": "",
-    "response": "Manually processed the cancellation request and confirmed no further charges will occur."
+    "response": "Manually processed the cancellation request and confirmed no further charges will occur.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "34",
@@ -711,7 +744,8 @@
     "createdDate": "12/07/2023",
     "dueDate": "10/07/2023",
     "closedDate": "",
-    "response": "Reconciled the inventory records with the warehouse system and corrected the discrepancy."
+    "response": "Reconciled the inventory records with the warehouse system and corrected the discrepancy.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "35",
@@ -732,7 +766,8 @@
     "createdDate": "03/07/2023",
     "dueDate": "16/07/2023",
     "closedDate": "03/07/2023",
-    "response": "Resolved a frontend event binding issue preventing the upload button from working; please try again."
+    "response": "Resolved a frontend event binding issue preventing the upload button from working; please try again.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "36",
@@ -753,7 +788,8 @@
     "createdDate": "18/07/2023",
     "dueDate": "06/07/2023",
     "closedDate": "09/07/2023",
-    "response": "Reset the 2FA configuration on the account and resent a test code; please confirm delivery."
+    "response": "Reset the 2FA configuration on the account and resent a test code; please confirm delivery.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "37",
@@ -774,7 +810,8 @@
     "createdDate": "07/07/2023",
     "dueDate": "10/07/2023",
     "closedDate": "",
-    "response": "Optimized the report generation query and increased the timeout threshold; reports should now complete successfully."
+    "response": "Optimized the report generation query and increased the timeout threshold; reports should now complete successfully.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "38",
@@ -795,7 +832,8 @@
     "createdDate": "04/07/2023",
     "dueDate": "08/07/2023",
     "closedDate": "08/07/2023",
-    "response": "Identified a broken script reference causing the blank page and corrected it; please clear your cache and retry."
+    "response": "Identified a broken script reference causing the blank page and corrected it; please clear your cache and retry.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "39",
@@ -816,7 +854,8 @@
     "createdDate": "08/07/2023",
     "dueDate": "19/07/2023",
     "closedDate": "08/07/2023",
-    "response": "Resolved the delivery issue by whitelisting the sender domain and resent the reset email; please confirm receipt."
+    "response": "Resolved the delivery issue by whitelisting the sender domain and resent the reset email; please confirm receipt.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "40",
@@ -837,7 +876,8 @@
     "createdDate": "02/07/2023",
     "dueDate": "11/07/2023",
     "closedDate": "",
-    "response": "Increased the upload size limit and redeployed the file service; please retry the upload and confirm."
+    "response": "Increased the upload size limit and redeployed the file service; please retry the upload and confirm.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "41",
@@ -858,7 +898,8 @@
     "createdDate": "16/07/2023",
     "dueDate": "07/07/2023",
     "closedDate": "",
-    "response": "Resolved a frontend event binding issue preventing the upload button from working; please try again."
+    "response": "Resolved a frontend event binding issue preventing the upload button from working; please try again.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "42",
@@ -879,7 +920,8 @@
     "createdDate": "08/07/2023",
     "dueDate": "16/07/2023",
     "closedDate": "14/07/2023",
-    "response": "Regenerated the invoice PDF using the corrected template; the new file should open without issues."
+    "response": "Regenerated the invoice PDF using the corrected template; the new file should open without issues.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "43",
@@ -900,7 +942,8 @@
     "createdDate": "12/07/2023",
     "dueDate": "14/07/2023",
     "closedDate": "14/07/2023",
-    "response": "Corrected the tax rate table for the affected region and reprocessed the calculation; please verify the new total."
+    "response": "Corrected the tax rate table for the affected region and reprocessed the calculation; please verify the new total.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "44",
@@ -921,7 +964,8 @@
     "createdDate": "11/07/2023",
     "dueDate": "04/07/2023",
     "closedDate": "",
-    "response": "Corrected the tax rate table for the affected region and reprocessed the calculation; please verify the new total."
+    "response": "Corrected the tax rate table for the affected region and reprocessed the calculation; please verify the new total.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "45",
@@ -942,7 +986,8 @@
     "createdDate": "05/07/2023",
     "dueDate": "14/07/2023",
     "closedDate": "06/07/2023",
-    "response": "Confirmed the duplicate charge and processed a refund for the extra transaction; refund should appear within 5 business days."
+    "response": "Confirmed the duplicate charge and processed a refund for the extra transaction; refund should appear within 5 business days.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "46",
@@ -963,7 +1008,8 @@
     "createdDate": "18/07/2023",
     "dueDate": "04/07/2023",
     "closedDate": "",
-    "response": "Resolved a frontend event binding issue preventing the upload button from working; please try again."
+    "response": "Resolved a frontend event binding issue preventing the upload button from working; please try again.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "47",
@@ -984,7 +1030,8 @@
     "createdDate": "06/07/2023",
     "dueDate": "14/07/2023",
     "closedDate": "",
-    "response": "Resolved the delivery issue by whitelisting the sender domain and resent the reset email; please confirm receipt."
+    "response": "Resolved the delivery issue by whitelisting the sender domain and resent the reset email; please confirm receipt.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "48",
@@ -1005,7 +1052,8 @@
     "createdDate": "06/07/2023",
     "dueDate": "13/07/2023",
     "closedDate": "",
-    "response": "Confirmed the duplicate charge and processed a refund for the extra transaction; refund should appear within 5 business days."
+    "response": "Confirmed the duplicate charge and processed a refund for the extra transaction; refund should appear within 5 business days.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "49",
@@ -1026,7 +1074,8 @@
     "createdDate": "14/07/2023",
     "dueDate": "18/07/2023",
     "closedDate": "",
-    "response": "Reviewed the account's API usage and increased the rate limit tier; please monitor for further errors."
+    "response": "Reviewed the account's API usage and increased the rate limit tier; please monitor for further errors.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "50",
@@ -1047,7 +1096,8 @@
     "createdDate": "02/07/2023",
     "dueDate": "19/07/2023",
     "closedDate": "",
-    "response": "Confirmed the duplicate charge and processed a refund for the extra transaction; refund should appear within 5 business days."
+    "response": "Confirmed the duplicate charge and processed a refund for the extra transaction; refund should appear within 5 business days.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "51",
@@ -1068,7 +1118,8 @@
     "createdDate": "03/04/2023",
     "dueDate": "08/04/2023",
     "closedDate": "",
-    "response": "Updated the account's regional settings and corrected the currency display on new invoices."
+    "response": "Updated the account's regional settings and corrected the currency display on new invoices.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "52",
@@ -1089,7 +1140,8 @@
     "createdDate": "28/06/2022",
     "dueDate": "10/07/2022",
     "closedDate": "",
-    "response": "Updated the account's regional settings and corrected the currency display on new invoices."
+    "response": "Updated the account's regional settings and corrected the currency display on new invoices.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "53",
@@ -1110,7 +1162,8 @@
     "createdDate": "31/10/2024",
     "dueDate": "12/11/2024",
     "closedDate": "",
-    "response": "Found a broken data endpoint feeding the chart component and restored it; charts should render correctly now."
+    "response": "Found a broken data endpoint feeding the chart component and restored it; charts should render correctly now.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "54",
@@ -1131,7 +1184,8 @@
     "createdDate": "09/05/2024",
     "dueDate": "15/05/2024",
     "closedDate": "",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged."
+    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "55",
@@ -1152,7 +1206,8 @@
     "createdDate": "30/11/2025",
     "dueDate": "09/12/2025",
     "closedDate": "06/12/2025",
-    "response": "Resolved a queue backlog in the notification service; delivery times should now be near-instant."
+    "response": "Resolved a queue backlog in the notification service; delivery times should now be near-instant.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "56",
@@ -1173,7 +1228,8 @@
     "createdDate": "18/02/2024",
     "dueDate": "22/02/2024",
     "closedDate": "",
-    "response": "Switched the account to an alternate SMS gateway after confirming carrier delivery issues; please retest."
+    "response": "Switched the account to an alternate SMS gateway after confirming carrier delivery issues; please retest.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "57",
@@ -1194,7 +1250,8 @@
     "createdDate": "29/07/2024",
     "dueDate": "09/08/2024",
     "closedDate": "",
-    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested."
+    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "58",
@@ -1215,7 +1272,8 @@
     "createdDate": "11/01/2024",
     "dueDate": "23/01/2024",
     "closedDate": "",
-    "response": "Fixed a session-storage bug that was clearing filters on navigation; filters should now persist."
+    "response": "Fixed a session-storage bug that was clearing filters on navigation; filters should now persist.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "59",
@@ -1236,7 +1294,8 @@
     "createdDate": "13/06/2022",
     "dueDate": "19/06/2022",
     "closedDate": "",
-    "response": "Fixed a timeout in the export job for large datasets; please retry the export and let us know."
+    "response": "Fixed a timeout in the export job for large datasets; please retry the export and let us know.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "60",
@@ -1257,7 +1316,8 @@
     "createdDate": "30/11/2022",
     "dueDate": "08/12/2022",
     "closedDate": "06/12/2022",
-    "response": "Updated the account's regional settings and corrected the currency display on new invoices."
+    "response": "Updated the account's regional settings and corrected the currency display on new invoices.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "61",
@@ -1278,7 +1338,8 @@
     "createdDate": "01/06/2025",
     "dueDate": "14/06/2025",
     "closedDate": "",
-    "response": "Corrected the role assignment in the admin panel; your account now has Editor permissions."
+    "response": "Corrected the role assignment in the admin panel; your account now has Editor permissions.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "62",
@@ -1299,7 +1360,8 @@
     "createdDate": "17/02/2024",
     "dueDate": "24/02/2024",
     "closedDate": "",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged."
+    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "63",
@@ -1320,7 +1382,8 @@
     "createdDate": "15/04/2023",
     "dueDate": "18/04/2023",
     "closedDate": "",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged."
+    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "64",
@@ -1341,7 +1404,8 @@
     "createdDate": "07/03/2025",
     "dueDate": "21/03/2025",
     "closedDate": "13/03/2025",
-    "response": "Fixed a template-engine misconfiguration causing raw tags to leak into emails; sent a test email for confirmation."
+    "response": "Fixed a template-engine misconfiguration causing raw tags to leak into emails; sent a test email for confirmation.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "65",
@@ -1362,7 +1426,8 @@
     "createdDate": "27/06/2023",
     "dueDate": "02/07/2023",
     "closedDate": "01/07/2023",
-    "response": "Fixed an expired sync token that was blocking calendar updates; sync should resume automatically."
+    "response": "Fixed an expired sync token that was blocking calendar updates; sync should resume automatically.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "66",
@@ -1383,7 +1448,8 @@
     "createdDate": "27/05/2024",
     "dueDate": "08/06/2024",
     "closedDate": "",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged."
+    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "67",
@@ -1404,7 +1470,8 @@
     "createdDate": "06/07/2022",
     "dueDate": "09/07/2022",
     "closedDate": "",
-    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested."
+    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "68",
@@ -1425,7 +1492,8 @@
     "createdDate": "06/05/2025",
     "dueDate": "10/05/2025",
     "closedDate": "",
-    "response": "Updated the account's regional settings and corrected the currency display on new invoices."
+    "response": "Updated the account's regional settings and corrected the currency display on new invoices.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "69",
@@ -1446,7 +1514,8 @@
     "createdDate": "07/02/2025",
     "dueDate": "10/02/2025",
     "closedDate": "",
-    "response": "Fixed a session-storage bug that was clearing filters on navigation; filters should now persist."
+    "response": "Fixed a session-storage bug that was clearing filters on navigation; filters should now persist.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "70",
@@ -1467,7 +1536,8 @@
     "createdDate": "05/08/2025",
     "dueDate": "13/08/2025",
     "closedDate": "",
-    "response": "Updated the account's regional settings and corrected the currency display on new invoices."
+    "response": "Updated the account's regional settings and corrected the currency display on new invoices.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "71",
@@ -1488,7 +1558,8 @@
     "createdDate": "24/06/2023",
     "dueDate": "05/07/2023",
     "closedDate": "27/06/2023",
-    "response": "Added caching to the most-requested admin endpoints, cutting load times significantly during peak hours."
+    "response": "Added caching to the most-requested admin endpoints, cutting load times significantly during peak hours.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "72",
@@ -1509,7 +1580,8 @@
     "createdDate": "01/06/2025",
     "dueDate": "07/06/2025",
     "closedDate": "",
-    "response": "Updated the account's regional settings and corrected the currency display on new invoices."
+    "response": "Updated the account's regional settings and corrected the currency display on new invoices.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "73",
@@ -1530,7 +1602,8 @@
     "createdDate": "02/01/2022",
     "dueDate": "14/01/2022",
     "closedDate": "",
-    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested."
+    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "74",
@@ -1551,7 +1624,8 @@
     "createdDate": "22/09/2023",
     "dueDate": "28/09/2023",
     "closedDate": "",
-    "response": "Fixed an expired sync token that was blocking calendar updates; sync should resume automatically."
+    "response": "Fixed an expired sync token that was blocking calendar updates; sync should resume automatically.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "75",
@@ -1572,7 +1646,8 @@
     "createdDate": "22/05/2022",
     "dueDate": "02/06/2022",
     "closedDate": "",
-    "response": "Identified a memory leak triggered on login and shipped a patched app version; please update and retest."
+    "response": "Identified a memory leak triggered on login and shipped a patched app version; please update and retest.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "76",
@@ -1593,7 +1668,8 @@
     "createdDate": "05/12/2022",
     "dueDate": "12/12/2022",
     "closedDate": "",
-    "response": "Switched the account to an alternate SMS gateway after confirming carrier delivery issues; please retest."
+    "response": "Switched the account to an alternate SMS gateway after confirming carrier delivery issues; please retest.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "77",
@@ -1614,7 +1690,8 @@
     "createdDate": "13/11/2025",
     "dueDate": "19/11/2025",
     "closedDate": "18/11/2025",
-    "response": "Fixed contrast issues in the dark mode theme for the affected buttons; please refresh and confirm."
+    "response": "Fixed contrast issues in the dark mode theme for the affected buttons; please refresh and confirm.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "78",
@@ -1635,7 +1712,8 @@
     "createdDate": "23/05/2023",
     "dueDate": "29/05/2023",
     "closedDate": "25/05/2023",
-    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested."
+    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "79",
@@ -1656,7 +1734,8 @@
     "createdDate": "28/03/2023",
     "dueDate": "31/03/2023",
     "closedDate": "",
-    "response": "Extended the reset-link expiry window and resent a fresh link; please confirm you're able to log in now."
+    "response": "Extended the reset-link expiry window and resent a fresh link; please confirm you're able to log in now.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "80",
@@ -1677,7 +1756,8 @@
     "createdDate": "08/11/2023",
     "dueDate": "12/11/2023",
     "closedDate": "",
-    "response": "Found a broken data endpoint feeding the chart component and restored it; charts should render correctly now."
+    "response": "Found a broken data endpoint feeding the chart component and restored it; charts should render correctly now.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "81",
@@ -1698,7 +1778,8 @@
     "createdDate": "09/01/2025",
     "dueDate": "14/01/2025",
     "closedDate": "14/01/2025",
-    "response": "Identified a memory leak triggered on login and shipped a patched app version; please update and retest."
+    "response": "Identified a memory leak triggered on login and shipped a patched app version; please update and retest.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "82",
@@ -1719,7 +1800,8 @@
     "createdDate": "25/01/2023",
     "dueDate": "29/01/2023",
     "closedDate": "",
-    "response": "Fixed an expired sync token that was blocking calendar updates; sync should resume automatically."
+    "response": "Fixed an expired sync token that was blocking calendar updates; sync should resume automatically.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "83",
@@ -1740,7 +1822,8 @@
     "createdDate": "21/04/2022",
     "dueDate": "04/05/2022",
     "closedDate": "23/04/2022",
-    "response": "Raised the upload size limit and improved the error message for oversized files; please retry your upload."
+    "response": "Raised the upload size limit and improved the error message for oversized files; please retry your upload.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "84",
@@ -1761,7 +1844,8 @@
     "createdDate": "25/05/2023",
     "dueDate": "31/05/2023",
     "closedDate": "",
-    "response": "Fixed a session-storage bug that was clearing filters on navigation; filters should now persist."
+    "response": "Fixed a session-storage bug that was clearing filters on navigation; filters should now persist.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "85",
@@ -1782,7 +1866,8 @@
     "createdDate": "25/07/2023",
     "dueDate": "04/08/2023",
     "closedDate": "29/07/2023",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged."
+    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "86",
@@ -1803,7 +1888,8 @@
     "createdDate": "28/08/2025",
     "dueDate": "08/09/2025",
     "closedDate": "29/08/2025",
-    "response": "Fixed a timeout in the export job for large datasets; please retry the export and let us know."
+    "response": "Fixed a timeout in the export job for large datasets; please retry the export and let us know.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "87",
@@ -1824,7 +1910,8 @@
     "createdDate": "14/03/2023",
     "dueDate": "23/03/2023",
     "closedDate": "",
-    "response": "Identified a memory leak triggered on login and shipped a patched app version; please update and retest."
+    "response": "Identified a memory leak triggered on login and shipped a patched app version; please update and retest.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "88",
@@ -1845,7 +1932,8 @@
     "createdDate": "20/07/2024",
     "dueDate": "27/07/2024",
     "closedDate": "27/07/2024",
-    "response": "Reindexed the search service after discovering a stale index; full results should now appear."
+    "response": "Reindexed the search service after discovering a stale index; full results should now appear.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "89",
@@ -1866,7 +1954,8 @@
     "createdDate": "24/01/2023",
     "dueDate": "31/01/2023",
     "closedDate": "",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged."
+    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "90",
@@ -1887,7 +1976,8 @@
     "createdDate": "05/10/2023",
     "dueDate": "08/10/2023",
     "closedDate": "",
-    "response": "Found a broken data endpoint feeding the chart component and restored it; charts should render correctly now."
+    "response": "Found a broken data endpoint feeding the chart component and restored it; charts should render correctly now.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "91",
@@ -1908,7 +1998,8 @@
     "createdDate": "19/11/2022",
     "dueDate": "22/11/2022",
     "closedDate": "22/11/2022",
-    "response": "Resolved a queue backlog in the notification service; delivery times should now be near-instant."
+    "response": "Resolved a queue backlog in the notification service; delivery times should now be near-instant.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "92",
@@ -1929,7 +2020,8 @@
     "createdDate": "06/04/2024",
     "dueDate": "10/04/2024",
     "closedDate": "",
-    "response": "Reindexed the search service after discovering a stale index; full results should now appear."
+    "response": "Reindexed the search service after discovering a stale index; full results should now appear.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "93",
@@ -1950,7 +2042,8 @@
     "createdDate": "17/06/2022",
     "dueDate": "26/06/2022",
     "closedDate": "",
-    "response": "Identified a memory leak triggered on login and shipped a patched app version; please update and retest."
+    "response": "Identified a memory leak triggered on login and shipped a patched app version; please update and retest.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "94",
@@ -1971,7 +2064,8 @@
     "createdDate": "23/02/2023",
     "dueDate": "08/03/2023",
     "closedDate": "",
-    "response": "Resolved a queue backlog in the notification service; delivery times should now be near-instant."
+    "response": "Resolved a queue backlog in the notification service; delivery times should now be near-instant.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "95",
@@ -1992,7 +2086,8 @@
     "createdDate": "07/10/2025",
     "dueDate": "20/10/2025",
     "closedDate": "",
-    "response": "Fixed a template-engine misconfiguration causing raw tags to leak into emails; sent a test email for confirmation."
+    "response": "Fixed a template-engine misconfiguration causing raw tags to leak into emails; sent a test email for confirmation.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "96",
@@ -2013,7 +2108,8 @@
     "createdDate": "26/06/2025",
     "dueDate": "08/07/2025",
     "closedDate": "28/06/2025",
-    "response": "Reprocessed the failed payment and restored full access to your subscription."
+    "response": "Reprocessed the failed payment and restored full access to your subscription.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "97",
@@ -2034,7 +2130,8 @@
     "createdDate": "16/12/2023",
     "dueDate": "20/12/2023",
     "closedDate": "",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged."
+    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
+    "topicName": "Hỗ trợ ứng dụng"
   },
   {
     "id": "98",
@@ -2055,7 +2152,8 @@
     "createdDate": "11/12/2025",
     "dueDate": "18/12/2025",
     "closedDate": "18/12/2025",
-    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested."
+    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested.",
+    "topicName": "Hỗ trợ kĩ thuật"
   },
   {
     "id": "99",
@@ -2076,7 +2174,8 @@
     "createdDate": "06/09/2023",
     "dueDate": "19/09/2023",
     "closedDate": "",
-    "response": "Corrected a timezone mismatch in the SLA calculation; the countdown now reflects the correct due date."
+    "response": "Corrected a timezone mismatch in the SLA calculation; the countdown now reflects the correct due date.",
+    "topicName": "Hỗ trợ mạng"
   },
   {
     "id": "100",
@@ -2097,6 +2196,7 @@
     "createdDate": "07/02/2025",
     "dueDate": "12/02/2025",
     "closedDate": "12/02/2025",
-    "response": "Switched the account to an alternate SMS gateway after confirming carrier delivery issues; please retest."
+    "response": "Switched the account to an alternate SMS gateway after confirming carrier delivery issues; please retest.",
+    "topicName": "Hỗ trợ ứng dụng"
   }
 ]

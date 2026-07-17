@@ -42,9 +42,10 @@ interface Person {
   dueDate: string;
   closedDate: string;
   response: string;
+  topicName: string;
 }
 
-type SortField = 'id' | 'assignedName' | 'priority' | 'actions' | 'createdDate' | 'dueDate';
+type SortField = 'id' | 'assignedName' | 'priority' | 'actions' | 'createdDate' | 'dueDate' | 'topicName';
 type SortOrder = 'asc' | 'desc';
 
 @Component({
@@ -91,6 +92,15 @@ type SortOrder = 'asc' | 'desc';
                 [(ngModel)]="searchValue"
                 (ngModelChange)="onSearchChange()"
               />
+            </div>
+            <div class="inline-flex items-center">
+              <nz-select
+                class="min-w-[180px] capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
+                [(ngModel)]="topicFilter"
+                (ngModelChange)="filterByTopic()" nzPlaceHolder="Tìm theo chủ đề" nzAllowClear
+              >
+                <nz-option *ngFor="let t of topicFilterOptions" [nzValue]="t" [nzLabel]="t"></nz-option>
+              </nz-select>
             </div>
             <div class="inline-flex items-center">
               <nz-select
@@ -142,6 +152,7 @@ type SortOrder = 'asc' | 'desc';
                   <tr>
                     <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden rounded-s-[10px] capitalize cursor-pointer select-none" (click)="toggleSort('id')">Mã Ticket{{ sortArrow('id') }}</th>
                     <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize">Tiêu đề</th>
+                    <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('topicName')">Chủ đề{{ sortArrow('topicName') }}</th>
                     <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('assignedName')">Người xử lý{{ sortArrow('assignedName') }}</th>
                     <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('priority')">Ưu tiên{{ sortArrow('priority') }}</th>
                     <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('actions')">Trạng thái{{ sortArrow('actions') }}</th>
@@ -153,6 +164,7 @@ type SortOrder = 'asc' | 'desc';
                   <tr class="group max-lg:whitespace-nowrap cursor-pointer" *ngFor="let person of pagedPeople" (click)="viewTicket(person)">
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">#{{ person.id }}</td>
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.subject }}</td>
+                    <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.topicName }}</td>
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
                     <div class="flex items-center">
                       <div class="me-2.5 w-[34px] h-[34px]">
@@ -272,6 +284,7 @@ type SortOrder = 'asc' | 'desc';
             </span>
           </span>
           <span class="text-[13px] font-medium text-theme-gray dark:text-white/60">Ưu tiên: <span class="font-semibold text-dark dark:text-white/[.87]">{{ ticket.priority }}</span></span>
+          <span class="text-[13px] font-medium text-theme-gray dark:text-white/60">Chủ đề: <span class="font-semibold text-dark dark:text-white/[.87]">{{ ticket.topicName }}</span></span>
         </div>
         <div>
           <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Tiêu đề</div>
@@ -363,6 +376,7 @@ export class TicketTableComponent implements OnInit {
   searchValue = '';
   statusFilter = '';
   priorityFilter = '';
+  topicFilter = '';
   createdDateRange: Date[] | null = null;
   dueDateRange: Date[] | null = null;
   people: Person[] = [];
@@ -418,6 +432,18 @@ export class TicketTableComponent implements OnInit {
     return this.filteredPeople.slice(start, start + this.pageSize);
   }
 
+  /** Unique list of topic names present in the loaded ticket data, used for
+   * the topic filter dropdown. */
+  get topicFilterOptions(): string[] {
+    const seen = new Set<string>();
+    for (const p of this.people) {
+      if (p.topicName) {
+        seen.add(p.topicName);
+      }
+    }
+    return Array.from(seen.values());
+  }
+
   onPageIndexChange(pageIndex: number): void {
     this.pageIndex = pageIndex;
   }
@@ -468,6 +494,11 @@ export class TicketTableComponent implements OnInit {
   }
 
   filterByPriority(): void {
+    this.pageIndex = 1;
+    this.filteredPeople = this.applyAll();
+  }
+
+  filterByTopic(): void {
     this.pageIndex = 1;
     this.filteredPeople = this.applyAll();
   }
@@ -540,9 +571,10 @@ export class TicketTableComponent implements OnInit {
         person.assignedName.toLowerCase().includes(searchQuery);
       const matchesStatus = !mappedStatus || person.actions === mappedStatus;
       const matchesPriority = !this.priorityFilter || person.priority === this.priorityFilter;
+      const matchesTopic = !this.topicFilter || person.topicName === this.topicFilter;
       const matchesCreatedRange = this.isWithinRange(person.createdDate, this.createdDateRange);
       const matchesDueRange = this.isWithinRange(person.dueDate, this.dueDateRange);
-      return matchesSearch && matchesStatus && matchesPriority && matchesCreatedRange && matchesDueRange;
+      return matchesSearch && matchesStatus && matchesPriority && matchesTopic && matchesCreatedRange && matchesDueRange;
     });
 
     if (this.sortField) {
@@ -565,6 +597,9 @@ export class TicketTableComponent implements OnInit {
           break;
         case 'priority':
           comparison = (this.priorityRank[a.priority] ?? 0) - (this.priorityRank[b.priority] ?? 0);
+          break;
+        case 'topicName':
+          comparison = a.topicName.localeCompare(b.topicName);
           break;
         case 'actions':
           comparison = (this.statusRank[a.actions] ?? 0) - (this.statusRank[b.actions] ?? 0);

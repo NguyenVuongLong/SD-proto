@@ -43,9 +43,10 @@ interface Person {
   dueDate: string;
   closedDate: string;
   response: string;
+  topicName: string;
 }
 
-type SortField = 'id' | 'creatorName' | 'priority' | 'actions' | 'createdDate' | 'dueDate';
+type SortField = 'id' | 'creatorName' | 'priority' | 'actions' | 'createdDate' | 'dueDate' | 'topicName';
 type SortOrder = 'asc' | 'desc';
 
 @Component({
@@ -97,6 +98,15 @@ type SortOrder = 'asc' | 'desc';
             </div>
             <div class="inline-flex items-center">
               <nz-select
+                class="min-w-[180px] capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
+                [(ngModel)]="topicFilter"
+                (ngModelChange)="filterByTopic()" nzPlaceHolder="Tìm theo chủ đề" nzAllowClear
+              >
+                <nz-option *ngFor="let t of topicFilterOptions" [nzValue]="t" [nzLabel]="t"></nz-option>
+              </nz-select>
+            </div>
+            <div class="inline-flex items-center">
+              <nz-select
                 class="min-w-[160px] capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
                 [(ngModel)]="priorityFilter"
                 (ngModelChange)="filterByPriority()" nzPlaceHolder="Tìm theo ưu tiên" nzAllowClear
@@ -145,6 +155,7 @@ type SortOrder = 'asc' | 'desc';
                   <tr>
                     <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden rounded-s-[10px] capitalize cursor-pointer select-none" (click)="toggleSort('id')">Mã Ticket{{ sortArrow('id') }}</th>
                     <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize">Tiêu đề</th>
+                    <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('topicName')">Chủ đề{{ sortArrow('topicName') }}</th>
                     <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('creatorName')">Người tạo{{ sortArrow('creatorName') }}</th>
                     <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('priority')">Ưu tiên{{ sortArrow('priority') }}</th>
                     <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('actions')">Trạng thái{{ sortArrow('actions') }}</th>
@@ -156,6 +167,7 @@ type SortOrder = 'asc' | 'desc';
                   <tr class="group max-lg:whitespace-nowrap cursor-pointer" *ngFor="let person of pagedPeople" (click)="viewTicket(person)">
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">#{{ person.id }}</td>
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.subject }}</td>
+                    <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.topicName }}</td>
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
                     <div class="flex items-center">
                       <div class="me-2.5 w-[34px] h-[34px]">
@@ -209,6 +221,7 @@ type SortOrder = 'asc' | 'desc';
             </span>
           </span>
           <span class="text-[13px] font-medium text-theme-gray dark:text-white/60">Ưu tiên: <span class="font-semibold text-dark dark:text-white/[.87]">{{ ticket.priority }}</span></span>
+          <span class="text-[13px] font-medium text-theme-gray dark:text-white/60">Chủ đề: <span class="font-semibold text-dark dark:text-white/[.87]">{{ ticket.topicName }}</span></span>
         </div>
         <div>
           <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Tiêu đề</div>
@@ -293,6 +306,7 @@ type SortOrder = 'asc' | 'desc';
         <div class="flex flex-wrap items-center gap-[10px] pt-[18px] border-t border-regular dark:border-white/10">
           <button nz-button (click)="openChangeAssigneeModal()">Đổi người xử lý</button>
           <button nz-button (click)="openChangePriorityModal()">Đổi ưu tiên</button>
+          <button nz-button (click)="openChangeTopicModal()">Đổi chủ đề</button>
           <button nz-button (click)="openChangeDueDateModal()">Đổi ngày hết hạn</button>
           <button *ngIf="ticket.actions !== 'Đóng'" nz-button nzType="primary" nzDanger (click)="closeTicket()">Đóng ticket</button>
           <button *ngIf="ticket.actions === 'Đóng'" nz-button nzType="primary" (click)="reopenTicket()">Mở lại</button>
@@ -338,6 +352,23 @@ type SortOrder = 'asc' | 'desc';
       <button nz-button (click)="ref.destroy()">Hủy</button>
       <button nz-button nzType="primary" (click)="confirmChangePriority(ref)">Lưu</button>
     </ng-template>
+    <ng-template #topicTplTitle>
+      <span>Đổi chủ đề</span>
+    </ng-template>
+    <ng-template #topicTplContent>
+      <nz-select
+        class="w-full capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
+        [(ngModel)]="selectedNewTopic"
+        name="newTopic"
+        nzPlaceHolder="Chọn chủ đề"
+      >
+        <nz-option *ngFor="let t of topicFilterOptions" [nzValue]="t" [nzLabel]="t"></nz-option>
+      </nz-select>
+    </ng-template>
+    <ng-template #topicTplFooter let-ref="modalRef">
+      <button nz-button (click)="ref.destroy()">Hủy</button>
+      <button nz-button nzType="primary" (click)="confirmChangeTopic(ref)">Lưu</button>
+    </ng-template>
     <ng-template #dueDateTplTitle>
       <span>Đổi ngày hết hạn</span>
     </ng-template>
@@ -369,6 +400,9 @@ export class ManageTicketComponent implements OnInit {
   @ViewChild('priorityTplTitle') priorityTplTitle!: TemplateRef<{}>;
   @ViewChild('priorityTplContent') priorityTplContent!: TemplateRef<{}>;
   @ViewChild('priorityTplFooter') priorityTplFooter!: TemplateRef<{}>;
+  @ViewChild('topicTplTitle') topicTplTitle!: TemplateRef<{}>;
+  @ViewChild('topicTplContent') topicTplContent!: TemplateRef<{}>;
+  @ViewChild('topicTplFooter') topicTplFooter!: TemplateRef<{}>;
   @ViewChild('dueDateTplTitle') dueDateTplTitle!: TemplateRef<{}>;
   @ViewChild('dueDateTplContent') dueDateTplContent!: TemplateRef<{}>;
   @ViewChild('dueDateTplFooter') dueDateTplFooter!: TemplateRef<{}>;
@@ -376,6 +410,7 @@ export class ManageTicketComponent implements OnInit {
   searchValue = '';
   statusFilter = '';
   priorityFilter = '';
+  topicFilter = '';
   createdDateRange: Date[] | null = null;
   dueDateRange: Date[] | null = null;
   people: Person[] = [];
@@ -390,6 +425,7 @@ export class ManageTicketComponent implements OnInit {
   subModalRef?: NzModalRef;
   selectedNewAssignedUser: string | null = null;
   selectedNewPriority: string | null = null;
+  selectedNewTopic: string | null = null;
   selectedNewDueDate: Date | null = null;
   newResponseText = '';
 
@@ -446,6 +482,18 @@ export class ManageTicketComponent implements OnInit {
     for (const p of this.people) {
       if (!seen.has(p.assignedUser)) {
         seen.set(p.assignedUser, { user: p.assignedUser, name: p.assignedName, phone: p.assignedPhone, email: p.assignedEmail });
+      }
+    }
+    return Array.from(seen.values());
+  }
+
+  /** Unique list of topic names present in the loaded ticket data, used for
+   * both the topic filter dropdown and the "Đổi chủ đề" change dialog. */
+  get topicFilterOptions(): string[] {
+    const seen = new Set<string>();
+    for (const p of this.people) {
+      if (p.topicName) {
+        seen.add(p.topicName);
       }
     }
     return Array.from(seen.values());
@@ -539,6 +587,31 @@ export class ManageTicketComponent implements OnInit {
   confirmChangePriority(modalRef?: NzModalRef): void {
     if (this.selectedTicket && this.selectedNewPriority) {
       this.selectedTicket.priority = this.selectedNewPriority;
+    }
+    if (modalRef) {
+      modalRef.destroy();
+    }
+  }
+
+  // --- Change Chủ đề ---
+  openChangeTopicModal(): void {
+    if (!this.selectedTicket) {
+      return;
+    }
+    this.selectedNewTopic = this.selectedTicket.topicName;
+    this.subModalRef = this.modal.create({
+      nzTitle: this.topicTplTitle,
+      nzContent: this.topicTplContent,
+      nzFooter: this.topicTplFooter,
+      nzMaskClosable: true,
+      nzClosable: true,
+      nzWidth: 380
+    });
+  }
+
+  confirmChangeTopic(modalRef?: NzModalRef): void {
+    if (this.selectedTicket && this.selectedNewTopic) {
+      this.selectedTicket.topicName = this.selectedNewTopic;
     }
     if (modalRef) {
       modalRef.destroy();
@@ -648,6 +721,11 @@ export class ManageTicketComponent implements OnInit {
     this.filteredPeople = this.applyAll();
   }
 
+  filterByTopic(): void {
+    this.pageIndex = 1;
+    this.filteredPeople = this.applyAll();
+  }
+
   filterByCreatedDateRange(): void {
     this.pageIndex = 1;
     this.filteredPeople = this.applyAll();
@@ -716,9 +794,10 @@ export class ManageTicketComponent implements OnInit {
         person.assignedName.toLowerCase().includes(searchQuery);
       const matchesStatus = !mappedStatus || person.actions === mappedStatus;
       const matchesPriority = !this.priorityFilter || person.priority === this.priorityFilter;
+      const matchesTopic = !this.topicFilter || person.topicName === this.topicFilter;
       const matchesCreatedRange = this.isWithinRange(person.createdDate, this.createdDateRange);
       const matchesDueRange = this.isWithinRange(person.dueDate, this.dueDateRange);
-      return matchesSearch && matchesStatus && matchesPriority && matchesCreatedRange && matchesDueRange;
+      return matchesSearch && matchesStatus && matchesPriority && matchesTopic && matchesCreatedRange && matchesDueRange;
     });
 
     if (this.sortField) {
@@ -741,6 +820,9 @@ export class ManageTicketComponent implements OnInit {
           break;
         case 'priority':
           comparison = (this.priorityRank[a.priority] ?? 0) - (this.priorityRank[b.priority] ?? 0);
+          break;
+        case 'topicName':
+          comparison = a.topicName.localeCompare(b.topicName);
           break;
         case 'actions':
           comparison = (this.statusRank[a.actions] ?? 0) - (this.statusRank[b.actions] ?? 0);
