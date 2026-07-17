@@ -14,7 +14,6 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { HeaderComponent } from './header/header.component';
-import { ProfileComponent } from './profile/profile.component';
 
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -64,8 +63,7 @@ registerLocaleData(en);
     AppComponent,
     LoginComponent,
     SidebarComponent,
-    HeaderComponent,
-    ProfileComponent
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
