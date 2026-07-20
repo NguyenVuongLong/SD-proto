@@ -119,11 +119,17 @@ type SortOrder = 'asc' | 'desc';
               <nz-select
                 class="min-w-[180px] capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
                 [(ngModel)]="statusFilter"
-                (ngModelChange)="filterByStatus()" nzPlaceHolder="Tìm theo trạng thái" nzAllowClear
+                (ngModelChange)="onStatusFilterChange($event)" nzPlaceHolder="Tìm theo trạng thái" nzAllowClear nzMode="multiple"
               >
-                <nz-option nzValue="open" nzLabel="Mở"></nz-option>
-                <nz-option nzValue="progress" nzLabel="Đang xử lý"></nz-option>
-                <nz-option nzValue="close" nzLabel="Hoàn thành"></nz-option>
+                <nz-option-group nzLabel="Trạng thái xử lý">
+                  <nz-option nzValue="open" nzLabel="Mở"></nz-option>
+                  <nz-option nzValue="progress" nzLabel="Đang xử lý"></nz-option>
+                  <nz-option nzValue="close" nzLabel="Hoàn thành"></nz-option>
+                </nz-option-group>
+                <nz-option-group nzLabel="Tiến độ">
+                  <nz-option nzValue="ontrack" nzLabel="Đúng tiến độ"></nz-option>
+                  <nz-option nzValue="overdue" nzLabel="Trễ hạn"></nz-option>
+                </nz-option-group>
               </nz-select>
             </div>
             <div class="inline-flex items-center">
@@ -393,7 +399,7 @@ export class TicketTableComponent implements OnInit {
   @ViewChild('detailTplFooter') detailTplFooter!: TemplateRef<{}>;
 
   searchValue = '';
-  statusFilter = '';
+  statusFilter: string[] = [];
   priorityFilter = '';
   topicFilter = '';
   createdDateRange: Date[] | null = null;
@@ -429,6 +435,13 @@ export class TicketTableComponent implements OnInit {
     open: 'Mở',
     close: 'Hoàn thành',
     progress: 'Đang xử lý'
+  };
+
+  // Maps the dropdown's schedule-status filter values to the labels
+  // returned by getScheduleStatus().
+  private readonly scheduleStatusMap: { [key: string]: string } = {
+    ontrack: 'Đúng tiến độ',
+    overdue: 'Trễ hạn'
   };
 
   // Custom priority ranking so "Gấp" sorts above "Cao", "Trung bình", and "Thấp"
@@ -528,6 +541,30 @@ export class TicketTableComponent implements OnInit {
     this.filteredPeople = this.applyAll();
   }
 
+  /**
+   * The Trạng thái filter has two independent option sets ("Trạng thái xử lý" and
+   * "Tiến độ"). Picking a new option within a set replaces whichever was already
+   * selected in that same set, so at most one value per set can be active at once.
+   */
+  onStatusFilterChange(values: string[]): void {
+    const previous = this.statusFilter;
+    let constrained = this.keepLatestPerGroup(values, previous, Object.keys(this.statusMap));
+    constrained = this.keepLatestPerGroup(constrained, previous, Object.keys(this.scheduleStatusMap));
+    this.statusFilter = constrained;
+    this.filterByStatus();
+  }
+
+  /** Within a single option group, keeps only the most recently added value (or the last one if none is new). */
+  private keepLatestPerGroup(values: string[], previous: string[], group: string[]): string[] {
+    const selectedInGroup = values.filter((v) => group.includes(v));
+    if (selectedInGroup.length <= 1) {
+      return values;
+    }
+    const newlyAdded = selectedInGroup.find((v) => !previous.includes(v));
+    const keep = newlyAdded ?? selectedInGroup[selectedInGroup.length - 1];
+    return values.filter((v) => !group.includes(v) || v === keep);
+  }
+
   filterByPriority(): void {
     this.pageIndex = 1;
     this.filteredPeople = this.applyAll();
@@ -619,16 +656,17 @@ export class TicketTableComponent implements OnInit {
   /** Runs the combined pipeline: search by id-or-name -> filter by status/priority/date ranges -> sort. */
   private applyAll(): Person[] {
     const searchQuery = this.searchValue.trim().toLowerCase();
-    const mappedStatus = this.statusFilter && this.statusFilter !== 'all'
-      ? this.statusMap[this.statusFilter]
-      : null;
+    const selectedAction = this.statusFilter.find((v) => this.statusMap[v]);
+    const selectedSchedule = this.statusFilter.find((v) => this.scheduleStatusMap[v]);
 
     let result = this.people.filter((person) => {
       const matchesSearch = !searchQuery ||
         person.id.toLowerCase().includes(searchQuery) ||
         person.creatorName.toLowerCase().includes(searchQuery) ||
         person.assignedName.toLowerCase().includes(searchQuery);
-      const matchesStatus = !mappedStatus || person.actions === mappedStatus;
+      const matchesStatus =
+        (!selectedAction || person.actions === this.statusMap[selectedAction]) &&
+        (!selectedSchedule || this.getScheduleStatus(person) === this.scheduleStatusMap[selectedSchedule]);
       const matchesPriority = !this.priorityFilter || person.priority === this.priorityFilter;
       const matchesTopic = !this.topicFilter || person.topicName === this.topicFilter;
       const matchesCreatedRange = this.isWithinRange(person.createdDate, this.createdDateRange);
