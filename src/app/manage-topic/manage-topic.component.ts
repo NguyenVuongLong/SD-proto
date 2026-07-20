@@ -61,6 +61,7 @@ type SortOrder = 'asc' | 'desc';
         useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
     }
   ],
+  styleUrls: ['./manage-topic.component.scss'],
   template: `
     <ng-template #loadingSkeleton>
       <nz-skeleton class="bg-white dark:bg-white/10 rounded-6 p-[30px] pt-[15px]" nzShape="circle" [nzAvatar]="true" [nzActive]="true"
@@ -341,9 +342,11 @@ type SortOrder = 'asc' | 'desc';
       </div>
     </ng-template>
     <ng-template #detailTplFooter let-ref="modalRef">
-      <button nz-button (click)="destroyDetailModal(ref)">
-        Đóng
-      </button>
+      <div class="detail-footer">
+        <button nz-button (click)="destroyDetailModal(ref)">
+          Đóng
+        </button>
+      </div>
     </ng-template>
 
     <ng-template #assigneeTplTitle>

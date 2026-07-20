@@ -43,12 +43,52 @@
   display: none;
 }
 
+.app-sidebar__scroll {
+  flex: 1;
+  min-height: 0;
+}
+
+.app-sidebar__group-label {
+  font-weight: 700;
+  font-size: 15px;
+  padding: 12px 18px 4px;
+}
+
 .app-sidebar__menu {
   flex: 1;
   margin: 0;
+  border-inline-end: 0;
+  background: transparent;
+}
+
+.app-sidebar__menu .ant-menu-submenu-title,
+.app-sidebar__menu .ant-menu-item a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .app-sidebar__collapse {
   width: calc(100% - 32px);
   margin: 24px 16px;
+}
+
+.app-sidebar__menu .ant-menu-submenu-title {
+  cursor: pointer;
+}
+
+.app-sidebar__menu .dropdown-menu {
+  overflow: hidden;
+  max-height: 1000px;
+  opacity: 1;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+}
+
+.app-sidebar__menu .dropdown-menu.app-sidebar__submenu--collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+.app-sidebar__menu .ant-menu-submenu-arrow {
+  transition: transform 0.25s ease;
 }

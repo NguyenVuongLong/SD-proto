@@ -1,30 +1,48 @@
-import { Component, EventEmitter, Input, Output, OnInit, OnDestroy } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+interface SidebarMenuItem {
+  title: string;
+  path?: string;
+  icon?: string;
+  iconType?: 'nzIcon' | 'fontawesome';
+  iconTheme?: 'outline' | 'fill' | 'twotone';
+  submenu?: SidebarMenuItem[];
+}
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit, OnDestroy {
+export class SidebarComponent {
   @Input() collapsed = false;
   @Output() toggle = new EventEmitter<void>();
 
-  private sub?: Subscription;
+  menuGroupLabel = 'Cá nhân';
 
-  constructor(private router: Router) {}
+  /** Index of the currently expanded submenu (accordion-style, one open at a time) */
+  expandedIndex: number | null = 0;
 
-  ngOnInit(): void {
-    
-  }
-
-
-  ngOnDestroy(): void {
-    this.sub?.unsubscribe();
-  }
+  menuItems: SidebarMenuItem[] = [
+    {
+      title: 'Hỗ trợ', 
+      icon: 'customer-service', 
+      iconType: 'nzIcon', 
+      iconTheme: 'outline',
+      submenu: [
+        { title: 'Dashboard', path: '/dashboard' },
+        { title: 'My Tickets', path: '/my-tickets' },
+        { title: 'Quản lý Ticket', path: '/manage-tickets' },
+        { title: 'Quản lý Chủ đề', path: '/manage-topic' }
+      ]
+    }
+  ];
 
   onToggle(): void {
     this.toggle.emit();
+  }
+
+  toggleSubmenu(index: number): void {
+    this.expandedIndex = this.expandedIndex === index ? null : index;
   }
 }

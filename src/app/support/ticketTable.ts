@@ -33,11 +33,11 @@ interface Person {
   creatorUser: string;
   creatorName: string;
   creatorPhone: string;
-  creatorEmail: string;
+  creatorDept: string;
   assignedUser: string;
   assignedName: string;
   assignedPhone: string;
-  assignedEmail: string;
+  assignedDept: string;
   createdDate: string;
   dueDate: string;
   closedDate: string;
@@ -72,6 +72,7 @@ type SortOrder = 'asc' | 'desc';
         useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
     }
   ],
+  styleUrls: ['./support.component.scss'],
   template: `
     <div class="bg-white dark:bg-white/10 m-0 p-0 text-theme-gray dark:text-white/60 text-[15px] rounded-10 relative mb-[25px]">
       <div class="pt-[30px] pb-[9px] px-[25px] text-dark dark:text-white/[.87] font-medium text-[17px] flex items-center justify-between max-sm:flex-col max-sm:gap-[15px]">
@@ -121,8 +122,8 @@ type SortOrder = 'asc' | 'desc';
                 (ngModelChange)="filterByStatus()" nzPlaceHolder="Tìm theo trạng thái" nzAllowClear
               >
                 <nz-option nzValue="open" nzLabel="Mở"></nz-option>
-                <nz-option nzValue="overdue" nzLabel="Quá hạn"></nz-option>
-                <nz-option nzValue="close" nzLabel="Đóng"></nz-option>
+                <nz-option nzValue="progress" nzLabel="Đang xử lý"></nz-option>
+                <nz-option nzValue="close" nzLabel="Hoàn thành"></nz-option>
               </nz-select>
             </div>
             <div class="inline-flex items-center">
@@ -174,7 +175,7 @@ type SortOrder = 'asc' | 'desc';
                         <span class="font-medium capitalize text-dark dark:text-white/[.87] text-15 block">{{ person.assignedName }}</span>
                         <div class="text-[12px] leading-[1.6] text-light dark:text-white/60 whitespace-nowrap">
                           <div>{{ person.assignedPhone }}</div>
-                          <div>{{ person.assignedEmail }}</div>
+                          <div>{{ person.assignedDept }}</div>
                         </div>
                       </div>
                     </div>
@@ -185,6 +186,11 @@ type SortOrder = 'asc' | 'desc';
                         class="inline-flex items-center justify-center bg-{{ person.status }}/10 text-{{ person.status }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize"
                       >
                         {{ person.actions }}
+                      </span>
+                      <span
+                        class="block mt-1 text-[11px] font-medium capitalize bg-{{ getScheduleStatusColor(person) }}/10 text-{{ getScheduleStatusColor(person) }} px-2 py-0.5 rounded-[15px] w-fit"
+                      >
+                        {{ getScheduleStatus(person) }}
                       </span>
                     </td>
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.createdDate }}</td>
@@ -211,6 +217,14 @@ type SortOrder = 'asc' | 'desc';
       <form nz-form nzLayout="vertical">
           <nz-form-item>
             <nz-form-control>
+              <nz-form-label nzRequired class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Phòng ban:</nz-form-label>
+              <nz-select class="min-w-[260px] capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[50px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[5px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-theme-gray dark:[&>.ant-select-arrow]:text-white/60" [(ngModel)]="newTicketDepartment" (ngModelChange)="onNewTicketDepartmentChange()" nzPlaceHolder="Chọn phòng ban" name="phongBan">
+                <nz-option *ngFor="let dept of departmentOptions" [nzValue]="dept" [nzLabel]="dept"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item *ngIf="newTicketDepartment">
+            <nz-form-control>
               <nz-form-label nzRequired class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Chủ đề:</nz-form-label>
               <nz-select class="min-w-[260px] capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[50px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[5px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-theme-gray dark:[&>.ant-select-arrow]:text-white/60" [(ngModel)]="newTicketTopic" nzPlaceHolder="Chọn chủ đề" name="chuDe">
                 <nz-option *ngFor="let topic of topicOptions" [nzValue]="topic" [nzLabel]="topic"></nz-option>
@@ -220,12 +234,6 @@ type SortOrder = 'asc' | 'desc';
           <ng-container *ngIf="newTicketTopic">
           <nz-form-item>
             <nz-form-control>
-              <nz-form-label nzRequired class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Tiêu đề:</nz-form-label>
-              <input class="h-[50px] border-normal dark:border-white/10 px-[20px] placeholder-shown:text-light-extra dark:placeholder-shown:text-white/60 rounded-[5px] dark:bg-white/10 dark:text-white/[.87]" type="text" nz-input placeholder="Tiêu đề" name="tieuDe" ngModel>
-            </nz-form-control>
-          </nz-form-item>
-          <nz-form-item>
-            <nz-form-control>
             <nz-form-label nzRequired class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Ưu tiên:</nz-form-label>
               <nz-select class="min-w-[260px] capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[50px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[5px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-theme-gray dark:[&>.ant-select-arrow]:text-white/60" nzPlaceHolder="Chọn mức độ ưu tiên" name="uuTien" ngModel>
                 <nz-option nzValue="Gấp" nzLabel="Gấp"></nz-option>
@@ -233,6 +241,12 @@ type SortOrder = 'asc' | 'desc';
                 <nz-option nzValue="Trung bình" nzLabel="Trung bình"></nz-option>
                 <nz-option nzValue="Thấp" nzLabel="Thấp"></nz-option>
               </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control>
+              <nz-form-label nzRequired class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Tiêu đề:</nz-form-label>
+              <input class="h-[50px] border-normal dark:border-white/10 px-[20px] placeholder-shown:text-light-extra dark:placeholder-shown:text-white/60 rounded-[5px] dark:bg-white/10 dark:text-white/[.87]" type="text" nz-input placeholder="Tiêu đề" name="tieuDe" ngModel>
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
@@ -282,6 +296,9 @@ type SortOrder = 'asc' | 'desc';
             <span class="inline-flex items-center justify-center bg-{{ ticket.status }}/10 text-{{ ticket.status }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize">
               {{ ticket.actions }}
             </span>
+            <span class="inline-flex items-center ms-1 text-[11px] font-medium capitalize bg-{{ getScheduleStatusColor(ticket) }}/10 text-{{ getScheduleStatusColor(ticket) }} px-2 py-0.5 rounded-[15px]">
+              {{ getScheduleStatus(ticket) }}
+            </span>
           </span>
           <span class="text-[13px] font-medium text-theme-gray dark:text-white/60">Ưu tiên: <span class="font-semibold text-dark dark:text-white/[.87]">{{ ticket.priority }}</span></span>
           <span class="text-[13px] font-medium text-theme-gray dark:text-white/60">Chủ đề: <span class="font-semibold text-dark dark:text-white/[.87]">{{ ticket.topicName }}</span></span>
@@ -302,7 +319,7 @@ type SortOrder = 'asc' | 'desc';
               <div>
                 <span class="block text-[15px] font-medium text-dark dark:text-white/[.87]">{{ ticket.creatorName }}</span>
                 <span class="block text-[13px] text-theme-gray dark:text-white/60">{{ ticket.creatorPhone }}</span>
-                <span class="block text-[13px] text-theme-gray dark:text-white/60">{{ ticket.creatorEmail }}</span>
+                <span class="block text-[13px] text-theme-gray dark:text-white/60">{{ ticket.creatorDept }}</span>
               </div>
             </div>
           </div>
@@ -313,7 +330,7 @@ type SortOrder = 'asc' | 'desc';
               <div>
                 <span class="block text-[15px] font-medium text-dark dark:text-white/[.87]">{{ ticket.assignedName }}</span>
                 <span class="block text-[13px] text-theme-gray dark:text-white/60">{{ ticket.assignedPhone }}</span>
-                <span class="block text-[13px] text-theme-gray dark:text-white/60">{{ ticket.assignedEmail }}</span>
+                <span class="block text-[13px] text-theme-gray dark:text-white/60">{{ ticket.assignedDept }}</span>
               </div>
             </div>
           </div>
@@ -328,8 +345,8 @@ type SortOrder = 'asc' | 'desc';
             <div class="text-[15px] text-dark dark:text-white/[.87]">{{ ticket.dueDate }}</div>
           </div>
           <div>
-            <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Ngày đóng</div>
-            <div class="text-[15px] text-dark dark:text-white/[.87]">{{ ticket.closedDate || 'Chưa đóng' }}</div>
+            <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Ngày hoàn thành</div>
+            <div class="text-[15px] text-dark dark:text-white/[.87]">{{ ticket.closedDate || 'Chưa hoàn thành' }}</div>
           </div>
         </div>
         <div *ngIf="ticket.attachedFile">
@@ -358,9 +375,11 @@ type SortOrder = 'asc' | 'desc';
       </div>
     </ng-template>
     <ng-template #detailTplFooter let-ref="modalRef">
-      <button nz-button (click)="destroyDetailModal(ref)">
-        Đóng
-      </button>
+      <div class="detail-footer">
+        <button nz-button (click)="destroyDetailModal(ref)">
+          Đóng
+        </button>
+    </div>
     </ng-template>
   `,
 })
@@ -393,9 +412,14 @@ export class TicketTableComponent implements OnInit {
   pageIndex = 1;
   readonly pageSize = 10;
 
+  // Options for the "Phòng ban" dropdown in the Tạo Ticket modal; the
+  // "Chủ đề" field only renders once one of these has been picked.
+  departmentOptions: string[] = ['P.CNTT', 'P.QTTH', 'P.QTNS'];
+  newTicketDepartment: string | null = null;
+
   // Options for the "Chủ đề" dropdown in the Tạo Ticket modal; the rest of
   // the form only renders once one of these has been picked.
-  readonly topicOptions: string[] = ['P.CNTT', 'Hỗ trợ kĩ thuật', 'Hỗ trợ ứng dụng'];
+  topicOptions: string[] = [];
   newTicketTopic: string | null = null;
   newTicketAttachedFile: string | null = null;
 
@@ -403,8 +427,8 @@ export class TicketTableComponent implements OnInit {
   // values stored in the `actions` field of the JSON data.
   private readonly statusMap: { [key: string]: string } = {
     open: 'Mở',
-    close: 'Đóng',
-    overdue: 'Quá hạn'
+    close: 'Hoàn thành',
+    progress: 'Đang xử lý'
   };
 
   // Custom priority ranking so "Gấp" sorts above "Cao", "Trung bình", and "Thấp"
@@ -420,8 +444,8 @@ export class TicketTableComponent implements OnInit {
   // lifecycle order (Mở -> Quá hạn -> Đóng) instead of alphabetically.
   private readonly statusRank: { [key: string]: number } = {
     'Mở': 1,
-    'Quá hạn': 2,
-    'Đóng': 3
+    'Đang xử lý': 2,
+    'Hoàn thành': 3
   };
 
   constructor(private http: HttpClient, private modal: NzModalService) {}
@@ -456,7 +480,7 @@ export class TicketTableComponent implements OnInit {
       nzFooter: this.detailTplFooter,
       nzMaskClosable: true,
       nzClosable: true,
-      nzWidth: 620
+      nzWidth: 730
     });
     // Only clear the selected ticket once the modal has fully finished closing
     // (whichever way it was closed), so the content doesn't disappear mid-animation.
@@ -479,6 +503,17 @@ export class TicketTableComponent implements OnInit {
       },
       (error) => {
         console.log('Error reading JSON file:', error);
+      }
+    );
+
+    this.http.get<any[]>('assets/data/features/topic-table.json').subscribe(
+      (topics) => {
+        this.topicOptions = topics
+          .filter((topic) => topic?.topicName)
+          .map((topic) => topic.topicName);
+      },
+      (error) => {
+        console.log('Error reading topic JSON file:', error);
       }
     );
   }
@@ -544,6 +579,30 @@ export class TicketTableComponent implements OnInit {
       return 0;
     }
     return new Date(year, month - 1, day).getTime();
+  }
+
+  /**
+   * Schedule status shown under "Trạng thái":
+   * - Closed tickets compare their closedDate against dueDate (closed late = Overdue).
+   * - Open tickets compare today's date against dueDate (past due, still open = Overdue).
+   */
+  getScheduleStatus(person: Person): 'Đúng tiến độ' | 'Trễ hạn' {
+    const due = this.parseDate(person.dueDate);
+    if (!due) {
+      return 'Đúng tiến độ';
+    }
+    if (person.closedDate) {
+      const closed = this.parseDate(person.closedDate);
+      return closed > due ? 'Trễ hạn' : 'Đúng tiến độ';
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today.getTime() > due ? 'Trễ hạn' : 'Đúng tiến độ';
+  }
+
+  /** Color token (matches the existing bg-{color}/10 text-{color} badge pattern) for the schedule status. */
+  getScheduleStatusColor(person: Person): string {
+    return this.getScheduleStatus(person) === 'Trễ hạn' ? 'danger' : 'success';
   }
 
   /** Checks whether a "dd/MM/yyyy" date string falls within a [start, end] range (inclusive, day-level precision). */
@@ -619,6 +678,7 @@ export class TicketTableComponent implements OnInit {
   }
 
   createTplModal(tplTitle?: TemplateRef<{}>, tplContent?: TemplateRef<{}>, tplFooter?: TemplateRef<{}>): void {
+    this.newTicketDepartment = null;
     this.newTicketTopic = null;
     this.newTicketAttachedFile = null;
     this.modalRef = this.modal.create({
@@ -636,8 +696,15 @@ export class TicketTableComponent implements OnInit {
     if (modalRef) {
       modalRef.destroy();
     }
+    this.newTicketDepartment = null;
     this.newTicketTopic = null;
     this.newTicketAttachedFile = null;
+  }
+
+  /** Clears the previously chosen topic whenever the department changes, so a
+   * stale "Chủ đề" selection from a different department can't linger. */
+  onNewTicketDepartmentChange(): void {
+    this.newTicketTopic = null;
   }
 
   /** Captures the chosen file's name for the create-ticket form without actually

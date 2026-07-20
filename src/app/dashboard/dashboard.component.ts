@@ -34,11 +34,11 @@ interface Ticket {
   creatorUser: string;
   creatorName: string;
   creatorPhone: string;
-  creatorEmail: string;
+  creatorDept: string;
   assignedUser: string;
   assignedName: string;
   assignedPhone: string;
-  assignedEmail: string;
+  assignedDept: string;
   createdDate: string;
   dueDate: string;
   closedDate: string;
@@ -324,8 +324,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           {
             label: 'Tổng số ticket',
             data: this.trend.map(p => p.total),
-            borderColor: '#4C6FFF',
-            backgroundColor: 'rgba(76, 111, 255, 0.12)',
+            borderColor: '#8A5CF6',
+            backgroundColor: 'rgba(138, 92, 246, 0.12)',
             tension: 0.35,
             fill: false,
             pointRadius: 4
@@ -333,8 +333,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           {
             label: 'Ticket mở',
             data: this.trend.map(p => p.open),
-            borderColor: '#8A5CF6',
-            backgroundColor: 'rgba(138, 92, 246, 0.12)',
+            borderColor: '#4C6FFF',
+            backgroundColor: 'rgba(76, 111, 255, 0.12)',
             tension: 0.35,
             fill: false,
             pointRadius: 4
@@ -380,11 +380,11 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const total = tickets.length;
 
-    // "Đóng" (closed) covers tickets explicitly closed by the requester.
-    const closed = tickets.filter(t => t.actions === 'Đóng').length;
+    // "Hoàn thành" (closed) covers tickets explicitly closed by the requester.
+    const closed = tickets.filter(t => t.actions === 'Hoàn thành').length;
 
-    // Still active tickets: anything not closed (covers both "Mở" and "Resolved" awaiting confirmation).
-    const activeTickets = tickets.filter(t => t.actions !== 'Đóng');
+    // Still active tickets: anything not closed (covers both "Mở" and "Đang xử lý").
+    const activeTickets = tickets.filter(t => t.actions !== 'Hoàn thành');
     const open = activeTickets.length;
 
     // Overdue: still active AND the due date has already passed.
