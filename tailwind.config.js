@@ -11,7 +11,7 @@ module.exports = {
         success: '#01B81A',
         pink: '#f2eafb',
         warning: '#FA8B0C',
-        danger: '#ff4d4f',
+        danger: '#FF4D4F',
         info: '#00AAFF',
         link: '#1890ff',
         dark: '#0A0A0A',
