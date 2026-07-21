@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SupportComponent } from './support/support.component';
 import { ManageTicketComponent } from './manage-ticket/manage-ticket.component';
+import { MonitorTicketComponent } from './monitor-ticket/monitor-ticket.component';
 import { ManageTopicComponent } from './manage-topic/manage-topic.component';
 
 const routes: Routes = [
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'my-tickets', component: SupportComponent },
   { path: 'manage-tickets', component: ManageTicketComponent },
+  { path: 'monitor-ticket', component: MonitorTicketComponent },
   { path: 'manage-topic', component: ManageTopicComponent },
   { path: '**', redirectTo: 'login' }
 ];

@@ -45,6 +45,14 @@
           </li>
           <li class="p-0 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-white/10 rounded-4" nz-menu-item>
             <a
+              [routerLink]="['/monitor-ticket']"
+              class="inline-flex items-center text-light dark:text-white/60 hover:text-primary hover:ps-6 w-full px-2.5 py-3 text-sm transition-all ease-in-out delay-150">
+              <i nz-icon nzType="search" nzTheme="outline" class="h-fit me-4 [&>svg]:w-[18px] [&>svg]:h-[18px]"></i>
+              Giám sát Ticket
+            </a>
+          </li>
+          <li class="p-0 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-white/10 rounded-4" nz-menu-item>
+            <a
               [routerLink]="['/manage-topic']"
               class="inline-flex items-center text-light dark:text-white/60 hover:text-primary hover:ps-6 w-full px-2.5 py-3 text-sm transition-all ease-in-out delay-150">
               <i nz-icon nzType="appstore" nzTheme="outline" class="h-fit me-4 [&>svg]:w-[18px] [&>svg]:h-[18px]"></i>

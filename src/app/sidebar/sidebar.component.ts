@@ -33,6 +33,7 @@ export class SidebarComponent {
         { title: 'Dashboard', path: '/dashboard' },
         { title: 'My Tickets', path: '/my-tickets' },
         { title: 'Quản lý Ticket', path: '/manage-tickets' },
+        { title: 'Giám sát Ticket', path: '/monitor-ticket' },
         { title: 'Quản lý Chủ đề', path: '/manage-topic' }
       ]
     }
