@@ -28,7 +28,6 @@ interface Person {
   content: string;
   attachedFile: string;
   actions: string;
-  status: string;
   priority: string;
   creatorUser: string;
   creatorName: string;
@@ -189,7 +188,7 @@ type SortOrder = 'asc' | 'desc';
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.priority }}</td>
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
                     <span
-                        class="inline-flex items-center justify-center bg-{{ person.status }}/10 text-{{ person.status }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize"
+                        class="inline-flex items-center justify-center bg-{{ getStatusColor(person.actions) }}/10 text-{{ getStatusColor(person.actions) }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize"
                       >
                         {{ person.actions }}
                       </span>
@@ -299,7 +298,7 @@ type SortOrder = 'asc' | 'desc';
       <div class="flex flex-col gap-[18px]" *ngIf="selectedTicket as ticket">
         <div class="flex items-center justify-between flex-wrap gap-[10px]">
           <span class="text-[13px] font-medium text-theme-gray dark:text-white/60">Trạng thái:
-            <span class="inline-flex items-center justify-center bg-{{ ticket.status }}/10 text-{{ ticket.status }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize">
+            <span class="inline-flex items-center justify-center bg-{{ getStatusColor(ticket.actions) }}/10 text-{{ getStatusColor(ticket.actions) }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize">
               {{ ticket.actions }}
             </span>
             <span class="inline-flex items-center ms-1 text-[11px] font-medium capitalize bg-{{ getScheduleStatusColor(ticket) }}/10 text-{{ getScheduleStatusColor(ticket) }} px-2 py-0.5 rounded-[15px]">
@@ -435,6 +434,15 @@ export class TicketTableComponent implements OnInit {
     open: 'Mở',
     close: 'Hoàn thành',
     progress: 'Đang xử lý'
+  };
+
+  // Color token (matches the existing bg-{color}/10 text-{color} badge pattern) for each
+  // possible `actions` value. The JSON no longer carries a separate `status` field — the
+  // badge color is derived natively from `actions` instead.
+  private readonly actionsColorMap: { [key: string]: string } = {
+    'Mở': 'secondary',
+    'Đang xử lý': 'warning',
+    'Hoàn thành': 'success'
   };
 
   // Maps the dropdown's schedule-status filter values to the labels
@@ -640,6 +648,11 @@ export class TicketTableComponent implements OnInit {
   /** Color token (matches the existing bg-{color}/10 text-{color} badge pattern) for the schedule status. */
   getScheduleStatusColor(person: Person): string {
     return this.getScheduleStatus(person) === 'Trễ hạn' ? 'danger' : 'success';
+  }
+
+  /** Color token (matches the existing bg-{color}/10 text-{color} badge pattern) for the ticket's action status, derived natively from `actions`. */
+  getStatusColor(actions: string): string {
+    return this.actionsColorMap[actions] ?? 'secondary';
   }
 
   /** Checks whether a "dd/MM/yyyy" date string falls within a [start, end] range (inclusive, day-level precision). */

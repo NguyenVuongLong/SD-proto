@@ -29,7 +29,6 @@ interface Ticket {
   content: string;
   attachedFile: string;
   actions: string;
-  status: string;
   priority: string;
   creatorUser: string;
   creatorName: string;
@@ -118,6 +117,16 @@ function getBucketInfo(date: Date, granularity: Granularity): { key: string; lab
   standalone: true,
   imports: [CommonModule, FormsModule, NzGridModule, NzCardModule, NzDatePickerModule, AngularSvgIconModule],
   template: `
+  <div class="flex items-center justify-between flex-wrap gap-[10px] mb-[20px]">
+    <h5 class="mb-0 text-lg font-medium text-dark dark:text-white/[.87]">Thống kê ticket</h5>
+    <nz-range-picker
+      [ngModel]="dateRange"
+      (ngModelChange)="onDateRangeChange($event)"
+      nzFormat="dd/MM/yyyy"
+      [nzPlaceHolder]="['Từ ngày', 'Đến ngày']">
+    </nz-range-picker>
+  </div>
+
   <div nz-row [nzGutter]="25">
     <div nz-col class="mb-[25px]" nzXs="24" nzMd="12" nzXXl="6">
       <div bordered="false"
@@ -215,12 +224,6 @@ function getBucketInfo(date: Date, granularity: Granularity): { key: string; lab
         <div class="flex items-center justify-between flex-wrap gap-[10px] mb-[20px]">
           <h5 class="mb-0 text-lg font-medium text-dark dark:text-white/[.87]">Thống kê ticket</h5>
           <div class="flex items-center flex-wrap gap-[10px]">
-            <nz-range-picker
-              [ngModel]="dateRange"
-              (ngModelChange)="onDateRangeChange($event)"
-              nzFormat="dd/MM/yyyy"
-              [nzPlaceHolder]="['Từ ngày', 'Đến ngày']">
-            </nz-range-picker>
             <div class="flex rounded-lg overflow-hidden border border-gray-200 dark:border-white/10">
               <button type="button"
                 (click)="setGranularity('day')"
@@ -271,7 +274,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   dateRange: Date[] | null = null;
 
   ngOnInit(): void {
-    this.stats = this.computeStats(this.tickets);
+    this.stats = this.computeStats(this.getFilteredTickets());
     this.trend = this.computeTrend(this.getFilteredTickets(), this.granularity);
   }
 
@@ -293,6 +296,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onDateRangeChange(range: Date[] | null): void {
     this.dateRange = range && range.length === 2 ? range : null;
+    this.stats = this.computeStats(this.getFilteredTickets());
     this.trend = this.computeTrend(this.getFilteredTickets(), this.granularity);
     this.chart?.destroy();
     this.renderChart();
