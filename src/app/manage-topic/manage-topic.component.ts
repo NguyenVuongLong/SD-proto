@@ -29,8 +29,10 @@ interface Topic {
   topicDescription: string;
   status: string; // 'active' | 'inactive'
   assignedEmployee: string;
-  prioritySLA: Record<string, string>;
-  SLA?: string[];
+  // Subset of the static SLA catalog (e.g. ['24','48']) that is enabled for this topic.
+  // The catalog itself (which hour values exist at all) is static and comes from the
+  // JSON data — topics can only toggle which of those values apply to them.
+  SLA: string[];
 }
 
 type SortField = 'id' | 'topicName' | 'assignedEmployee' | 'status';
@@ -98,13 +100,13 @@ type SortOrder = 'asc' | 'desc';
               </nz-select>
             </div>
             <div class="inline-flex items-center">
-              <input
-                class="h-10 min-w-[160px] px-[20px] text-body dark:text-white/60 bg-white dark:bg-white/10 border-normal border-1 dark:border-white/10 rounded-[6px]"
-                nz-input
-                placeholder="Tìm theo SLA"
+              <nz-select
+                class="min-w-[160px] [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
                 [(ngModel)]="slaFilter"
-                (ngModelChange)="filterBySLA()"
-              />
+                (ngModelChange)="filterBySLA()" nzPlaceHolder="Tìm theo SLA" nzAllowClear
+              >
+                <nz-option *ngFor="let slaValue of slaOptions" [nzValue]="slaValue" [nzLabel]="getSlaPriorityLabel(slaValue) + ' (' + slaValue + ' giờ)'"></nz-option>
+              </nz-select>
             </div>
             <div class="inline-flex items-center">
               <nz-select
@@ -139,9 +141,10 @@ type SortOrder = 'asc' | 'desc';
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ topic.assignedEmployee }}</td>
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
                       <div class="flex flex-wrap gap-[6px]">
-                        <span *ngFor="let item of getTopicPrioritySLAEntries(topic)" class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">
-                          {{ item.priority }}: {{ item.time }}
+                        <span *ngFor="let label of getTopicSlaLabels(topic)" class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">
+                          {{ label }}
                         </span>
+                        <span *ngIf="!topic.SLA.length" class="text-theme-gray dark:text-white/60">—</span>
                       </div>
                     </td>
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
@@ -213,23 +216,17 @@ type SortOrder = 'asc' | 'desc';
         </nz-form-item>
         <nz-form-item>
           <nz-form-control>
-            <nz-form-label class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">SLA theo ưu tiên:</nz-form-label>
-            <div class="flex flex-col gap-[12px]">
-              <div *ngFor="let priority of priorityLevels" class="flex items-center gap-[12px]">
-                <label class="min-w-[90px] text-[14px] font-medium text-dark dark:text-white/[.87]">{{ priority }}</label>
-                <div class="flex flex-1 items-center gap-[8px] rounded-[6px] border border-normal dark:border-white/10 bg-white dark:bg-white/10 px-[12px]">
-                  <input
-                    class="h-[40px] flex-1 border-0 bg-transparent px-0 text-dark dark:text-white/60 outline-none"
-                    [ngModel]="getSlaNumericValue(newTopicDraft.prioritySLA[priority])"
-                    (ngModelChange)="setNewTopicSlaValue(priority, $event)"
-                    [name]="'new-topic-sla-' + priority"
-                    type="number"
-                    min="0"
-                    placeholder="Nhập thời gian"
-                  />
-                  <span class="text-[14px] font-medium text-theme-gray dark:text-white/60">giờ</span>
-                </div>
-              </div>
+            <nz-form-label class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">SLA áp dụng:</nz-form-label>
+            <div class="flex flex-wrap gap-[16px]">
+              <label
+                *ngFor="let slaValue of slaOptions"
+                nz-checkbox
+                [ngModel]="isSlaEnabled(newTopicDraft.SLA, slaValue)"
+                (ngModelChange)="toggleNewTopicSla(slaValue, $event)"
+                [name]="'new-topic-sla-' + slaValue"
+              >
+                {{ getSlaPriorityLabel(slaValue) }} ({{ slaValue }} giờ)
+              </label>
             </div>
           </nz-form-control>
         </nz-form-item>
@@ -302,30 +299,22 @@ type SortOrder = 'asc' | 'desc';
         </div>
         <div>
           <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">SLA áp dụng</div>
-          <div *ngIf="!editingTopicDetails" class="flex flex-col gap-[8px]">
-            <div *ngFor="let item of getTopicPrioritySLAEntries(topic)" class="flex items-center justify-between gap-[12px] rounded-[8px] border border-regular dark:border-white/10 px-[12px] py-[8px]">
-              <span class="text-[13px] font-medium text-dark dark:text-white/[.87]">{{ item.priority }}</span>
-              <span class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">
-                {{ item.time }}
-              </span>
-            </div>
+          <div *ngIf="!editingTopicDetails" class="flex flex-wrap gap-[8px]">
+            <span *ngFor="let label of getTopicSlaLabels(topic)" class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">
+              {{ label }}
+            </span>
+            <span *ngIf="!topic.SLA.length" class="text-[13px] text-theme-gray dark:text-white/60">—</span>
           </div>
-          <div *ngIf="editingTopicDetails" class="flex flex-col gap-[12px]">
-            <div *ngFor="let priority of priorityLevels" class="flex items-center gap-[12px]">
-              <label class="min-w-[90px] text-[14px] font-medium text-dark dark:text-white/[.87]">{{ priority }}</label>
-              <div class="flex flex-1 items-center gap-[8px] rounded-[6px] border border-normal dark:border-white/10 bg-white dark:bg-white/10 px-[12px]">
-                <input
-                  class="h-[40px] flex-1 border-0 bg-transparent px-0 text-dark dark:text-white/60 outline-none"
-                  [ngModel]="getSlaNumericValue(editTopicPrioritySLA[priority])"
-                  (ngModelChange)="setEditTopicSlaValue(priority, $event)"
-                  [name]="'edit-topic-sla-' + priority"
-                  type="number"
-                  min="0"
-                  placeholder="Nhập thời gian"
-                />
-                <span class="text-[14px] font-medium text-theme-gray dark:text-white/60">giờ</span>
-              </div>
-            </div>
+          <div *ngIf="editingTopicDetails" class="flex flex-wrap gap-[16px]">
+            <label
+              *ngFor="let slaValue of slaOptions"
+              nz-checkbox
+              [ngModel]="isSlaEnabled(editTopicSLA, slaValue)"
+              (ngModelChange)="toggleEditTopicSla(slaValue, $event)"
+              [name]="'edit-topic-sla-' + slaValue"
+            >
+              {{ getSlaPriorityLabel(slaValue) }} ({{ slaValue }} giờ)
+            </label>
           </div>
         </div>
         <div class="flex flex-wrap items-center justify-left gap-[10px] pt-[18px] border-t border-regular dark:border-white/10">
@@ -371,22 +360,16 @@ type SortOrder = 'asc' | 'desc';
       <span>Đổi SLA áp dụng</span>
     </ng-template>
     <ng-template #slaTplContent>
-      <div class="flex flex-col gap-[12px]">
-        <div *ngFor="let priority of priorityLevels" class="flex items-center gap-[12px]">
-          <label class="min-w-[90px] text-[14px] font-medium text-dark dark:text-white/[.87]">{{ priority }}</label>
-          <div class="flex flex-1 items-center gap-[8px] rounded-[6px] border border-normal dark:border-white/10 bg-white dark:bg-white/10 px-[12px]">
-            <input
-              class="h-[40px] flex-1 border-0 bg-transparent px-0 text-dark dark:text-white/60 outline-none"
-              [ngModel]="getSlaNumericValue(selectedPrioritySLA[priority])"
-              (ngModelChange)="setSelectedPrioritySlaValue(priority, $event)"
-              [name]="'sla-' + priority"
-              type="number"
-              min="0"
-              placeholder="Nhập thời gian"
-            />
-            <span class="text-[14px] font-medium text-theme-gray dark:text-white/60">giờ</span>
-          </div>
-        </div>
+      <div class="flex flex-wrap gap-[16px]">
+        <label
+          *ngFor="let slaValue of slaOptions"
+          nz-checkbox
+          [ngModel]="isSlaEnabled(selectedTopicSLA, slaValue)"
+          (ngModelChange)="toggleSelectedTopicSla(slaValue, $event)"
+          [name]="'change-sla-' + slaValue"
+        >
+          {{ getSlaPriorityLabel(slaValue) }} ({{ slaValue }} giờ)
+        </label>
       </div>
     </ng-template>
     <ng-template #slaTplFooter let-ref="modalRef">
@@ -424,28 +407,29 @@ export class ManageTopicComponent implements OnInit {
   editTopicName = '';
   editTopicDescription = '';
   editTopicAssignedEmployee = '';
-  editTopicPrioritySLA: Record<string, string> = {};
+  editTopicSLA: string[] = [];
 
-  newTopicDraft: { topicName: string; topicDescription: string; status: string; assignedEmployee: string; prioritySLA: Record<string, string> } = {
+  newTopicDraft: { topicName: string; topicDescription: string; status: string; assignedEmployee: string; SLA: string[] } = {
     topicName: '',
     topicDescription: '',
     status: 'active',
     assignedEmployee: '',
-    prioritySLA: {
-      'Thấp': '24 giờ',
-      'Trung bình': '24 giờ',
-      'Cao': '24 giờ',
-      'Gấp': '24 giờ'
-    }
+    SLA: []
   };
 
   // Sub-dialogs launched from within the topic detail dialog.
   subModalRef?: NzModalRef;
   selectedNewAssignedEmployee: string | null = null;
-  selectedPrioritySLA: Record<string, string> = {};
+  selectedTopicSLA: string[] = [];
 
+  // Static catalog of selectable SLA hour values (e.g. ['24','48','72','96']).
+  // Populated once from the JSON data on load and never edited directly — creating
+  // or editing a topic can only enable/disable which of these values apply.
+  slaOptions: string[] = [];
+
+  // Priority labels mapped positionally onto the ascending-sorted SLA catalog
+  // (fastest hour value = highest priority), used purely for display.
   readonly priorityLevels: string[] = ['Thấp', 'Trung bình', 'Cao', 'Gấp'];
-  readonly slaOptions: string[] = ['24 giờ', '48 giờ', '72 giờ', '96 giờ'];
 
   sortField: SortField | null = null;
   sortOrder: SortOrder = 'asc';
@@ -501,6 +485,7 @@ export class ManageTopicComponent implements OnInit {
     this.http.get<Topic[]>('assets/data/features/topic-table.json').subscribe(
       (data) => {
         this.topics = data.map((topic) => this.normalizeTopic(topic));
+        this.slaOptions = this.buildSlaCatalog(this.topics);
         this.filteredTopics = this.applyAll();
       },
       (error) => {
@@ -563,7 +548,7 @@ export class ManageTopicComponent implements OnInit {
         topic.assignedEmployee.toLowerCase().includes(searchQuery);
       const matchesStatus = !this.statusFilter || topic.status === this.statusFilter;
       const matchesEmployee = !this.employeeFilter || topic.assignedEmployee === this.employeeFilter;
-      const matchesSLA = !this.slaFilter || this.getTopicSLAValues(topic).some((value) => this.getSlaNumericValue(value) === this.getSlaNumericValue(this.slaFilter));
+      const matchesSLA = !this.slaFilter || topic.SLA.includes(this.slaFilter);
       return matchesSearch && matchesStatus && matchesEmployee && matchesSLA;
     });
 
@@ -599,69 +584,62 @@ export class ManageTopicComponent implements OnInit {
     return sorted;
   }
 
-  getTopicPrioritySLAEntries(topic: Topic): Array<{ priority: string; time: string }> {
-    return this.priorityLevels.map((priority) => ({
-      priority,
-      time: this.formatSlaTime(topic.prioritySLA?.[priority] || '')
-    }));
+  /** Display labels (e.g. "24 giờ") for the SLA values currently enabled on a topic. */
+  getTopicSlaLabels(topic: Topic): string[] {
+    return topic.SLA.map((value) => this.formatSlaTime(value));
   }
 
   private normalizeTopic(topic: Topic): Topic {
-    const rawSlaValues = Array.isArray((topic as Topic & { SLA?: string[] }).SLA)
-      ? (topic as Topic & { SLA?: string[] }).SLA || []
-      : [];
-
-    const prioritySLA: Record<string, string> = {};
-    this.priorityLevels.forEach((priority, index) => {
-      const rawValue = rawSlaValues[index];
-      prioritySLA[priority] = this.normalizeSlaValue(rawValue ?? '');
-    });
-
+    const rawSlaValues = Array.isArray(topic.SLA) ? topic.SLA : [];
     return {
       ...topic,
-      prioritySLA,
-      SLA: this.priorityLevels.map((priority) => prioritySLA[priority]).filter((value) => !!value)
+      SLA: rawSlaValues.map((value) => value.toString().trim()).filter((value) => !!value)
     };
   }
 
+  /** Derives the static, selectable SLA catalog (e.g. ['24','48','72','96']) from the JSON data. */
+  private buildSlaCatalog(topics: Topic[]): string[] {
+    const values = new Set<string>();
+    topics.forEach((topic) => topic.SLA.forEach((value) => values.add(value)));
+    return Array.from(values).sort((a, b) => Number(a) - Number(b));
+  }
+
   private formatSlaTime(value: string): string {
-    const normalized = (value || '').toString().trim();
-    if (!normalized) {
-      return '—';
-    }
-    return normalized.endsWith('giờ') ? normalized : `${normalized} giờ`;
+    const priority = this.getSlaPriorityLabel(value);
+    return priority ? `${priority}: ${value} giờ` : `${value} giờ`;
   }
 
-  setNewTopicSlaValue(priority: string, value: string): void {
-    this.newTopicDraft.prioritySLA[priority] = this.normalizeSlaValue(value);
+  /** Priority label (Thấp/Trung bình/Cao/Gấp) for a catalog value, based on its ascending position. */
+  getSlaPriorityLabel(value: string): string {
+    const index = this.slaOptions.indexOf(value);
+    return index >= 0 && index < this.priorityLevels.length ? this.priorityLevels[index] : '';
   }
 
-  setSelectedPrioritySlaValue(priority: string, value: string): void {
-    this.selectedPrioritySLA[priority] = this.normalizeSlaValue(value);
+  /** Whether a given catalog value (e.g. '24') is currently enabled in a topic's SLA list. */
+  isSlaEnabled(list: string[], value: string): boolean {
+    return list.includes(value);
   }
 
-  getSlaNumericValue(value: string): string {
-    const trimmed = (value || '').toString().trim();
-    if (!trimmed) {
-      return '';
-    }
-    return trimmed.replace(/\s*giờ$/i, '').trim();
+  toggleNewTopicSla(value: string, checked: boolean): void {
+    this.newTopicDraft.SLA = this.toggleSlaValue(this.newTopicDraft.SLA, value, checked);
   }
 
-  private normalizeSlaValue(value: string): string {
-    const trimmed = (value || '').toString().trim();
-    if (!trimmed) {
-      return '';
-    }
-    const numericValue = trimmed.replace(/\s*giờ$/i, '').trim();
-    return numericValue ? `${numericValue} giờ` : '';
+  toggleEditTopicSla(value: string, checked: boolean): void {
+    this.editTopicSLA = this.toggleSlaValue(this.editTopicSLA, value, checked);
   }
 
-  getTopicSLAValues(topic: Topic): string[] {
-    if (topic.prioritySLA && Object.keys(topic.prioritySLA).length) {
-      return Object.values(topic.prioritySLA).filter((value) => !!value);
-    }
-    return (topic.SLA || []).map((value) => this.formatSlaTime(value));
+  toggleSelectedTopicSla(value: string, checked: boolean): void {
+    this.selectedTopicSLA = this.toggleSlaValue(this.selectedTopicSLA, value, checked);
+  }
+
+  private toggleSlaValue(list: string[], value: string, checked: boolean): string[] {
+    const withoutValue = list.filter((v) => v !== value);
+    return checked ? this.sortBySlaCatalog([...withoutValue, value]) : withoutValue;
+  }
+
+  /** Orders a subset of SLA values to match the catalog's order (ascending by hour). */
+  private sortBySlaCatalog(values: string[]): string[] {
+    return this.slaOptions.filter((option) => values.includes(option));
   }
 
   viewTopic(topic: Topic): void {
@@ -670,7 +648,7 @@ export class ManageTopicComponent implements OnInit {
     this.editTopicName = topic.topicName;
     this.editTopicDescription = topic.topicDescription;
     this.editTopicAssignedEmployee = topic.assignedEmployee;
-    this.editTopicPrioritySLA = { ...topic.prioritySLA };
+    this.editTopicSLA = [...topic.SLA];
     this.viewModalRef = this.modal.create({
       nzTitle: this.detailTplTitle,
       nzContent: this.detailTplContent,
@@ -693,7 +671,7 @@ export class ManageTopicComponent implements OnInit {
     this.editTopicName = this.selectedTopic.topicName;
     this.editTopicDescription = this.selectedTopic.topicDescription;
     this.editTopicAssignedEmployee = this.selectedTopic.assignedEmployee;
-    this.editTopicPrioritySLA = { ...this.selectedTopic.prioritySLA };
+    this.editTopicSLA = [...this.selectedTopic.SLA];
     this.editingTopicDetails = true;
   }
 
@@ -710,8 +688,7 @@ export class ManageTopicComponent implements OnInit {
     this.selectedTopic.topicName = updatedName;
     this.selectedTopic.topicDescription = this.editTopicDescription.trim();
     this.selectedTopic.assignedEmployee = this.editTopicAssignedEmployee.trim();
-    this.selectedTopic.prioritySLA = { ...this.editTopicPrioritySLA };
-    this.selectedTopic.SLA = Object.values(this.selectedTopic.prioritySLA).filter((value) => !!value);
+    this.selectedTopic.SLA = this.sortBySlaCatalog(this.editTopicSLA);
     this.editingTopicDetails = false;
     this.filteredTopics = this.applyAll();
   }
@@ -723,12 +700,8 @@ export class ManageTopicComponent implements OnInit {
     this.editTopicName = this.selectedTopic.topicName;
     this.editTopicDescription = this.selectedTopic.topicDescription;
     this.editTopicAssignedEmployee = this.selectedTopic.assignedEmployee;
-    this.editTopicPrioritySLA = { ...this.selectedTopic.prioritySLA };
+    this.editTopicSLA = [...this.selectedTopic.SLA];
     this.editingTopicDetails = false;
-  }
-
-  setEditTopicSlaValue(priority: string, value: string): void {
-    this.editTopicPrioritySLA[priority] = this.normalizeSlaValue(value);
   }
 
   openAddTopicModal(): void {
@@ -737,12 +710,7 @@ export class ManageTopicComponent implements OnInit {
       topicDescription: '',
       status: 'active',
       assignedEmployee: '',
-      prioritySLA: {
-        'Thấp': '24 giờ',
-        'Trung bình': '24 giờ',
-        'Cao': '24 giờ',
-        'Gấp': '24 giờ'
-      }
+      SLA: []
     };
 
     this.addTopicModalRef = this.modal.create({
@@ -751,7 +719,7 @@ export class ManageTopicComponent implements OnInit {
       nzFooter: this.addTopicTplFooter,
       nzMaskClosable: true,
       nzClosable: true,
-      nzWidth: 560
+      nzWidth: 640
     });
   }
 
@@ -771,8 +739,7 @@ export class ManageTopicComponent implements OnInit {
       topicDescription: this.newTopicDraft.topicDescription.trim(),
       status: this.newTopicDraft.status || 'active',
       assignedEmployee: this.newTopicDraft.assignedEmployee.trim(),
-      prioritySLA: { ...this.newTopicDraft.prioritySLA },
-      SLA: Object.values(this.newTopicDraft.prioritySLA).filter((value) => !!value)
+      SLA: this.sortBySlaCatalog(this.newTopicDraft.SLA)
     };
 
     this.topics = [createdTopic, ...this.topics];
@@ -820,7 +787,7 @@ export class ManageTopicComponent implements OnInit {
     if (!this.selectedTopic) {
       return;
     }
-    this.selectedPrioritySLA = { ...this.selectedTopic.prioritySLA };
+    this.selectedTopicSLA = [...this.selectedTopic.SLA];
     this.subModalRef = this.modal.create({
       nzTitle: this.slaTplTitle,
       nzContent: this.slaTplContent,
@@ -833,8 +800,7 @@ export class ManageTopicComponent implements OnInit {
 
   confirmChangeSLA(modalRef?: NzModalRef): void {
     if (this.selectedTopic) {
-      this.selectedTopic.prioritySLA = { ...this.selectedPrioritySLA };
-      this.selectedTopic.SLA = Object.values(this.selectedTopic.prioritySLA).filter((value) => !!value);
+      this.selectedTopic.SLA = this.sortBySlaCatalog(this.selectedTopicSLA);
     }
     if (modalRef) {
       modalRef.destroy();
