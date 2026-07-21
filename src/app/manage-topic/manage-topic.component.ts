@@ -141,9 +141,13 @@ type SortOrder = 'asc' | 'desc';
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ topic.assignedEmployee }}</td>
                     <td class="ltr:pr-[20px] rtl:pl-[20px] text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
                       <div class="flex flex-wrap gap-[6px]">
-                        <span *ngFor="let label of getTopicSlaLabels(topic)" class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">
-                          {{ label }}
-                        </span>
+                        <ng-container *ngFor="let slaValue of topic.SLA" [ngSwitch]="getSlaPriorityLabel(slaValue)">
+                          <span *ngSwitchCase="'Thấp'" class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(slaValue) }}</span>
+                          <span *ngSwitchCase="'Trung bình'" class="inline-flex items-center justify-center bg-secondary/10 text-secondary min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(slaValue) }}</span>
+                          <span *ngSwitchCase="'Cao'" class="inline-flex items-center justify-center bg-warning/10 text-warning min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(slaValue) }}</span>
+                          <span *ngSwitchCase="'Gấp'" class="inline-flex items-center justify-center bg-danger/10 text-danger min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(slaValue) }}</span>
+                          <span *ngSwitchDefault class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(slaValue) }}</span>
+                        </ng-container>
                         <span *ngIf="!topic.SLA.length" class="text-theme-gray dark:text-white/60">—</span>
                       </div>
                     </td>
@@ -300,9 +304,13 @@ type SortOrder = 'asc' | 'desc';
         <div>
           <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">SLA áp dụng</div>
           <div *ngIf="!editingTopicDetails" class="flex flex-wrap gap-[8px]">
-            <span *ngFor="let label of getTopicSlaLabels(topic)" class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">
-              {{ label }}
-            </span>
+            <ng-container *ngFor="let slaValue of topic.SLA" [ngSwitch]="getSlaPriorityLabel(slaValue)">
+              <span *ngSwitchCase="'Thấp'" class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(slaValue) }}</span>
+              <span *ngSwitchCase="'Trung bình'" class="inline-flex items-center justify-center bg-secondary/10 text-secondary min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(slaValue) }}</span>
+              <span *ngSwitchCase="'Cao'" class="inline-flex items-center justify-center bg-warning/10 text-warning min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(slaValue) }}</span>
+              <span *ngSwitchCase="'Gấp'" class="inline-flex items-center justify-center bg-danger/10 text-danger min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(slaValue) }}</span>
+              <span *ngSwitchDefault class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(slaValue) }}</span>
+            </ng-container>
             <span *ngIf="!topic.SLA.length" class="text-[13px] text-theme-gray dark:text-white/60">—</span>
           </div>
           <div *ngIf="editingTopicDetails" class="flex flex-wrap gap-[16px]">
@@ -584,11 +592,6 @@ export class ManageTopicComponent implements OnInit {
     return sorted;
   }
 
-  /** Display labels (e.g. "24 giờ") for the SLA values currently enabled on a topic. */
-  getTopicSlaLabels(topic: Topic): string[] {
-    return topic.SLA.map((value) => this.formatSlaTime(value));
-  }
-
   private normalizeTopic(topic: Topic): Topic {
     const rawSlaValues = Array.isArray(topic.SLA) ? topic.SLA : [];
     return {
@@ -604,7 +607,7 @@ export class ManageTopicComponent implements OnInit {
     return Array.from(values).sort((a, b) => Number(a) - Number(b));
   }
 
-  private formatSlaTime(value: string): string {
+  formatSlaTime(value: string): string {
     const priority = this.getSlaPriorityLabel(value);
     return priority ? `${priority}: ${value} giờ` : `${value} giờ`;
   }
