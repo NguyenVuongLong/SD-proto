@@ -126,6 +126,7 @@ function getBucketInfo(date: Date, granularity: Granularity): { key: string; lab
       [nzPlaceHolder]="['Từ ngày', 'Đến ngày']">
     </nz-range-picker>
   </div>
+  <div class="bg-danger"></div>
 
   <div nz-row [nzGutter]="25">
     <div nz-col class="mb-[25px]" nzXs="24" nzMd="12" nzXXl="6">
