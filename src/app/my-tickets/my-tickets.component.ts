@@ -87,15 +87,8 @@ type SortOrder = 'asc' | 'desc';
       <nz-skeleton class="bg-white dark:bg-white/10 rounded-6 p-[30px] pt-[15px]" nzShape="circle" [nzAvatar]="true" [nzActive]="true"
         [nzParagraph]="{ rows: 15 }"></nz-skeleton>
     </ng-template>
-    <!-- skeleton -->
-
-    <!-- <div nz-col nzXs="24" class="mb-[25px]">
-      <ng-container *ngIf="showContent; else loadingSkeleton">
-        <app-ticket-overview></app-ticket-overview>
-      </ng-container>
-    </div> -->
     <div nz-col nzXs="24" class="mb-[25px]">
-      <ng-container *ngIf="showContent; else loadingSkeleton2">
+      <ng-container>
         <div class="bg-white dark:bg-white/10 m-0 p-0 text-theme-gray dark:text-white/60 text-[15px] rounded-10 relative mb-[25px]">
           <div class="pt-[30px] pb-[9px] px-[25px] text-dark dark:text-white/[.87] font-medium text-[17px] flex items-center justify-between max-sm:flex-col max-sm:gap-[15px]">
             <h4 class="mb-0 text-[20px] leading-6 font-medium text-dark dark:text-white/[.87]">My Tickets</h4>
@@ -416,17 +409,6 @@ type SortOrder = 'asc' | 'desc';
 })
 
 export class MyTicketsComponent implements OnInit {
-  isLoading = true;
-  showContent = false;
-
-  loadData() {
-    // Simulate an asynchronous data loading operation
-    setTimeout(() => {
-      this.isLoading = false;
-      this.showContent = true;
-    }, 500);
-  }
-
   @ViewChild('tplTitle') tplTitle!: TemplateRef<{}>;
   @ViewChild('tplContent') tplContent!: TemplateRef<{}>;
   @ViewChild('tplFooter') tplFooter!: TemplateRef<{}>;
@@ -554,7 +536,6 @@ export class MyTicketsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadData();
     this.http.get<Person[]>('assets/data/features/ticket-table.json').subscribe(
       (data) => {
         this.people = data;

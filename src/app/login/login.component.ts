@@ -47,7 +47,7 @@ import { Router } from '@angular/router';
                   </label>
                 </div>
                 <button nz-button type="submit" class="login-form__submit">
-                  <i class="fas fa-cog fa-spin" [hidden]="!isLoading"></i>
+                  <i class="fas fa-cog fa-spin"></i>
                   Đăng nhập
                 </button>
               </form>
@@ -61,9 +61,6 @@ import { Router } from '@angular/router';
 })
 
 export class LoginComponent {
-  isLoading = false;
-  error = false;
-
   validateForm!: FormGroup;
 
   constructor(private fb: FormBuilder, private router: Router) {}
