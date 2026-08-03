@@ -63,315 +63,332 @@ type SortOrder = 'asc' | 'desc';
   ],
   styleUrls: ['./manage-topic.component.scss'],
   template: `
-    <ng-template #loadingSkeleton>
-      <nz-skeleton class="bg-white dark:bg-white/10 rounded-6 p-[30px] pt-[15px]" nzShape="circle" [nzAvatar]="true" [nzActive]="true"
-        [nzParagraph]="{ rows: 15 }"></nz-skeleton>
-    </ng-template>
-    <ng-container *ngIf="showContent; else loadingSkeleton">
-    <div class="bg-white dark:bg-white/10 m-0 p-0 text-theme-gray dark:text-white/60 text-[15px] rounded-10 relative mb-[25px]">
-      <div class="pt-[30px] pb-[9px] px-[25px] text-dark dark:text-white/[.87] font-medium text-[17px] flex items-center justify-between max-sm:flex-col max-sm:gap-[15px]">
-        <h4 class="mb-0 text-[20px] leading-6 font-medium text-dark dark:text-white/[.87]">Quản lý Chủ đề</h4>
-        <button class="flex items-center px-[14px] text-sm text-white rounded-md font-semibold bg-primary border-primary h-10 gap-[6px]" nz-button (click)="openAddTopicModal()">
-          <i class="text-[12px]" nz-icon nzType="plus"></i>
-          <span class="m-0">Thêm chủ đề</span>
-        </button>
-      </div>
-      <div class="px-[25px] pb-[25px]">
-        <div class="flex items-center justify-center w-full mt-5 mb-[25px] max-md:flex-col max-md:justify-center gap-[15px]">
-          <div class="inline-flex items-center flex-wrap w-full gap-[20px] max-md:justify-center">
-            <div class="inline-flex items-center">
-              <input
-                class="h-10 px-[20px] text-body dark:text-white/60 bg-white dark:bg-white/10 border-normal border-1 dark:border-white/10 rounded-[6px]"
-                nz-input
-                placeholder="Tìm theo tên hoặc mô tả chủ đề"
-                [(ngModel)]="searchValue"
-                (ngModelChange)="onSearchChange()"
-              />
+    <div nz-row [nzGutter]="25">
+      <!-- skeleton -->
+      <ng-template #loadingSkeleton>
+        <nz-skeleton class="bg-white dark:bg-white/10 rounded-6 p-[30px] pt-[15px]" nzShape="circle" [nzAvatar]="true" [nzActive]="true"
+          [nzParagraph]="{ rows: 4 }"></nz-skeleton>
+      </ng-template>
+      <ng-template #loadingSkeleton2>
+        <nz-skeleton class="bg-white dark:bg-white/10 rounded-6 p-[30px] pt-[15px]" nzShape="circle" [nzAvatar]="true" [nzActive]="true"
+          [nzParagraph]="{ rows: 15 }"></nz-skeleton>
+      </ng-template>
+      <!-- skeleton -->
+      
+      <div nz-col nzXs="24" class="mb-[25px]">
+        <ng-container *ngIf="showContent; else loadingSkeleton2">
+          <ng-template #loadingSkeleton>
+            <nz-skeleton class="bg-white dark:bg-white/10 rounded-6 p-[30px] pt-[15px]" nzShape="circle" [nzAvatar]="true" [nzActive]="true"
+              [nzParagraph]="{ rows: 15 }"></nz-skeleton>
+          </ng-template>
+          <ng-container *ngIf="showContent; else loadingSkeleton">
+          <div class="bg-white dark:bg-white/10 m-0 p-0 text-theme-gray dark:text-white/60 text-[15px] rounded-10 relative mb-[25px]">
+            <div class="pt-[30px] pb-[9px] px-[25px] text-dark dark:text-white/[.87] font-medium text-[17px] flex items-center justify-between max-sm:flex-col max-sm:gap-[15px]">
+              <h4 class="mb-0 text-[20px] leading-6 font-medium text-dark dark:text-white/[.87]">Quản lý Chủ đề</h4>
+              <button class="flex items-center px-[14px] text-sm text-white rounded-md font-semibold bg-primary border-primary h-10 gap-[6px]" nz-button (click)="openAddTopicModal()">
+                <i class="text-[12px]" nz-icon nzType="plus"></i>
+                <span class="m-0">Thêm chủ đề</span>
+              </button>
             </div>
-            <div class="inline-flex items-center">
-              <nz-select
-                class="min-w-[200px] [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
-                [(ngModel)]="employeeFilter"
-                (ngModelChange)="filterByEmployee()" nzPlaceHolder="Tìm theo nhân viên phụ trách" nzAllowClear
-              >
-                <nz-option *ngFor="let e of employeeOptions" [nzValue]="e" [nzLabel]="e"></nz-option>
-              </nz-select>
-            </div>
-            <div class="inline-flex items-center">
-              <nz-select
-                class="min-w-[160px] [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
-                [(ngModel)]="slaFilter"
-                (ngModelChange)="filterBySLA()" nzPlaceHolder="Tìm theo SLA" nzAllowClear
-              >
-                <nz-option *ngFor="let slaValue of slaOptions" [nzValue]="slaValue" [nzLabel]="getSlaPriorityLabel(slaValue) + ' (' + slaValue + ' giờ)'"></nz-option>
-              </nz-select>
-            </div>
-            <div class="inline-flex items-center">
-              <nz-select
-                class="min-w-[180px] capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
-                [(ngModel)]="statusFilter"
-                (ngModelChange)="filterByStatus()" nzPlaceHolder="Tìm theo trạng thái" nzAllowClear
-              >
-                <nz-option nzValue="active" nzLabel="Hoạt động"></nz-option>
-                <nz-option nzValue="inactive" nzLabel="Ngừng hoạt động"></nz-option>
-              </nz-select>
+            <div class="px-[25px] pb-[25px]">
+              <div class="flex items-center justify-center w-full mt-5 mb-[25px] max-md:flex-col max-md:justify-center gap-[15px]">
+                <div class="inline-flex items-center flex-wrap w-full gap-[20px] max-md:justify-center">
+                  <div class="inline-flex items-center">
+                    <input
+                      class="h-10 px-[20px] text-body dark:text-white/60 bg-white dark:bg-white/10 border-normal border-1 dark:border-white/10 rounded-[6px]"
+                      nz-input
+                      placeholder="Tìm theo tên hoặc mô tả chủ đề"
+                      [(ngModel)]="searchValue"
+                      (ngModelChange)="onSearchChange()"
+                    />
+                  </div>
+                  <div class="inline-flex items-center">
+                    <nz-select
+                      class="min-w-[200px] [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
+                      [(ngModel)]="employeeFilter"
+                      (ngModelChange)="filterByEmployee()" nzPlaceHolder="Tìm theo nhân viên phụ trách" nzAllowClear
+                    >
+                      <nz-option *ngFor="let e of employeeOptions" [nzValue]="e" [nzLabel]="e"></nz-option>
+                    </nz-select>
+                  </div>
+                  <div class="inline-flex items-center">
+                    <nz-select
+                      class="min-w-[160px] [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
+                      [(ngModel)]="slaFilter"
+                      (ngModelChange)="filterBySLA()" nzPlaceHolder="Tìm theo SLA" nzAllowClear
+                    >
+                      <nz-option *ngFor="let slaValue of slaOptions" [nzValue]="slaValue" [nzLabel]="getSlaPriorityLabel(slaValue) + ' (' + slaValue + ' giờ)'"></nz-option>
+                    </nz-select>
+                  </div>
+                  <div class="inline-flex items-center">
+                    <nz-select
+                      class="min-w-[180px] capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
+                      [(ngModel)]="statusFilter"
+                      (ngModelChange)="filterByStatus()" nzPlaceHolder="Tìm theo trạng thái" nzAllowClear
+                    >
+                      <nz-option nzValue="active" nzLabel="Hoạt động"></nz-option>
+                      <nz-option nzValue="inactive" nzLabel="Ngừng hoạt động"></nz-option>
+                    </nz-select>
+                  </div>
+                </div>
+              </div>
+              <perfect-scrollbar>
+                  <div class="w-full max-2xl:overflow-x-auto max-h-[450px]">
+                    <nz-table #basicTable [nzData]="filteredTopics" [nzFrontPagination]="false" [nzShowPagination]="false">
+                      <thead>
+                        <tr>
+                          <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden rounded-s-[10px] capitalize cursor-pointer select-none" (click)="toggleSort('id')">Mã{{ sortArrow('id') }}</th>
+                          <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('topicName')">Tên chủ đề{{ sortArrow('topicName') }}</th>
+                          <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize">Mô tả</th>
+                          <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('assignedEmployee')">Nhân viên phụ trách{{ sortArrow('assignedEmployee') }}</th>
+                          <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize">SLA</th>
+                          <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none rounded-e-[10px]" (click)="toggleSort('status')">Trạng thái{{ sortArrow('status') }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="group max-lg:whitespace-nowrap cursor-pointer" *ngFor="let topic of pagedTopics" (click)="viewTopic(topic)">
+                          <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">#{{ topic.id }}</td>
+                          <td class="ltr:pr-[20px] rtl:pl-[20px] font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent text-dark dark:text-white/[.87]">{{ topic.topicName }}</td>
+                          <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent max-w-[280px] truncate">{{ topic.topicDescription }}</td>
+                          <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ topic.assignedEmployee }}</td>
+                          <td class="ltr:pr-[20px] rtl:pl-[20px] text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
+                            <ng-container *ngIf="topic.SLA; else noSla" [ngSwitch]="getSlaPriorityLabel(topic.SLA)">
+                              <span *ngSwitchCase="'Thấp'" class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
+                              <span *ngSwitchCase="'Trung bình'" class="inline-flex items-center justify-center bg-secondary/10 text-secondary min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
+                              <span *ngSwitchCase="'Cao'" class="inline-flex items-center justify-center bg-warning/10 text-warning min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
+                              <span *ngSwitchCase="'Gấp'" class="inline-flex items-center justify-center bg-danger/10 text-danger min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
+                              <span *ngSwitchDefault class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
+                            </ng-container>
+                            <ng-template #noSla><span class="text-theme-gray dark:text-white/60">—</span></ng-template>
+                          </td>
+                          <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
+                            <span
+                              class="inline-flex items-center justify-center bg-{{ statusColorMap[topic.status] || 'light' }}/10 text-{{ statusColorMap[topic.status] || 'light' }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize"
+                            >
+                              {{ statusLabelMap[topic.status] || topic.status }}
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </nz-table>
+                  </div>
+              </perfect-scrollbar>
+              <div class="border-t border-regular dark:border-white/10 pt-[30px] mt-[10px] flex justify-center">
+                <nz-pagination
+                  [(nzPageIndex)]="pageIndex"
+                  [nzPageSize]="pageSize"
+                  [nzTotal]="filteredTopics.length"
+                  (nzPageIndexChange)="onPageIndexChange($event)"
+                ></nz-pagination>
+              </div>
             </div>
           </div>
-        </div>
-        <perfect-scrollbar>
-            <div class="w-full max-2xl:overflow-x-auto max-h-[450px]">
-              <nz-table #basicTable [nzData]="filteredTopics" [nzFrontPagination]="false" [nzShowPagination]="false">
-                <thead>
-                  <tr>
-                    <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden rounded-s-[10px] capitalize cursor-pointer select-none" (click)="toggleSort('id')">Mã{{ sortArrow('id') }}</th>
-                    <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('topicName')">Tên chủ đề{{ sortArrow('topicName') }}</th>
-                    <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize">Mô tả</th>
-                    <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('assignedEmployee')">Nhân viên phụ trách{{ sortArrow('assignedEmployee') }}</th>
-                    <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize">SLA</th>
-                    <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none rounded-e-[10px]" (click)="toggleSort('status')">Trạng thái{{ sortArrow('status') }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="group max-lg:whitespace-nowrap cursor-pointer" *ngFor="let topic of pagedTopics" (click)="viewTopic(topic)">
-                    <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">#{{ topic.id }}</td>
-                    <td class="ltr:pr-[20px] rtl:pl-[20px] font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent text-dark dark:text-white/[.87]">{{ topic.topicName }}</td>
-                    <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent max-w-[280px] truncate">{{ topic.topicDescription }}</td>
-                    <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ topic.assignedEmployee }}</td>
-                    <td class="ltr:pr-[20px] rtl:pl-[20px] text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
-                      <ng-container *ngIf="topic.SLA; else noSla" [ngSwitch]="getSlaPriorityLabel(topic.SLA)">
-                        <span *ngSwitchCase="'Thấp'" class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
-                        <span *ngSwitchCase="'Trung bình'" class="inline-flex items-center justify-center bg-secondary/10 text-secondary min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
-                        <span *ngSwitchCase="'Cao'" class="inline-flex items-center justify-center bg-warning/10 text-warning min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
-                        <span *ngSwitchCase="'Gấp'" class="inline-flex items-center justify-center bg-danger/10 text-danger min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
-                        <span *ngSwitchDefault class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[22px] px-2.5 text-xs font-medium rounded-[12px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
-                      </ng-container>
-                      <ng-template #noSla><span class="text-theme-gray dark:text-white/60">—</span></ng-template>
-                    </td>
-                    <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
-                      <span
-                        class="inline-flex items-center justify-center bg-{{ statusColorMap[topic.status] || 'light' }}/10 text-{{ statusColorMap[topic.status] || 'light' }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize"
-                      >
-                        {{ statusLabelMap[topic.status] || topic.status }}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </nz-table>
-            </div>
-        </perfect-scrollbar>
-        <div class="border-t border-regular dark:border-white/10 pt-[30px] mt-[10px] flex justify-center">
-          <nz-pagination
-            [(nzPageIndex)]="pageIndex"
-            [nzPageSize]="pageSize"
-            [nzTotal]="filteredTopics.length"
-            (nzPageIndexChange)="onPageIndexChange($event)"
-          ></nz-pagination>
-        </div>
-      </div>
-    </div>
-    </ng-container>
+          </ng-container>
 
-    <ng-template #addTopicTplTitle>
-      <span>Thêm chủ đề</span>
-    </ng-template>
-    <ng-template #addTopicTplContent>
-      <form nz-form nzLayout="vertical">
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label nzRequired class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Tên chủ đề:</nz-form-label>
-            <input
-              class="h-[50px] border-normal dark:border-white/10 px-[20px] placeholder-shown:text-light-extra dark:placeholder-shown:text-white/60 rounded-[5px] dark:bg-white/10 dark:text-white/[.87]"
-              type="text"
-              nz-input
-              placeholder="Tên chủ đề"
-              name="topicName"
-              [(ngModel)]="newTopicDraft.topicName"
-            />
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Mô tả:</nz-form-label>
-            <textarea
-              class="h-[118px] border-normal dark:border-white/10 px-[20px] placeholder-shown:text-light-extra dark:placeholder-shown:text-white/60 rounded-[5px] py-[15px] dark:bg-white/10 dark:text-white/60"
-              nz-input
-              placeholder="Mô tả"
-              name="topicDescription"
-              [(ngModel)]="newTopicDraft.topicDescription"
-            ></textarea>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Nhân viên phụ trách:</nz-form-label>
+          <ng-template #addTopicTplTitle>
+            <span>Thêm chủ đề</span>
+          </ng-template>
+          <ng-template #addTopicTplContent>
+            <form nz-form nzLayout="vertical">
+              <nz-form-item>
+                <nz-form-control>
+                  <nz-form-label nzRequired class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Tên chủ đề:</nz-form-label>
+                  <input
+                    class="h-[50px] border-normal dark:border-white/10 px-[20px] placeholder-shown:text-light-extra dark:placeholder-shown:text-white/60 rounded-[5px] dark:bg-white/10 dark:text-white/[.87]"
+                    type="text"
+                    nz-input
+                    placeholder="Tên chủ đề"
+                    name="topicName"
+                    [(ngModel)]="newTopicDraft.topicName"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control>
+                  <nz-form-label class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Mô tả:</nz-form-label>
+                  <textarea
+                    class="h-[118px] border-normal dark:border-white/10 px-[20px] placeholder-shown:text-light-extra dark:placeholder-shown:text-white/60 rounded-[5px] py-[15px] dark:bg-white/10 dark:text-white/60"
+                    nz-input
+                    placeholder="Mô tả"
+                    name="topicDescription"
+                    [(ngModel)]="newTopicDraft.topicDescription"
+                  ></textarea>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control>
+                  <nz-form-label class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Nhân viên phụ trách:</nz-form-label>
+                  <nz-select
+                    class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
+                    [(ngModel)]="newTopicDraft.assignedEmployee"
+                    name="assignedEmployee"
+                    nzPlaceHolder="Chọn nhân viên phụ trách"
+                  >
+                    <nz-option *ngFor="let e of employeeOptions" [nzValue]="e" [nzLabel]="e"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control>
+                  <nz-form-label class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">SLA áp dụng:</nz-form-label>
+                  <nz-select
+                    class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
+                    [(ngModel)]="newTopicDraft.SLA"
+                    name="newTopicSla"
+                    nzPlaceHolder="Chọn SLA áp dụng"
+                  >
+                    <nz-option *ngFor="let slaValue of slaOptions" [nzValue]="slaValue" [nzLabel]="getSlaPriorityLabel(slaValue) + ' (' + slaValue + ' giờ)'"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control>
+                  <nz-form-label class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Trạng thái:</nz-form-label>
+                  <nz-select
+                    class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
+                    [(ngModel)]="newTopicDraft.status"
+                    name="status"
+                  >
+                    <nz-option nzValue="active" nzLabel="Hoạt động"></nz-option>
+                    <nz-option nzValue="inactive" nzLabel="Ngừng hoạt động"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </form>
+          </ng-template>
+          <ng-template #addTopicTplFooter let-ref="modalRef">
+            <button nz-button (click)="ref.destroy()">Hủy</button>
+            <button nz-button nzType="primary" (click)="confirmAddTopic(ref)">Lưu</button>
+          </ng-template>
+
+          <ng-template #detailTplTitle>
+            <span>Chi tiết chủ đề #{{ selectedTopic?.id }}</span>
+          </ng-template>
+          <ng-template #detailTplContent>
+            <div class="flex flex-col gap-[18px]" *ngIf="selectedTopic as topic">
+              <div class="flex items-center justify-between flex-wrap gap-[10px]">
+                <span class="text-[13px] font-medium text-theme-gray dark:text-white/60">Trạng thái:
+                  <span class="inline-flex items-center justify-center bg-{{ statusColorMap[topic.status] || 'light' }}/10 text-{{ statusColorMap[topic.status] || 'light' }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize">
+                    {{ statusLabelMap[topic.status] || topic.status }}
+                  </span>
+                </span>
+              </div>
+              <div>
+                <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Tên chủ đề</div>
+                <div *ngIf="!editingTopicDetails" class="text-[15px] font-medium text-dark dark:text-white/[.87]">{{ topic.topicName }}</div>
+                <input
+                  *ngIf="editingTopicDetails"
+                  class="h-[44px] w-full border-normal dark:border-white/10 px-[15px] rounded-[6px] dark:bg-white/10 dark:text-white/[.87]"
+                  nz-input
+                  placeholder="Tên chủ đề"
+                  [(ngModel)]="editTopicName"
+                />
+              </div>
+              <div>
+                <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Mô tả</div>
+                <div *ngIf="!editingTopicDetails" class="text-[15px] text-dark dark:text-white/[.87] whitespace-pre-line">{{ topic.topicDescription }}</div>
+                <textarea
+                  *ngIf="editingTopicDetails"
+                  class="h-[110px] w-full border-normal dark:border-white/10 px-[15px] py-[12px] rounded-[6px] dark:bg-white/10 dark:text-white/[.87]"
+                  nz-input
+                  placeholder="Mô tả"
+                  [(ngModel)]="editTopicDescription"
+                ></textarea>
+              </div>
+              <div>
+                <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Nhân viên phụ trách</div>
+                <div *ngIf="!editingTopicDetails" class="text-[15px] font-medium text-dark dark:text-white/[.87]">{{ topic.assignedEmployee }}</div>
+                <nz-select
+                  *ngIf="editingTopicDetails"
+                  class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
+                  [(ngModel)]="editTopicAssignedEmployee"
+                  name="editAssignedEmployee"
+                  nzPlaceHolder="Chọn nhân viên phụ trách"
+                >
+                  <nz-option *ngFor="let e of employeeOptions" [nzValue]="e" [nzLabel]="e"></nz-option>
+                </nz-select>
+              </div>
+              <div>
+                <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">SLA áp dụng</div>
+                <div *ngIf="!editingTopicDetails" class="flex flex-wrap gap-[8px]">
+                  <ng-container *ngIf="topic.SLA; else noSlaDetail" [ngSwitch]="getSlaPriorityLabel(topic.SLA)">
+                    <span *ngSwitchCase="'Thấp'" class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
+                    <span *ngSwitchCase="'Trung bình'" class="inline-flex items-center justify-center bg-secondary/10 text-secondary min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
+                    <span *ngSwitchCase="'Cao'" class="inline-flex items-center justify-center bg-warning/10 text-warning min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
+                    <span *ngSwitchCase="'Gấp'" class="inline-flex items-center justify-center bg-danger/10 text-danger min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
+                    <span *ngSwitchDefault class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
+                  </ng-container>
+                  <ng-template #noSlaDetail><span class="text-[13px] text-theme-gray dark:text-white/60">—</span></ng-template>
+                </div>
+                <nz-select
+                  *ngIf="editingTopicDetails"
+                  class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
+                  [(ngModel)]="editTopicSLA"
+                  name="editTopicSla"
+                  nzPlaceHolder="Chọn SLA áp dụng"
+                >
+                  <nz-option *ngFor="let slaValue of slaOptions" [nzValue]="slaValue" [nzLabel]="getSlaPriorityLabel(slaValue) + ' (' + slaValue + ' giờ)'"></nz-option>
+                </nz-select>
+              </div>
+              <div class="flex flex-wrap items-center justify-left gap-[10px] pt-[18px] border-t border-regular dark:border-white/10">
+                <div class="flex flex-wrap items-center gap-[10px]">
+                  <button *ngIf="editingTopicDetails" nz-button nzType="primary" (click)="saveTopicDetails()">Lưu</button>
+                  <button *ngIf="editingTopicDetails" nz-button (click)="cancelEditTopicDetails()">Hủy</button>
+                  <button *ngIf="!editingTopicDetails" nz-button (click)="startEditTopicDetails()">Chỉnh sửa</button>
+                </div>
+                <div class="flex flex-wrap items-center gap-[10px]">
+                  <button *ngIf="topic.status === 'active'" nz-button nzType="primary" nzDanger (click)="deactivateTopic()">Ngừng hoạt động</button>
+                  <button *ngIf="topic.status !== 'active'" nz-button nzType="primary" (click)="activateTopic()">Kích hoạt lại</button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template #detailTplFooter let-ref="modalRef">
+            <div class="detail-footer">
+              <button nz-button (click)="destroyDetailModal(ref)">
+                Đóng
+              </button>
+            </div>
+          </ng-template>
+
+          <ng-template #assigneeTplTitle>
+            <span>Đổi nhân viên phụ trách</span>
+          </ng-template>
+          <ng-template #assigneeTplContent>
             <nz-select
               class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
-              [(ngModel)]="newTopicDraft.assignedEmployee"
-              name="assignedEmployee"
+              [(ngModel)]="selectedNewAssignedEmployee"
+              name="newAssignedEmployee"
               nzPlaceHolder="Chọn nhân viên phụ trách"
             >
               <nz-option *ngFor="let e of employeeOptions" [nzValue]="e" [nzLabel]="e"></nz-option>
             </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">SLA áp dụng:</nz-form-label>
+          </ng-template>
+          <ng-template #assigneeTplFooter let-ref="modalRef">
+            <button nz-button (click)="ref.destroy()">Hủy</button>
+            <button nz-button nzType="primary" (click)="confirmChangeAssignee(ref)">Lưu</button>
+          </ng-template>
+
+          <ng-template #slaTplTitle>
+            <span>Đổi SLA áp dụng</span>
+          </ng-template>
+          <ng-template #slaTplContent>
             <nz-select
               class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
-              [(ngModel)]="newTopicDraft.SLA"
-              name="newTopicSla"
+              [(ngModel)]="selectedTopicSLA"
+              name="changeSla"
               nzPlaceHolder="Chọn SLA áp dụng"
             >
               <nz-option *ngFor="let slaValue of slaOptions" [nzValue]="slaValue" [nzLabel]="getSlaPriorityLabel(slaValue) + ' (' + slaValue + ' giờ)'"></nz-option>
             </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Trạng thái:</nz-form-label>
-            <nz-select
-              class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
-              [(ngModel)]="newTopicDraft.status"
-              name="status"
-            >
-              <nz-option nzValue="active" nzLabel="Hoạt động"></nz-option>
-              <nz-option nzValue="inactive" nzLabel="Ngừng hoạt động"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </form>
-    </ng-template>
-    <ng-template #addTopicTplFooter let-ref="modalRef">
-      <button nz-button (click)="ref.destroy()">Hủy</button>
-      <button nz-button nzType="primary" (click)="confirmAddTopic(ref)">Lưu</button>
-    </ng-template>
-
-    <ng-template #detailTplTitle>
-      <span>Chi tiết chủ đề #{{ selectedTopic?.id }}</span>
-    </ng-template>
-    <ng-template #detailTplContent>
-      <div class="flex flex-col gap-[18px]" *ngIf="selectedTopic as topic">
-        <div class="flex items-center justify-between flex-wrap gap-[10px]">
-          <span class="text-[13px] font-medium text-theme-gray dark:text-white/60">Trạng thái:
-            <span class="inline-flex items-center justify-center bg-{{ statusColorMap[topic.status] || 'light' }}/10 text-{{ statusColorMap[topic.status] || 'light' }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize">
-              {{ statusLabelMap[topic.status] || topic.status }}
-            </span>
-          </span>
-        </div>
-        <div>
-          <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Tên chủ đề</div>
-          <div *ngIf="!editingTopicDetails" class="text-[15px] font-medium text-dark dark:text-white/[.87]">{{ topic.topicName }}</div>
-          <input
-            *ngIf="editingTopicDetails"
-            class="h-[44px] w-full border-normal dark:border-white/10 px-[15px] rounded-[6px] dark:bg-white/10 dark:text-white/[.87]"
-            nz-input
-            placeholder="Tên chủ đề"
-            [(ngModel)]="editTopicName"
-          />
-        </div>
-        <div>
-          <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Mô tả</div>
-          <div *ngIf="!editingTopicDetails" class="text-[15px] text-dark dark:text-white/[.87] whitespace-pre-line">{{ topic.topicDescription }}</div>
-          <textarea
-            *ngIf="editingTopicDetails"
-            class="h-[110px] w-full border-normal dark:border-white/10 px-[15px] py-[12px] rounded-[6px] dark:bg-white/10 dark:text-white/[.87]"
-            nz-input
-            placeholder="Mô tả"
-            [(ngModel)]="editTopicDescription"
-          ></textarea>
-        </div>
-        <div>
-          <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Nhân viên phụ trách</div>
-          <div *ngIf="!editingTopicDetails" class="text-[15px] font-medium text-dark dark:text-white/[.87]">{{ topic.assignedEmployee }}</div>
-          <nz-select
-            *ngIf="editingTopicDetails"
-            class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
-            [(ngModel)]="editTopicAssignedEmployee"
-            name="editAssignedEmployee"
-            nzPlaceHolder="Chọn nhân viên phụ trách"
-          >
-            <nz-option *ngFor="let e of employeeOptions" [nzValue]="e" [nzLabel]="e"></nz-option>
-          </nz-select>
-        </div>
-        <div>
-          <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">SLA áp dụng</div>
-          <div *ngIf="!editingTopicDetails" class="flex flex-wrap gap-[8px]">
-            <ng-container *ngIf="topic.SLA; else noSlaDetail" [ngSwitch]="getSlaPriorityLabel(topic.SLA)">
-              <span *ngSwitchCase="'Thấp'" class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
-              <span *ngSwitchCase="'Trung bình'" class="inline-flex items-center justify-center bg-secondary/10 text-secondary min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
-              <span *ngSwitchCase="'Cao'" class="inline-flex items-center justify-center bg-warning/10 text-warning min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
-              <span *ngSwitchCase="'Gấp'" class="inline-flex items-center justify-center bg-danger/10 text-danger min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
-              <span *ngSwitchDefault class="inline-flex items-center justify-center bg-primary/10 text-primary min-h-[24px] px-3 text-xs font-medium rounded-[15px] whitespace-nowrap">{{ formatSlaTime(topic.SLA) }}</span>
-            </ng-container>
-            <ng-template #noSlaDetail><span class="text-[13px] text-theme-gray dark:text-white/60">—</span></ng-template>
-          </div>
-          <nz-select
-            *ngIf="editingTopicDetails"
-            class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
-            [(ngModel)]="editTopicSLA"
-            name="editTopicSla"
-            nzPlaceHolder="Chọn SLA áp dụng"
-          >
-            <nz-option *ngFor="let slaValue of slaOptions" [nzValue]="slaValue" [nzLabel]="getSlaPriorityLabel(slaValue) + ' (' + slaValue + ' giờ)'"></nz-option>
-          </nz-select>
-        </div>
-        <div class="flex flex-wrap items-center justify-left gap-[10px] pt-[18px] border-t border-regular dark:border-white/10">
-          <div class="flex flex-wrap items-center gap-[10px]">
-            <button *ngIf="editingTopicDetails" nz-button nzType="primary" (click)="saveTopicDetails()">Lưu</button>
-            <button *ngIf="editingTopicDetails" nz-button (click)="cancelEditTopicDetails()">Hủy</button>
-            <button *ngIf="!editingTopicDetails" nz-button (click)="startEditTopicDetails()">Chỉnh sửa</button>
-          </div>
-          <div class="flex flex-wrap items-center gap-[10px]">
-            <button *ngIf="topic.status === 'active'" nz-button nzType="primary" nzDanger (click)="deactivateTopic()">Ngừng hoạt động</button>
-            <button *ngIf="topic.status !== 'active'" nz-button nzType="primary" (click)="activateTopic()">Kích hoạt lại</button>
-          </div>
-        </div>
+          </ng-template>
+          <ng-template #slaTplFooter let-ref="modalRef">
+            <button nz-button (click)="ref.destroy()">Hủy</button>
+            <button nz-button nzType="primary" (click)="confirmChangeSLA(ref)">Lưu</button>
+          </ng-template>
+        </ng-container>
       </div>
-    </ng-template>
-    <ng-template #detailTplFooter let-ref="modalRef">
-      <div class="detail-footer">
-        <button nz-button (click)="destroyDetailModal(ref)">
-          Đóng
-        </button>
-      </div>
-    </ng-template>
-
-    <ng-template #assigneeTplTitle>
-      <span>Đổi nhân viên phụ trách</span>
-    </ng-template>
-    <ng-template #assigneeTplContent>
-      <nz-select
-        class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
-        [(ngModel)]="selectedNewAssignedEmployee"
-        name="newAssignedEmployee"
-        nzPlaceHolder="Chọn nhân viên phụ trách"
-      >
-        <nz-option *ngFor="let e of employeeOptions" [nzValue]="e" [nzLabel]="e"></nz-option>
-      </nz-select>
-    </ng-template>
-    <ng-template #assigneeTplFooter let-ref="modalRef">
-      <button nz-button (click)="ref.destroy()">Hủy</button>
-      <button nz-button nzType="primary" (click)="confirmChangeAssignee(ref)">Lưu</button>
-    </ng-template>
-
-    <ng-template #slaTplTitle>
-      <span>Đổi SLA áp dụng</span>
-    </ng-template>
-    <ng-template #slaTplContent>
-      <nz-select
-        class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
-        [(ngModel)]="selectedTopicSLA"
-        name="changeSla"
-        nzPlaceHolder="Chọn SLA áp dụng"
-      >
-        <nz-option *ngFor="let slaValue of slaOptions" [nzValue]="slaValue" [nzLabel]="getSlaPriorityLabel(slaValue) + ' (' + slaValue + ' giờ)'"></nz-option>
-      </nz-select>
-    </ng-template>
-    <ng-template #slaTplFooter let-ref="modalRef">
-      <button nz-button (click)="ref.destroy()">Hủy</button>
-      <button nz-button nzType="primary" (click)="confirmChangeSLA(ref)">Lưu</button>
-    </ng-template>
+    </div>
   `,
 })
 
