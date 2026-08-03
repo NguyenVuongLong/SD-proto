@@ -26,15 +26,13 @@ interface Topic {
   id: string;
   topicName: string;
   topicDescription: string;
+  department: string;
   status: string; // 'active' | 'inactive'
   assignedEmployee: string;
-  // A single value from the static SLA catalog (e.g. '24') that applies to this topic.
-  // The catalog itself (which hour values exist at all) is static and comes from the
-  // JSON data — a topic can only pick one of those values.
   SLA: string;
 }
 
-type SortField = 'id' | 'topicName' | 'assignedEmployee' | 'status';
+type SortField = 'id' | 'topicName' | 'department' | 'assignedEmployee' | 'status';
 type SortOrder = 'asc' | 'desc';
 
 @Component({
@@ -140,6 +138,7 @@ type SortOrder = 'asc' | 'desc';
                           <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden rounded-s-[10px] capitalize cursor-pointer select-none" (click)="toggleSort('id')">Mã{{ sortArrow('id') }}</th>
                           <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('topicName')">Tên chủ đề{{ sortArrow('topicName') }}</th>
                           <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize">Mô tả</th>
+                          <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('department')">Phòng ban{{ sortArrow('department') }}</th>
                           <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('assignedEmployee')">Nhân viên phụ trách{{ sortArrow('assignedEmployee') }}</th>
                           <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize">SLA</th>
                           <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none rounded-e-[10px]" (click)="toggleSort('status')">Trạng thái{{ sortArrow('status') }}</th>
@@ -150,6 +149,7 @@ type SortOrder = 'asc' | 'desc';
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">#{{ topic.id }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent text-dark dark:text-white/[.87]">{{ topic.topicName }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent max-w-[280px] truncate">{{ topic.topicDescription }}</td>
+                          <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ topic.department }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ topic.assignedEmployee }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
                             <ng-container *ngIf="topic.SLA; else noSla" [ngSwitch]="getSlaPriorityLabel(topic.SLA)">
@@ -213,6 +213,19 @@ type SortOrder = 'asc' | 'desc';
                     name="topicDescription"
                     [(ngModel)]="newTopicDraft.topicDescription"
                   ></textarea>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control>
+                  <nz-form-label class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Phòng ban:</nz-form-label>
+                  <input
+                    class="h-[50px] border-normal dark:border-white/10 px-[20px] placeholder-shown:text-light-extra dark:placeholder-shown:text-white/60 rounded-[5px] dark:bg-white/10 dark:text-white/[.87]"
+                    type="text"
+                    nz-input
+                    placeholder="Phòng ban"
+                    name="department"
+                    [(ngModel)]="newTopicDraft.department"
+                  />
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
@@ -294,6 +307,17 @@ type SortOrder = 'asc' | 'desc';
                   placeholder="Mô tả"
                   [(ngModel)]="editTopicDescription"
                 ></textarea>
+              </div>
+              <div>
+                <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Phòng ban</div>
+                <div *ngIf="!editingTopicDetails" class="text-[15px] font-medium text-dark dark:text-white/[.87]">{{ topic.department }}</div>
+                <input
+                  *ngIf="editingTopicDetails"
+                  class="h-[44px] w-full border-normal dark:border-white/10 px-[15px] rounded-[6px] dark:bg-white/10 dark:text-white/[.87]"
+                  nz-input
+                  placeholder="Phòng ban"
+                  [(ngModel)]="editTopicDepartment"
+                />
               </div>
               <div>
                 <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Nhân viên phụ trách</div>
@@ -409,6 +433,7 @@ export class ManageTopicComponent implements OnInit {
   searchValue = '';
   statusFilter = '';
   employeeFilter = '';
+  departmentFilter = '';
   slaFilter = '';
   topics: Topic[] = [];
   filteredTopics: Topic[] = [];
@@ -419,12 +444,14 @@ export class ManageTopicComponent implements OnInit {
   editingTopicDetails = false;
   editTopicName = '';
   editTopicDescription = '';
+  editTopicDepartment = '';
   editTopicAssignedEmployee = '';
   editTopicSLA = '';
 
-  newTopicDraft: { topicName: string; topicDescription: string; status: string; assignedEmployee: string; SLA: string } = {
+  newTopicDraft: { topicName: string; topicDescription: string; department: string; status: string; assignedEmployee: string; SLA: string } = {
     topicName: '',
     topicDescription: '',
+    department: '',
     status: 'active',
     assignedEmployee: '',
     SLA: ''
@@ -479,7 +506,12 @@ export class ManageTopicComponent implements OnInit {
 
   /** Unique list of employees who are assigned to at least one topic, derived from the loaded data. */
   get employeeOptions(): string[] {
-    return Array.from(new Set(this.topics.map((t) => t.assignedEmployee)));
+    return Array.from(new Set(this.topics.map((t) => t.assignedEmployee))).filter(Boolean);
+  }
+
+  /** Unique list of departments represented in the loaded topic data. */
+  get departmentOptions(): string[] {
+    return Array.from(new Set(this.topics.map((t) => t.department))).filter(Boolean);
   }
 
   ngOnInit(): void {
@@ -513,6 +545,11 @@ export class ManageTopicComponent implements OnInit {
     this.filteredTopics = this.applyAll();
   }
 
+  filterByDepartment(): void {
+    this.pageIndex = 1;
+    this.filteredTopics = this.applyAll();
+  }
+
   filterBySLA(): void {
     this.pageIndex = 1;
     this.filteredTopics = this.applyAll();
@@ -537,7 +574,7 @@ export class ManageTopicComponent implements OnInit {
     return this.sortOrder === 'asc' ? ' ▲' : ' ▼';
   }
 
-  /** Runs the combined pipeline: search by name/description -> filter by status/employee/SLA -> sort. */
+  /** Runs the combined pipeline: search by name/description -> filter by status/department/employee/SLA -> sort. */
   private applyAll(): Topic[] {
     const searchQuery = this.searchValue.trim().toLowerCase();
 
@@ -545,11 +582,13 @@ export class ManageTopicComponent implements OnInit {
       const matchesSearch = !searchQuery ||
         topic.topicName.toLowerCase().includes(searchQuery) ||
         topic.topicDescription.toLowerCase().includes(searchQuery) ||
-        topic.assignedEmployee.toLowerCase().includes(searchQuery);
+        topic.assignedEmployee.toLowerCase().includes(searchQuery) ||
+        topic.department.toLowerCase().includes(searchQuery);
       const matchesStatus = !this.statusFilter || topic.status === this.statusFilter;
+      const matchesDepartment = !this.departmentFilter || topic.department === this.departmentFilter;
       const matchesEmployee = !this.employeeFilter || topic.assignedEmployee === this.employeeFilter;
       const matchesSLA = !this.slaFilter || topic.SLA === this.slaFilter;
-      return matchesSearch && matchesStatus && matchesEmployee && matchesSLA;
+      return matchesSearch && matchesStatus && matchesDepartment && matchesEmployee && matchesSLA;
     });
 
     if (this.sortField) {
@@ -569,6 +608,9 @@ export class ManageTopicComponent implements OnInit {
           break;
         case 'topicName':
           comparison = a.topicName.localeCompare(b.topicName);
+          break;
+        case 'department':
+          comparison = a.department.localeCompare(b.department);
           break;
         case 'assignedEmployee':
           comparison = a.assignedEmployee.localeCompare(b.assignedEmployee);
@@ -609,6 +651,7 @@ export class ManageTopicComponent implements OnInit {
     this.editingTopicDetails = false;
     this.editTopicName = topic.topicName;
     this.editTopicDescription = topic.topicDescription;
+    this.editTopicDepartment = topic.department;
     this.editTopicAssignedEmployee = topic.assignedEmployee;
     this.editTopicSLA = topic.SLA;
     this.viewModalRef = this.modal.create({
@@ -632,6 +675,7 @@ export class ManageTopicComponent implements OnInit {
     }
     this.editTopicName = this.selectedTopic.topicName;
     this.editTopicDescription = this.selectedTopic.topicDescription;
+    this.editTopicDepartment = this.selectedTopic.department;
     this.editTopicAssignedEmployee = this.selectedTopic.assignedEmployee;
     this.editTopicSLA = this.selectedTopic.SLA;
     this.editingTopicDetails = true;
@@ -649,6 +693,7 @@ export class ManageTopicComponent implements OnInit {
 
     this.selectedTopic.topicName = updatedName;
     this.selectedTopic.topicDescription = this.editTopicDescription.trim();
+    this.selectedTopic.department = this.editTopicDepartment.trim();
     this.selectedTopic.assignedEmployee = this.editTopicAssignedEmployee.trim();
     this.selectedTopic.SLA = this.editTopicSLA;
     this.editingTopicDetails = false;
@@ -661,6 +706,7 @@ export class ManageTopicComponent implements OnInit {
     }
     this.editTopicName = this.selectedTopic.topicName;
     this.editTopicDescription = this.selectedTopic.topicDescription;
+    this.editTopicDepartment = this.selectedTopic.department;
     this.editTopicAssignedEmployee = this.selectedTopic.assignedEmployee;
     this.editTopicSLA = this.selectedTopic.SLA;
     this.editingTopicDetails = false;
@@ -670,6 +716,7 @@ export class ManageTopicComponent implements OnInit {
     this.newTopicDraft = {
       topicName: '',
       topicDescription: '',
+      department: '',
       status: 'active',
       assignedEmployee: '',
       SLA: ''
@@ -699,6 +746,7 @@ export class ManageTopicComponent implements OnInit {
       id: nextId,
       topicName,
       topicDescription: this.newTopicDraft.topicDescription.trim(),
+      department: this.newTopicDraft.department.trim(),
       status: this.newTopicDraft.status || 'active',
       assignedEmployee: this.newTopicDraft.assignedEmployee.trim(),
       SLA: this.newTopicDraft.SLA

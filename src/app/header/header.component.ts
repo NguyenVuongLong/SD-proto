@@ -70,7 +70,7 @@ import authorMenu from '../../assets/data/global/header/author-menu.json';
           <a
             class="flex items-center justify-center text-sm font-medium bg-[#f4f5f7] dark:bg-[#32333f] h-[50px] text-light hover:text-primary dark:hover:text-white/60 dark:text-white/[.87] mx-[-15px] mb-[-15px] rounded-b-6"
             href="#" (click)="signOut()">
-            <i class="facebook"></i> Sign Out</a>
+            Sign Out</a>
         </div>
       </nz-dropdown-menu>
     </div>

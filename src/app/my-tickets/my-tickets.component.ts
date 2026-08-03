@@ -25,8 +25,19 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 };
 
 interface Person {
+  ticketId: string;
   id: string;
-  subject?: string;
+  topicId?: string;
+  departmentCode?: string;
+  ticketName?: string;
+  ticketContent?: string;
+  slaCode?: string;
+  statusCode?: string;
+  assignedDate?: string;
+  assignedTo?: string;
+  closedBy?: string;
+  createdBy?: string;
+  subject: string;
   content: string;
   attachedFile: string;
   actions: string;
@@ -42,7 +53,7 @@ interface Person {
   createdDate: string;
   dueDate: string;
   closedDate: string;
-  response: string;
+  response?: string;
   topicName: string;
 }
 
@@ -538,7 +549,7 @@ export class MyTicketsComponent implements OnInit {
   ngOnInit(): void {
     this.http.get<Person[]>('assets/data/features/ticket-table.json').subscribe(
       (data) => {
-        this.people = data;
+        this.people = this.normalizeTicketData(data);
         this.filteredPeople = this.applyAll();
       },
       (error) => {
@@ -556,6 +567,39 @@ export class MyTicketsComponent implements OnInit {
         console.log('Error reading topic JSON file:', error);
       }
     );
+  }
+
+  private normalizeTicketData(data: any[]): Person[] {
+    return data.map((item) => ({
+      ...item,
+      ticketId: item.ticketId ?? item.id ?? '',
+      id: item.id ?? item.ticketId ?? '',
+      topicId: item.topicId ?? undefined,
+      topicName: item.topicName ?? item.topicId ?? '',
+      departmentCode: item.departmentCode ?? item.creatorDept ?? item.assignedDept ?? '',
+      ticketName: item.ticketName ?? item.subject ?? '',
+      subject: item.subject ?? item.ticketName ?? '',
+      ticketContent: item.ticketContent ?? item.content ?? '',
+      content: item.content ?? item.ticketContent ?? '',
+      slaCode: item.slaCode ?? item.priority ?? '',
+      priority: item.priority ?? item.slaCode ?? '',
+      statusCode: item.statusCode ?? item.actions ?? '',
+      actions: item.actions ?? item.statusCode ?? '',
+      assignedDate: item.assignedDate ?? undefined,
+      assignedTo: item.assignedTo ?? item.assignedUser ?? '',
+      assignedUser: item.assignedUser ?? item.assignedTo ?? '',
+      createdBy: item.createdBy ?? item.creatorName ?? '',
+      creatorName: item.creatorName ?? item.createdBy ?? '',
+      creatorDept: item.creatorDept ?? item.departmentCode ?? '',
+      assignedDept: item.assignedDept ?? item.departmentCode ?? '',
+      creatorUser: item.creatorUser ?? item.createdBy ?? undefined,
+      closedBy: item.closedBy ?? undefined,
+      attachedFile: item.attachedFile ?? '',
+      response: item.response ?? '',
+      createdDate: item.createdDate ?? '',
+      dueDate: item.dueDate ?? '',
+      closedDate: item.closedDate ?? ''
+    } as Person));
   }
 
   onSearchChange(): void {
