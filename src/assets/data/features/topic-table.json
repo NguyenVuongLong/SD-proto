@@ -3,7 +3,7 @@
         "id": "1",
         "topicName": "Hỗ trợ ứng dụng",
         "topicDescription": "Hỗ trợ các vấn đề liên quan đến ứng dụng",
-        "department": "Phòng Công nghệ thông tin",
+        "departmentCode": "D005",
         "status": "active",
         "assignedEmployee": "Nguyễn Văn A",
         "SLA": "24"
@@ -12,7 +12,7 @@
         "id": "2",
         "topicName": "Hỗ trợ kĩ thuật",
         "topicDescription": "Hỗ trợ các vấn đề liên quan đến kĩ thuật",
-        "department": "Phòng Công nghệ thông tin",
+        "departmentCode": "D005",
         "status": "active",
         "assignedEmployee": "Trần Thị B",
         "SLA": "48"
@@ -21,7 +21,7 @@
         "id": "3",
         "topicName": "Hỗ trợ mạng",
         "topicDescription": "Hỗ trợ các vấn đề liên quan đến mạng",
-        "department": "Phòng Hạ tầng mạng",
+        "departmentCode": "D005",
         "status": "inactive",
         "assignedEmployee": "Lê Văn C",
         "SLA": "96"
@@ -30,7 +30,7 @@
         "id": "4",
         "topicName": "Hỗ trợ nhân sự",
         "topicDescription": "Hỗ trợ các vấn đề liên quan đến chính sách và hồ sơ nhân sự",
-        "department": "Phòng Nhân sự",
+        "departmentCode": "D003",
         "status": "active",
         "assignedEmployee": "Phạm Thị D",
         "SLA": "72"
@@ -39,7 +39,7 @@
         "id": "5",
         "topicName": "Hỗ trợ tài chính - kế toán",
         "topicDescription": "Hỗ trợ các vấn đề liên quan đến hóa đơn, thanh toán và kế toán",
-        "department": "Phòng Kế toán",
+        "departmentCode": "D002",
         "status": "active",
         "assignedEmployee": "Hoàng Văn E",
         "SLA": "48"
@@ -48,7 +48,7 @@
         "id": "6",
         "topicName": "Hỗ trợ mua sắm thiết bị",
         "topicDescription": "Hỗ trợ các vấn đề liên quan đến mua sắm và cấp phát thiết bị văn phòng",
-        "department": "Phòng Hành chính",
+        "departmentCode": "D001",
         "status": "active",
         "assignedEmployee": "Vũ Thị F",
         "SLA": "96"
@@ -57,7 +57,7 @@
         "id": "7",
         "topicName": "Hỗ trợ bảo trì cơ sở vật chất",
         "topicDescription": "Hỗ trợ các vấn đề liên quan đến sửa chữa, bảo trì tòa nhà và trang thiết bị",
-        "department": "Phòng Hành chính",
+        "departmentCode": "D001",
         "status": "inactive",
         "assignedEmployee": "Đặng Văn G",
         "SLA": "72"
@@ -66,7 +66,7 @@
         "id": "8",
         "topicName": "Hỗ trợ marketing",
         "topicDescription": "Hỗ trợ các vấn đề liên quan đến truyền thông và quảng bá thương hiệu",
-        "department": "Phòng Marketing",
+        "departmentCode": "D004",
         "status": "active",
         "assignedEmployee": "Bùi Thị H",
         "SLA": "48"
@@ -75,7 +75,7 @@
         "id": "9",
         "topicName": "Hỗ trợ pháp lý",
         "topicDescription": "Hỗ trợ các vấn đề liên quan đến hợp đồng và tuân thủ pháp luật",
-        "department": "Phòng Pháp chế",
+        "departmentCode": "D005",
         "status": "active",
         "assignedEmployee": "Ngô Văn I",
         "SLA": "96"
@@ -84,7 +84,7 @@
         "id": "10",
         "topicName": "Hỗ trợ bảo mật hệ thống",
         "topicDescription": "Hỗ trợ các vấn đề liên quan đến an ninh mạng và bảo mật dữ liệu",
-        "department": "Phòng Công nghệ thông tin",
+        "departmentCode": "D005",
         "status": "active",
         "assignedEmployee": "Đỗ Thị K",
         "SLA": "24"

@@ -2,6 +2,7 @@ import { Component, TemplateRef, OnInit, ViewChild, ElementRef } from '@angular/
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
@@ -27,11 +28,12 @@ interface Person {
   ticketId: string;
   id: string;
   topicId?: string;
-  departmentCode?: string;
+  departmentCode: string;
   ticketName?: string;
   ticketContent?: string;
-  slaCode?: string;
-  statusCode?: string;
+  slaCode: string;
+  priority: string;
+  statusCode: string;
   assignedDate?: string;
   assignedTo?: string;
   closedBy?: string;
@@ -39,8 +41,6 @@ interface Person {
   subject: string;
   content: string;
   attachedFile: string;
-  actions: string;
-  priority: string;
   creatorUser: string;
   creatorName: string;
   creatorPhone: string;
@@ -56,7 +56,24 @@ interface Person {
   topicName: string;
 }
 
-type SortField = 'id' | 'creatorName' | 'priority' | 'actions' | 'createdDate' | 'dueDate' | 'topicName';
+interface TicketResponse {
+  ticketId: string;
+  responseId: string;
+  content: string;
+}
+
+interface Topic {
+  id: string;
+  topicName: string;
+  departmentCode?: string;
+}
+
+interface Department {
+  departmentCode: string;
+  departmentName: string;
+}
+
+type SortField = 'id' | 'creatorName' | 'priority' | 'statusCode' | 'createdDate' | 'dueDate' | 'topicName';
 type SortOrder = 'asc' | 'desc';
 
 @Component({
@@ -125,7 +142,9 @@ type SortOrder = 'asc' | 'desc';
                       [(ngModel)]="topicFilter"
                       (ngModelChange)="filterByTopic()" nzPlaceHolder="Tìm theo chủ đề" nzAllowClear
                     >
-                      <nz-option *ngFor="let t of topicFilterOptions" [nzValue]="t" [nzLabel]="t"></nz-option>
+                      <nz-option-group *ngFor="let group of topicFilterGroups" [nzLabel]="group.departmentName">
+                        <nz-option *ngFor="let t of group.topics" [nzValue]="t" [nzLabel]="t"></nz-option>
+                      </nz-option-group>
                     </nz-select>
                   </div>
                   <div class="inline-flex items-center">
@@ -134,10 +153,7 @@ type SortOrder = 'asc' | 'desc';
                       [(ngModel)]="priorityFilter"
                       (ngModelChange)="filterByPriority()" nzPlaceHolder="Tìm theo ưu tiên" nzAllowClear
                     >
-                      <nz-option nzValue="Gấp" nzLabel="Gấp"></nz-option>
-                      <nz-option nzValue="Cao" nzLabel="Cao"></nz-option>
-                      <nz-option nzValue="Trung bình" nzLabel="Trung bình"></nz-option>
-                      <nz-option nzValue="Thấp" nzLabel="Thấp"></nz-option>
+                      <nz-option *ngFor="let p of priorityOptions" [nzValue]="p" [nzLabel]="p"></nz-option>
                     </nz-select>
                   </div>
                   <div class="inline-flex items-center">
@@ -147,9 +163,7 @@ type SortOrder = 'asc' | 'desc';
                       (ngModelChange)="onStatusFilterChange($event)" nzPlaceHolder="Tìm theo trạng thái" nzAllowClear nzMode="multiple"
                     >
                       <nz-option-group nzLabel="Trạng thái xử lý">
-                        <nz-option nzValue="open" nzLabel="Mở"></nz-option>
-                        <nz-option nzValue="progress" nzLabel="Đang xử lý"></nz-option>
-                        <nz-option nzValue="close" nzLabel="Hoàn thành"></nz-option>
+                        <nz-option *ngFor="let status of statusOptions" [nzValue]="status.statusCode" [nzLabel]="status.statusName"></nz-option>
                       </nz-option-group>
                       <nz-option-group nzLabel="Tiến độ">
                         <nz-option nzValue="ontrack" nzLabel="Đúng tiến độ"></nz-option>
@@ -187,7 +201,7 @@ type SortOrder = 'asc' | 'desc';
                           <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('topicName')">Chủ đề{{ sortArrow('topicName') }}</th>
                           <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('creatorName')">Người tạo{{ sortArrow('creatorName') }}</th>
                           <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('priority')">Ưu tiên{{ sortArrow('priority') }}</th>
-                          <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('actions')">Trạng thái{{ sortArrow('actions') }}</th>
+                          <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('statusCode')">Trạng thái{{ sortArrow('statusCode') }}</th>
                           <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('createdDate')">Ngày tạo{{ sortArrow('createdDate') }}</th>
                           <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('dueDate')">Ngày đến hạn{{ sortArrow('dueDate') }}</th>
                         </tr>
@@ -214,9 +228,9 @@ type SortOrder = 'asc' | 'desc';
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.priority }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
                           <span
-                              class="inline-flex items-center justify-center bg-{{ getStatusColor(person.actions) }}/10 text-{{ getStatusColor(person.actions) }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize"
+                              class="inline-flex items-center justify-center bg-{{ getStatusColor(person.statusCode) }}/10 text-{{ getStatusColor(person.statusCode) }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize"
                             >
-                              {{ person.actions }}
+                              {{ statusNameByCode[person.statusCode] || person.statusCode }}
                             </span>
                             <span
                               class="block mt-1 text-[11px] font-medium capitalize bg-{{ getScheduleStatusColor(person) }}/10 text-{{ getScheduleStatusColor(person) }} px-2 py-0.5 rounded-[15px] w-fit"
@@ -250,8 +264,8 @@ type SortOrder = 'asc' | 'desc';
             <div class="flex flex-col gap-[18px]" *ngIf="selectedTicket as ticket">
               <div class="flex items-center justify-between flex-wrap gap-[10px]">
                 <span class="text-[13px] font-medium text-theme-gray dark:text-white/60">Trạng thái:
-                  <span class="inline-flex items-center justify-center bg-{{ getStatusColor(ticket.actions) }}/10 text-{{ getStatusColor(ticket.actions) }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize">
-                    {{ ticket.actions }}
+                  <span class="inline-flex items-center justify-center bg-{{ getStatusColor(ticket.statusCode) }}/10 text-{{ getStatusColor(ticket.statusCode) }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize">
+                    {{ statusNameByCode[ticket.statusCode] || ticket.statusCode }}
                   </span>
                   <span class="inline-flex items-center ms-1 text-[11px] font-medium capitalize bg-{{ getScheduleStatusColor(ticket) }}/10 text-{{ getScheduleStatusColor(ticket) }} px-2 py-0.5 rounded-[15px]">
                     {{ getScheduleStatus(ticket) }}
@@ -310,9 +324,9 @@ type SortOrder = 'asc' | 'desc';
                 <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Tệp đính kèm</div>
                 <div class="text-[15px] text-primary font-medium">{{ ticket.attachedFile }}</div>
               </div>
-              <div *ngIf="ticket.response" class="pt-[18px] border-t border-regular dark:border-white/10">
+              <div *ngIf="selectedTicketResponses.length" class="pt-[18px] border-t border-regular dark:border-white/10">
                 <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-[15px]">Phản hồi</div>
-                <div class="flex items-start w-full gap-[10px]">
+                <div *ngFor="let response of selectedTicketResponses" class="flex items-start w-full gap-[10px] mb-[12px] last:mb-0">
                   <div class="rounded-full relative inline-flex items-center justify-center">
                     <img src="assets/images/avatars/{{ ticket.assignedUser }}" class="bg-gray dark:bg-white/10 w-[30px] h-[30px] rounded-full" alt="{{ ticket.assignedName }}">
                   </div>
@@ -320,7 +334,7 @@ type SortOrder = 'asc' | 'desc';
                     <div>
                       <h6 class="text-[14px] font-medium leading-[1.4285714286] text-dark dark:text-white/[.87]">{{ ticket.assignedName }}</h6>
                       <div class="text-limit">
-                        <p class="text-[16px] font-normal leading-[1.6875] text-theme-gray dark:text-white/60 whitespace-pre-line">{{ ticket.response }}</p>
+                        <p class="text-[16px] font-normal leading-[1.6875] text-theme-gray dark:text-white/60 whitespace-pre-line">{{ response.content }}</p>
                       </div>
                     </div>
                     <div class="last-chat-time" *ngIf="ticket.closedDate">
@@ -366,8 +380,8 @@ type SortOrder = 'asc' | 'desc';
                 <button nz-button (click)="openChangeAssigneeTopicModal()">Đổi người xử lý &amp; chủ đề</button>
                 <button nz-button (click)="openChangePriorityModal()">Đổi ưu tiên</button>
                 <button nz-button (click)="openChangeDueDateModal()">Đổi ngày đến hạn</button>
-                <button *ngIf="ticket.actions !== 'Hoàn thành'" nz-button nzType="primary" nzDanger (click)="closeTicket()">Đánh dấu hoàn thành</button>
-                <button *ngIf="ticket.actions === 'Hoàn thành'" nz-button nzType="primary" (click)="reopenTicket()">Mở lại ticket</button>
+                <button *ngIf="ticket.statusCode !== 'closed'" nz-button nzType="primary" nzDanger (click)="closeTicket()">Đánh dấu hoàn thành</button>
+                <button *ngIf="ticket.statusCode === 'closed'" nz-button nzType="primary" (click)="reopenTicket()">Mở lại ticket</button>
               </div>
             </div>
           </ng-template>
@@ -402,7 +416,9 @@ type SortOrder = 'asc' | 'desc';
                   name="newTopic"
                   nzPlaceHolder="Chọn chủ đề"
                 >
-                  <nz-option *ngFor="let t of topicFilterOptions" [nzValue]="t" [nzLabel]="t"></nz-option>
+                  <nz-option-group *ngFor="let group of topicFilterGroups" [nzLabel]="group.departmentName">
+                    <nz-option *ngFor="let t of group.topics" [nzValue]="t" [nzLabel]="t"></nz-option>
+                  </nz-option-group>
                 </nz-select>
               </div>
             </div>
@@ -480,6 +496,8 @@ export class ManageTicketComponent implements OnInit {
 
   viewModalRef?: NzModalRef;
   selectedTicket: Person | null = null;
+  selectedTicketResponses: TicketResponse[] = [];
+  responseMap: { [ticketId: string]: TicketResponse[] } = {};
 
   // Sub-dialogs launched from within the ticket detail dialog.
   subModalRef?: NzModalRef;
@@ -490,7 +508,11 @@ export class ManageTicketComponent implements OnInit {
   newResponseText = '';
   newResponseFiles: File[] = [];
 
-  readonly priorityOptions: string[] = ['Gấp', 'Cao', 'Trung bình', 'Thấp'];
+  slaOptions: string[] = [];
+  slaPriorityByCode: { [key: string]: string } = {};
+  slaCodeByPriority: { [key: string]: string } = {};
+  slaValueByCode: { [key: string]: number } = {};
+  priorityOptions: string[] = [];
 
   sortField: SortField | null = null;
   sortOrder: SortOrder = 'asc';
@@ -500,24 +522,32 @@ export class ManageTicketComponent implements OnInit {
 
   // Options for the "Chủ đề" dropdown in the Tạo Ticket modal; the rest of
   // the form only renders once one of these has been picked.
-  readonly topicOptions: string[] = ['P.CNTT', 'Hỗ trợ kĩ thuật', 'Hỗ trợ ứng dụng'];
+  topicOptions: string[] = [];
+  topicFilterGroups: { departmentName: string; topics: string[] }[] = [];
+  topicNameById: { [key: string]: string } = {};
+  departmentNameByCode: { [key: string]: string } = {};
   newTicketTopic: string | null = null;
 
-  // Maps the dropdown's filter values to the actual Vietnamese/English
-  // values stored in the `actions` field of the JSON data.
-  private readonly statusMap: { [key: string]: string } = {
+  statusOptions: { statusCode: string; statusName: string }[] = [];
+  statusNameByCode: { [key: string]: string } = {
     open: 'Mở',
-    close: 'Hoàn thành',
-    progress: 'Đang xử lý'
+    processing: 'Đang xử lý',
+    closed: 'Hoàn thành'
   };
+  statusRank: { [key: string]: number } = {
+    open: 1,
+    processing: 2,
+    closed: 3
+  };
+  private readonly statusActionCodes: string[] = ['open', 'processing', 'closed'];
 
   // Color token (matches the existing bg-{color}/10 text-{color} badge pattern) for each
-  // possible `actions` value. The JSON no longer carries a separate `status` field — the
-  // badge color is derived natively from `actions` instead.
-  private readonly actionsColorMap: { [key: string]: string } = {
-    'Mở': 'secondary',
-    'Đang xử lý': 'warning',
-    'Hoàn thành': 'success'
+  // possible `statusCode` value. The JSON no longer carries a separate `status` field — the
+  // badge color is derived natively from `statusCode` instead.
+  private readonly statusCodeColorMap: { [key: string]: string } = {
+    'open': 'secondary',
+    'processing': 'warning',
+    'closed': 'success'
   };
 
   // Maps the dropdown's schedule-status filter values to the labels
@@ -534,14 +564,6 @@ export class ManageTicketComponent implements OnInit {
     'Cao': 3,
     'Trung bình': 2,
     'Thấp': 1
-  };
-
-  // Custom status ranking so the Trạng thái column sorts in a logical
-  // lifecycle order (Mở -> Quá hạn -> Đóng) instead of alphabetically.
-  private readonly statusRank: { [key: string]: number } = {
-    'Mở': 1,
-    'Đang xử lý': 2,
-    'Hoàn thành': 3
   };
 
   constructor(private http: HttpClient, private modal: NzModalService) {}
@@ -564,16 +586,23 @@ export class ManageTicketComponent implements OnInit {
     return Array.from(seen.values());
   }
 
-  /** Unique list of topic names present in the loaded ticket data, used for
-   * both the topic filter dropdown and the "Đổi chủ đề" change dialog. */
-  get topicFilterOptions(): string[] {
-    const seen = new Set<string>();
-    for (const p of this.people) {
-      if (p.topicName) {
-        seen.add(p.topicName);
+  private buildTopicFilterGroups(topics: Topic[]): { departmentName: string; topics: string[] }[] {
+    const grouped = new Map<string, Set<string>>();
+    for (const topic of topics) {
+      const departmentName = this.departmentNameByCode[topic.departmentCode ?? ''] ?? topic.departmentCode ?? 'Khác';
+      if (!grouped.has(departmentName)) {
+        grouped.set(departmentName, new Set());
+      }
+      if (topic.topicName) {
+        grouped.get(departmentName)?.add(topic.topicName);
       }
     }
-    return Array.from(seen.values());
+    return Array.from(grouped.entries())
+      .map(([departmentName, topics]) => ({
+        departmentName,
+        topics: Array.from(topics).sort((a, b) => a.localeCompare(b))
+      }))
+      .sort((a, b) => a.departmentName.localeCompare(b.departmentName));
   }
 
   onPageIndexChange(pageIndex: number): void {
@@ -582,6 +611,7 @@ export class ManageTicketComponent implements OnInit {
 
   viewTicket(person: Person): void {
     this.selectedTicket = person;
+    this.selectedTicketResponses = this.getResponsesByTicketId(person.id);
     this.newResponseText = '';
     this.newResponseFiles = [];
     this.viewModalRef = this.modal.create({
@@ -596,6 +626,7 @@ export class ManageTicketComponent implements OnInit {
     // (whichever way it was closed), so the content doesn't disappear mid-animation.
     this.viewModalRef.afterClose.subscribe(() => {
       this.selectedTicket = null;
+      this.selectedTicketResponses = [];
     });
   }
 
@@ -661,6 +692,10 @@ export class ManageTicketComponent implements OnInit {
   confirmChangePriority(modalRef?: NzModalRef): void {
     if (this.selectedTicket && this.selectedNewPriority) {
       this.selectedTicket.priority = this.selectedNewPriority;
+      const newCode = this.slaCodeByPriority[this.selectedNewPriority];
+      if (newCode) {
+        this.selectedTicket.slaCode = newCode;
+      }
     }
     if (modalRef) {
       modalRef.destroy();
@@ -694,19 +729,19 @@ export class ManageTicketComponent implements OnInit {
 
   // --- Close ticket ---
   closeTicket(): void {
-    if (!this.selectedTicket || this.selectedTicket.actions === 'Hoàn thành') {
+    if (!this.selectedTicket || this.selectedTicket.statusCode === 'closed') {
       return;
     }
-    this.selectedTicket.actions = 'Hoàn thành';
+    this.selectedTicket.statusCode = 'closed';
     this.selectedTicket.closedDate = this.formatDateForStorage(new Date());
   }
 
   // --- Reopen ticket ---
   reopenTicket(): void {
-    if (!this.selectedTicket || this.selectedTicket.actions !== 'Hoàn thành') {
+    if (!this.selectedTicket || this.selectedTicket.statusCode !== 'closed') {
       return;
     }
-    this.selectedTicket.actions = 'Mở';
+    this.selectedTicket.statusCode = 'open';
     this.selectedTicket.closedDate = '';
   }
 
@@ -728,9 +763,26 @@ export class ManageTicketComponent implements OnInit {
     if (!this.selectedTicket || (!text && !this.newResponseFiles.length)) {
       return;
     }
+
+    const newResponse: TicketResponse = {
+      ticketId: this.selectedTicket.id,
+      responseId: `${this.selectedTicket.id}-${Date.now()}`,
+      content: text
+    };
+
+    if (!this.responseMap[this.selectedTicket.id]) {
+      this.responseMap[this.selectedTicket.id] = [];
+    }
+
+    this.responseMap[this.selectedTicket.id].push(newResponse);
+    this.selectedTicketResponses = this.responseMap[this.selectedTicket.id];
     this.selectedTicket.response = text;
     this.newResponseText = '';
     this.newResponseFiles = [];
+  }
+
+  private getResponsesByTicketId(ticketId: string): TicketResponse[] {
+    return this.responseMap[ticketId] ?? [];
   }
 
   /** Parses a "dd/MM/yyyy" string into a Date for pre-filling a date picker. */
@@ -754,9 +806,67 @@ export class ManageTicketComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.http.get<Person[]>('assets/data/features/ticket-table.json').subscribe(
-      (data) => {
-        this.people = this.normalizeTicketData(data);
+    forkJoin({
+      tickets: this.http.get<Person[]>('assets/data/features/ticket-table.json'),
+      responses: this.http.get<TicketResponse[]>('assets/data/features/response-table.json'),
+      statuses: this.http.get<{ statusCode: string; statusName: string }[]>('assets/data/features/status-table.json'),
+      topics: this.http.get<Topic[]>('assets/data/features/topic-table.json'),
+      departments: this.http.get<Department[]>('assets/data/features/department-table.json'),
+      sla: this.http.get<{ SLAcode: string; SLApriority: string; SLAvalue: string }[]>('assets/data/features/SLA-table.json')
+    }).subscribe(
+      ({ tickets, responses, statuses, topics, departments, sla }) => {
+        this.statusOptions = statuses;
+        this.statusNameByCode = statuses.reduce((map, item) => {
+          map[item.statusCode] = item.statusName;
+          return map;
+        }, { ...this.statusNameByCode });
+
+        this.responseMap = responses.reduce((map, item) => {
+          if (!map[item.ticketId]) {
+            map[item.ticketId] = [];
+          }
+          map[item.ticketId].push(item);
+          return map;
+        }, {} as { [ticketId: string]: TicketResponse[] });
+
+        this.topicOptions = topics
+          .map((topic) => topic.topicName)
+          .filter((topicName): topicName is string => !!topicName);
+
+        this.departmentNameByCode = departments.reduce((map, department) => {
+          map[department.departmentCode] = department.departmentName;
+          return map;
+        }, {} as { [key: string]: string });
+
+        this.topicFilterGroups = this.buildTopicFilterGroups(topics);
+
+        this.topicNameById = topics.reduce((map, topic) => {
+          map[topic.id] = topic.topicName;
+          return map;
+        }, {} as { [key: string]: string });
+
+        this.slaPriorityByCode = sla.reduce((map, item) => {
+          map[item.SLAcode] = item.SLApriority;
+          return map;
+        }, {} as { [key: string]: string });
+
+        this.slaCodeByPriority = sla.reduce((map, item) => {
+          map[item.SLApriority] = item.SLAcode;
+          return map;
+        }, {} as { [key: string]: string });
+
+        this.slaValueByCode = sla.reduce((map, item) => {
+          const value = Number(item.SLAvalue);
+          if (!Number.isNaN(value)) {
+            map[item.SLAcode] = value;
+          }
+          return map;
+        }, {} as { [key: string]: number });
+
+        this.priorityOptions = sla.map((item) => item.SLApriority);
+        this.slaOptions = sla.map((item) => item.SLAcode);
+
+        this.people = this.normalizeTicketData(tickets);
         this.filteredPeople = this.applyAll();
       },
       (error) => {
@@ -771,16 +881,15 @@ export class ManageTicketComponent implements OnInit {
       ticketId: item.ticketId ?? item.id ?? '',
       id: item.id ?? item.ticketId ?? '',
       topicId: item.topicId ?? undefined,
-      topicName: item.topicName ?? item.topicId ?? '',
+      topicName: this.topicNameById[item.topicId] ?? item.topicName ?? item.topicId ?? '',
       departmentCode: item.departmentCode ?? item.creatorDept ?? item.assignedDept ?? '',
       ticketName: item.ticketName ?? item.subject ?? '',
       subject: item.subject ?? item.ticketName ?? '',
       ticketContent: item.ticketContent ?? item.content ?? '',
       content: item.content ?? item.ticketContent ?? '',
-      slaCode: item.slaCode ?? item.priority ?? '',
-      priority: item.priority ?? item.slaCode ?? '',
-      statusCode: item.statusCode ?? item.actions ?? '',
-      actions: item.actions ?? item.statusCode ?? '',
+      slaCode: item.slaCode ?? item.SLAcode ?? '',
+      priority: this.slaPriorityByCode[item.slaCode ?? item.SLAcode ?? ''] ?? '',
+      statusCode: item.statusCode ?? item.statusCode ?? '',
       assignedDate: item.assignedDate ?? undefined,
       assignedTo: item.assignedTo ?? item.assignedUser ?? '',
       assignedUser: item.assignedUser ?? item.assignedTo ?? '',
@@ -815,7 +924,7 @@ export class ManageTicketComponent implements OnInit {
    */
   onStatusFilterChange(values: string[]): void {
     const previous = this.statusFilter;
-    let constrained = this.keepLatestPerGroup(values, previous, Object.keys(this.statusMap));
+    let constrained = this.keepLatestPerGroup(values, previous, this.statusActionCodes);
     constrained = this.keepLatestPerGroup(constrained, previous, Object.keys(this.scheduleStatusMap));
     this.statusFilter = constrained;
     this.filterByStatus();
@@ -909,9 +1018,9 @@ export class ManageTicketComponent implements OnInit {
     return this.getScheduleStatus(person) === 'Trễ hạn' ? 'danger' : 'success';
   }
 
-  /** Color token (matches the existing bg-{color}/10 text-{color} badge pattern) for the ticket's action status, derived natively from `actions`. */
-  getStatusColor(actions: string): string {
-    return this.actionsColorMap[actions] ?? 'secondary';
+  /** Color token (matches the existing bg-{color}/10 text-{color} badge pattern) for the ticket's action status, derived natively from `statusCode`. */
+  getStatusColor(statusCode: string): string {
+    return this.statusCodeColorMap[statusCode] ?? 'secondary';
   }
 
   /** Checks whether a "dd/MM/yyyy" date string falls within a [start, end] range (inclusive, day-level precision). */
@@ -928,7 +1037,7 @@ export class ManageTicketComponent implements OnInit {
   /** Runs the combined pipeline: search by id-or-name -> filter by status/priority/date ranges -> sort. */
   private applyAll(): Person[] {
     const searchQuery = this.searchValue.trim().toLowerCase();
-    const selectedAction = this.statusFilter.find((v) => this.statusMap[v]);
+    const selectedAction = this.statusFilter.find((v) => this.statusActionCodes.includes(v));
     const selectedSchedule = this.statusFilter.find((v) => this.scheduleStatusMap[v]);
 
     let result = this.people.filter((person) => {
@@ -937,7 +1046,7 @@ export class ManageTicketComponent implements OnInit {
         person.creatorName.toLowerCase().includes(searchQuery) ||
         person.assignedName.toLowerCase().includes(searchQuery);
       const matchesStatus =
-        (!selectedAction || person.actions === this.statusMap[selectedAction]) &&
+        (!selectedAction || person.statusCode === selectedAction) &&
         (!selectedSchedule || this.getScheduleStatus(person) === this.scheduleStatusMap[selectedSchedule]);
       const matchesPriority = !this.priorityFilter || person.priority === this.priorityFilter;
       const matchesTopic = !this.topicFilter || person.topicName === this.topicFilter;
@@ -970,8 +1079,8 @@ export class ManageTicketComponent implements OnInit {
         case 'topicName':
           comparison = a.topicName.localeCompare(b.topicName);
           break;
-        case 'actions':
-          comparison = (this.statusRank[a.actions] ?? 0) - (this.statusRank[b.actions] ?? 0);
+        case 'statusCode':
+          comparison = (this.statusRank[a.statusCode] ?? 0) - (this.statusRank[b.statusCode] ?? 0);
           break;
         case 'createdDate':
           comparison = this.parseDate(a.createdDate) - this.parseDate(b.createdDate);

@@ -1,11 +1,11 @@
 [
   {
-    "id": "000111",
+    "id": "01",
     "subject": "Need to help for adding new contact",
     "content": "I'm trying to add a new contact to my account but the save button doesn't seem to respond. Could someone walk me through the correct steps?",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Cao",
+    "statusCode": "closed",
+    "SLAcode": "High",
     "creatorUser": "tm1.png",
     "creatorName": "Kellie Marquot",
     "creatorPhone": "+1-202-555-0101",
@@ -17,7 +17,6 @@
     "createdDate": "16/07/2026",
     "dueDate": "20/07/2026",
     "closedDate": "21/07/2026",
-    "response": "Looked into the contact-save issue — a validation error on the phone field was silently blocking the save button. Deployed a fix; please try adding the contact again and let us know if it saves correctly.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -25,8 +24,8 @@
     "subject": "I Want to know payment method",
     "content": "I'd like to know which payment methods are currently supported and whether I can update my billing details before my next invoice.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm2.png",
     "creatorName": "Robert Clinton",
     "creatorPhone": "+1-202-555-0102",
@@ -38,7 +37,6 @@
     "createdDate": "16/07/2026",
     "dueDate": "20/07/2026",
     "closedDate": "",
-    "response": "Shared the list of currently supported payment methods along with a link to update billing details. Following up to confirm everything looks correct before closing.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -46,8 +44,8 @@
     "subject": "Cannot access my account",
     "content": "I keep getting an 'invalid credentials' error when logging in, even after resetting my password twice. I need access restored as soon as possible.",
     "attachedFile": "login-error.png",
-    "actions": "Mở",
-    "priority": "Cao",
+    "statusCode": "open",
+    "SLAcode": "High",
     "creatorUser": "tm3.png",
     "creatorName": "Chris Joe",
     "creatorPhone": "+1-202-555-0103",
@@ -59,7 +57,6 @@
     "createdDate": "16/07/2026",
     "dueDate": "20/07/2026",
     "closedDate": "",
-    "response": "Reset the account password and sent a new secure login link. Monitoring the account for further sign-in attempts to confirm access has been restored.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -67,8 +64,8 @@
     "subject": "Product shipment delay",
     "content": "My order was supposed to arrive last week but tracking hasn't updated since it left the warehouse. This has been resolved after checking with the courier.",
     "attachedFile": "tracking-screenshot.png",
-    "actions": "Hoàn thành",
-    "priority": "Trung bình",
+    "statusCode": "closed",
+    "SLAcode": "Normal",
     "creatorUser": "tm4.png",
     "creatorName": "Jack Kalis",
     "creatorPhone": "+1-202-555-0104",
@@ -80,7 +77,6 @@
     "createdDate": "16/07/2026",
     "dueDate": "20/07/2026",
     "closedDate": "19/07/2026",
-    "response": "Followed up with the courier and confirmed the package was delivered on 19/07. Ticket closed as resolved.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -88,8 +84,8 @@
     "subject": "Billing discrepancy",
     "content": "There's a charge on my latest invoice that doesn't match my subscription plan. Could you review it and confirm the correct amount?",
     "attachedFile": "invoice-05.pdf",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Black Smith",
     "creatorPhone": "+1-202-555-0105",
@@ -101,7 +97,6 @@
     "createdDate": "16/07/2026",
     "dueDate": "20/07/2026",
     "closedDate": "",
-    "response": "Reviewing the invoice with billing to confirm which subscription tier applies to the disputed charge. Will update once the discrepancy is confirmed or corrected.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -109,8 +104,8 @@
     "subject": "Website error on checkout",
     "content": "The checkout page throws a 500 error whenever I try to apply a discount code. I was able to complete the purchase after removing the code, but the bug should still be fixed.",
     "attachedFile": "checkout-error.png",
-    "actions": "Đang xử lý",
-    "priority": "Cao",
+    "statusCode": "processing",
+    "SLAcode": "High",
     "creatorUser": "tm1.png",
     "creatorName": "Aftab Ahmed",
     "creatorPhone": "+1-202-555-0106",
@@ -122,7 +117,6 @@
     "createdDate": "16/07/2026",
     "dueDate": "20/07/2026",
     "closedDate": "",
-    "response": "Identified a null-pointer error triggered by expired discount codes and pushed a hotfix to the checkout service. Verifying the fix holds before closing the ticket.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -130,8 +124,8 @@
     "subject": "Missing order item",
     "content": "My package arrived but one of the items listed on the packing slip was missing from the box. Please advise on next steps for a replacement or refund.",
     "attachedFile": "packing-slip.png",
-    "actions": "Mở",
-    "priority": "Trung bình",
+    "statusCode": "open",
+    "SLAcode": "Normal",
     "creatorUser": "tm2.png",
     "creatorName": "Daniel White",
     "creatorPhone": "+1-202-555-0107",
@@ -143,7 +137,6 @@
     "createdDate": "12/07/2026",
     "dueDate": "20/07/2026",
     "closedDate": "",
-    "response": "Confirmed the missing item with the warehouse team and a replacement is being shipped out. Will update with tracking details once it ships.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -151,8 +144,8 @@
     "subject": "Email notifications not received",
     "content": "I stopped receiving email notifications for ticket updates about a week ago. Turned out my notification settings had been reset; re-enabling them fixed the issue.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Thấp",
+    "statusCode": "closed",
+    "SLAcode": "Low",
     "creatorUser": "tm3.png",
     "creatorName": "Chris John",
     "creatorPhone": "+1-202-555-0108",
@@ -164,7 +157,6 @@
     "createdDate": "11/07/2026",
     "dueDate": "20/07/2026",
     "closedDate": "14/07/2026",
-    "response": "Found that email notifications had been disabled during a settings reset; re-enabled them and confirmed delivery is working again. Ticket closed.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -172,8 +164,8 @@
     "subject": "Application crashing on startup",
     "content": "The desktop app crashes immediately after the splash screen on the latest update. Reinstalling didn't help. Attaching the crash log for reference.",
     "attachedFile": "crash-log-09.txt",
-    "actions": "Đang xử lý",
-    "priority": "Cao",
+    "statusCode": "processing",
+    "SLAcode": "High",
     "creatorUser": "tm4.png",
     "creatorName": "David Manal",
     "creatorPhone": "+1-202-555-0109",
@@ -185,7 +177,6 @@
     "createdDate": "10/07/2026",
     "dueDate": "20/07/2026",
     "closedDate": "",
-    "response": "Traced the startup crash to a bad dependency introduced in the latest build and shipped a patched release. Awaiting confirmation the crash no longer occurs.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -193,8 +184,8 @@
     "subject": "Application crashing on startup",
     "content": "Same crash-on-startup issue as reported previously, now happening on a second machine as well. Sharing an updated crash log.",
     "attachedFile": "crash-log-10.txt",
-    "actions": "Đang xử lý",
-    "priority": "Cao",
+    "statusCode": "processing",
+    "SLAcode": "High",
     "creatorUser": "tm4.png",
     "creatorName": "David Manal",
     "creatorPhone": "+1-202-555-0109",
@@ -206,7 +197,6 @@
     "createdDate": "10/07/2026",
     "dueDate": "20/07/2026",
     "closedDate": "",
-    "response": "Applied the same fix released for ticket #09 to the second machine; startup crash no longer reproduces on either device.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -214,8 +204,8 @@
     "subject": "Application crashing on startup",
     "content": "Following up on the earlier crash reports — the issue also occurs on the mobile version now. Attaching a screen recording of the crash.",
     "attachedFile": "crash-recording-11.mp4",
-    "actions": "Đang xử lý",
-    "priority": "Cao",
+    "statusCode": "processing",
+    "SLAcode": "High",
     "creatorUser": "tm4.png",
     "creatorName": "David Manal",
     "creatorPhone": "+1-202-555-0109",
@@ -227,7 +217,6 @@
     "createdDate": "10/07/2026",
     "dueDate": "20/07/2026",
     "closedDate": "",
-    "response": "Extended the startup-crash fix to the mobile build after reviewing the screen recording. Monitoring for further reports before closing.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -235,8 +224,8 @@
     "subject": "API rate limit errors",
     "content": "Our integration is hitting rate limit errors much sooner than expected during normal usage.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Cao",
+    "statusCode": "open",
+    "SLAcode": "High",
     "creatorUser": "tm3.png",
     "creatorName": "Hassan Nguyen",
     "creatorPhone": "+1-202-555-0112",
@@ -248,7 +237,6 @@
     "createdDate": "05/07/2026",
     "dueDate": "04/07/2026",
     "closedDate": "",
-    "response": "Reviewed the account's API usage and increased the rate limit tier; please monitor for further errors.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -256,8 +244,8 @@
     "subject": "Invoice PDF corrupted",
     "content": "The invoice PDF I downloaded won't open and shows a corrupted file error.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Cao",
+    "statusCode": "processing",
+    "SLAcode": "High",
     "creatorUser": "tm4.png",
     "creatorName": "Ian Lopez",
     "creatorPhone": "+1-202-555-0113",
@@ -269,7 +257,6 @@
     "createdDate": "01/07/2026",
     "dueDate": "03/07/2026",
     "closedDate": "",
-    "response": "Regenerated the invoice PDF using the corrected template; the new file should open without issues.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -277,8 +264,8 @@
     "subject": "Push notifications delayed",
     "content": "Push notifications are arriving several hours late instead of in real time.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Cao",
+    "statusCode": "closed",
+    "SLAcode": "Urgent",
     "creatorUser": "tm5.png",
     "creatorName": "Nathan Le",
     "creatorPhone": "+1-202-555-0114",
@@ -290,7 +277,6 @@
     "createdDate": "18/07/2026",
     "dueDate": "07/07/2026",
     "closedDate": "18/07/2026",
-    "response": "Restarted the notification queue service which had stalled and confirmed notifications are now real-time.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -298,8 +284,8 @@
     "subject": "Login page not loading",
     "content": "The login page shows a blank white screen on both Chrome and Firefox.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Trung bình",
+    "statusCode": "closed",
+    "SLAcode": "Normal",
     "creatorUser": "tm1.png",
     "creatorName": "Ahmed Le",
     "creatorPhone": "+1-202-555-0115",
@@ -311,7 +297,6 @@
     "createdDate": "01/07/2026",
     "dueDate": "06/07/2026",
     "closedDate": "14/07/2026",
-    "response": "Identified a broken script reference causing the blank page and corrected it; please clear your cache and retry.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -319,8 +304,8 @@
     "subject": "Two-factor authentication issue",
     "content": "I'm not receiving the OTP code on my phone when trying to log in with 2FA enabled.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Trung bình",
+    "statusCode": "open",
+    "SLAcode": "Normal",
     "creatorUser": "tm2.png",
     "creatorName": "Victor Davis",
     "creatorPhone": "+1-202-555-0116",
@@ -332,7 +317,6 @@
     "createdDate": "04/07/2026",
     "dueDate": "03/07/2026",
     "closedDate": "",
-    "response": "Reset the 2FA configuration on the account and resent a test code; please confirm delivery.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -340,8 +324,8 @@
     "subject": "Cannot cancel subscription",
     "content": "I've tried multiple times to cancel my subscription from the account settings page but it keeps failing.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Thấp",
+    "statusCode": "processing",
+    "SLAcode": "Low",
     "creatorUser": "tm3.png",
     "creatorName": "Yara Tran",
     "creatorPhone": "+1-202-555-0117",
@@ -353,7 +337,6 @@
     "createdDate": "09/07/2026",
     "dueDate": "02/07/2026",
     "closedDate": "",
-    "response": "Manually processed the cancellation request and confirmed no further charges will occur.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -361,8 +344,8 @@
     "subject": "Incorrect tax calculation",
     "content": "The tax amount shown at checkout doesn't match the rate listed for my region.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Cao",
+    "statusCode": "processing",
+    "SLAcode": "Urgent",
     "creatorUser": "tm4.png",
     "creatorName": "Diana Ho",
     "creatorPhone": "+1-202-555-0118",
@@ -374,7 +357,6 @@
     "createdDate": "18/07/2026",
     "dueDate": "10/07/2026",
     "closedDate": "",
-    "response": "Corrected the tax rate table for the affected region and reprocessed the calculation; please verify the new total.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -382,8 +364,8 @@
     "subject": "Invoice PDF corrupted",
     "content": "The invoice PDF I downloaded won't open and shows a corrupted file error.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Nadia Bui",
     "creatorPhone": "+1-202-555-0119",
@@ -395,7 +377,6 @@
     "createdDate": "03/07/2026",
     "dueDate": "02/07/2026",
     "closedDate": "",
-    "response": "Regenerated the invoice PDF using the corrected template; the new file should open without issues.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -403,8 +384,8 @@
     "subject": "Dashboard loading slowly",
     "content": "The main dashboard takes over 30 seconds to load since the last update, making it hard to work efficiently.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Cao",
+    "statusCode": "open",
+    "SLAcode": "Urgent",
     "creatorUser": "tm1.png",
     "creatorName": "Olga Vo",
     "creatorPhone": "+1-202-555-0120",
@@ -416,7 +397,6 @@
     "createdDate": "13/07/2026",
     "dueDate": "09/07/2026",
     "closedDate": "",
-    "response": "Identified an unoptimized query causing the slowdown and added proper indexing; load times should now be normal.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -424,8 +404,8 @@
     "subject": "Export to CSV fails",
     "content": "Exporting my report to CSV results in an empty file every time I try.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Trung bình",
+    "statusCode": "processing",
+    "SLAcode": "Normal",
     "creatorUser": "tm2.png",
     "creatorName": "Diana Bui",
     "creatorPhone": "+1-202-555-0121",
@@ -437,7 +417,6 @@
     "createdDate": "07/07/2026",
     "dueDate": "09/07/2026",
     "closedDate": "",
-    "response": "Fixed a bug in the export module that was truncating the file stream; export should now work correctly.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -445,8 +424,8 @@
     "subject": "Export to CSV fails",
     "content": "Exporting my report to CSV results in an empty file every time I try.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Thấp",
+    "statusCode": "closed",
+    "SLAcode": "Low",
     "creatorUser": "tm3.png",
     "creatorName": "Elena Vu",
     "creatorPhone": "+1-202-555-0122",
@@ -458,7 +437,6 @@
     "createdDate": "08/07/2026",
     "dueDate": "06/07/2026",
     "closedDate": "15/07/2026",
-    "response": "Fixed a bug in the export module that was truncating the file stream; export should now work correctly.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -466,8 +444,8 @@
     "subject": "Cannot merge duplicate contacts",
     "content": "There's no option in the interface to merge two duplicate contact entries.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm4.png",
     "creatorName": "Yara Davis",
     "creatorPhone": "+1-202-555-0123",
@@ -479,7 +457,6 @@
     "createdDate": "11/07/2026",
     "dueDate": "02/07/2026",
     "closedDate": "",
-    "response": "Added a merge contacts feature to the latest release; please check the contacts page for the new option.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -487,8 +464,8 @@
     "subject": "Mobile app freezing",
     "content": "The mobile app freezes whenever I try to open the notifications tab.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Trung bình",
+    "statusCode": "processing",
+    "SLAcode": "Normal",
     "creatorUser": "tm5.png",
     "creatorName": "Olga Smith",
     "creatorPhone": "+1-202-555-0124",
@@ -500,7 +477,6 @@
     "createdDate": "03/07/2026",
     "dueDate": "07/07/2026",
     "closedDate": "",
-    "response": "Identified a memory leak in the notifications view and shipped a fix in the latest app update.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -508,8 +484,8 @@
     "subject": "Duplicate charge on account",
     "content": "I was charged twice for the same subscription renewal this month.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Trung bình",
+    "statusCode": "closed",
+    "SLAcode": "Normal",
     "creatorUser": "tm1.png",
     "creatorName": "Kevin Wilson",
     "creatorPhone": "+1-202-555-0125",
@@ -521,7 +497,6 @@
     "createdDate": "13/07/2026",
     "dueDate": "15/07/2026",
     "closedDate": "05/07/2026",
-    "response": "Confirmed the duplicate charge and processed a refund for the extra transaction; refund should appear within 5 business days.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -529,8 +504,8 @@
     "subject": "Cannot change profile picture",
     "content": "The upload button for changing my profile picture doesn't respond when clicked.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Thấp",
+    "statusCode": "closed",
+    "SLAcode": "Low",
     "creatorUser": "tm2.png",
     "creatorName": "Quynh Johnson",
     "creatorPhone": "+1-202-555-0126",
@@ -542,7 +517,6 @@
     "createdDate": "18/07/2026",
     "dueDate": "09/07/2026",
     "closedDate": "19/07/2026",
-    "response": "Resolved a frontend event binding issue preventing the upload button from working; please try again.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -550,8 +524,8 @@
     "subject": "Wrong shipping address used",
     "content": "My last order was shipped to an old address even though I updated it in my profile.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Cao",
+    "statusCode": "processing",
+    "SLAcode": "Urgent",
     "creatorUser": "tm3.png",
     "creatorName": "Bianca Martin",
     "creatorPhone": "+1-202-555-0127",
@@ -563,7 +537,6 @@
     "createdDate": "05/07/2026",
     "dueDate": "17/07/2026",
     "closedDate": "",
-    "response": "Updated the default shipping address in the system and flagged the order for redelivery to the correct address.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -571,8 +544,8 @@
     "subject": "Unable to upload attachment",
     "content": "Every time I try to attach a file larger than 5MB the upload just fails silently with no error message.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Cao",
+    "statusCode": "open",
+    "SLAcode": "Urgent",
     "creatorUser": "tm4.png",
     "creatorName": "Fatima Lopez",
     "creatorPhone": "+1-202-555-0128",
@@ -584,7 +557,6 @@
     "createdDate": "06/07/2026",
     "dueDate": "14/07/2026",
     "closedDate": "",
-    "response": "Increased the upload size limit and redeployed the file service; please retry the upload and confirm.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -592,8 +564,8 @@
     "subject": "Wrong shipping address used",
     "content": "My last order was shipped to an old address even though I updated it in my profile.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Thấp",
+    "statusCode": "processing",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Marco Lopez",
     "creatorPhone": "+1-202-555-0129",
@@ -605,7 +577,6 @@
     "createdDate": "15/07/2026",
     "dueDate": "17/07/2026",
     "closedDate": "",
-    "response": "Updated the default shipping address in the system and flagged the order for redelivery to the correct address.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -613,8 +584,8 @@
     "subject": "Password reset not working",
     "content": "I requested a password reset email several times but it never arrived in my inbox or spam folder.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Thấp",
+    "statusCode": "closed",
+    "SLAcode": "Low",
     "creatorUser": "tm1.png",
     "creatorName": "Quynh Ho",
     "creatorPhone": "+1-202-555-0130",
@@ -626,7 +597,6 @@
     "createdDate": "04/07/2026",
     "dueDate": "18/07/2026",
     "closedDate": "09/07/2026",
-    "response": "Resolved the delivery issue by whitelisting the sender domain and resent the reset email; please confirm receipt.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -634,8 +604,8 @@
     "subject": "Search results are inaccurate",
     "content": "Searching for exact product names returns irrelevant results or nothing at all.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Cao",
+    "statusCode": "processing",
+    "SLAcode": "Urgent",
     "creatorUser": "tm2.png",
     "creatorName": "Victor Tran",
     "creatorPhone": "+1-202-555-0131",
@@ -647,7 +617,6 @@
     "createdDate": "15/07/2026",
     "dueDate": "01/07/2026",
     "closedDate": "",
-    "response": "Reindexed the search database and adjusted the relevance scoring; please retest your search queries.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -655,8 +624,8 @@
     "subject": "Export to CSV fails",
     "content": "Exporting my report to CSV results in an empty file every time I try.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Cao",
+    "statusCode": "closed",
+    "SLAcode": "Urgent",
     "creatorUser": "tm3.png",
     "creatorName": "Quynh Thomas",
     "creatorPhone": "+1-202-555-0132",
@@ -668,7 +637,6 @@
     "createdDate": "10/07/2026",
     "dueDate": "17/07/2026",
     "closedDate": "20/07/2026",
-    "response": "Fixed a bug in the export module that was truncating the file stream; export should now work correctly.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -676,8 +644,8 @@
     "subject": "Cannot cancel subscription",
     "content": "I've tried multiple times to cancel my subscription from the account settings page but it keeps failing.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm4.png",
     "creatorName": "Maria Johnson",
     "creatorPhone": "+1-202-555-0133",
@@ -689,7 +657,6 @@
     "createdDate": "17/07/2026",
     "dueDate": "01/07/2026",
     "closedDate": "",
-    "response": "Manually processed the cancellation request and confirmed no further charges will occur.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -697,8 +664,8 @@
     "subject": "Incorrect inventory count",
     "content": "The inventory count shown in the system doesn't match our physical stock count.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Cao",
+    "statusCode": "open",
+    "SLAcode": "Urgent",
     "creatorUser": "tm5.png",
     "creatorName": "Marco Wilson",
     "creatorPhone": "+1-202-555-0134",
@@ -710,7 +677,6 @@
     "createdDate": "12/07/2026",
     "dueDate": "10/07/2026",
     "closedDate": "",
-    "response": "Reconciled the inventory records with the warehouse system and corrected the discrepancy.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -718,8 +684,8 @@
     "subject": "Cannot change profile picture",
     "content": "The upload button for changing my profile picture doesn't respond when clicked.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Cao",
+    "statusCode": "closed",
+    "SLAcode": "Urgent",
     "creatorUser": "tm1.png",
     "creatorName": "Pedro Smith",
     "creatorPhone": "+1-202-555-0135",
@@ -731,7 +697,6 @@
     "createdDate": "03/07/2026",
     "dueDate": "16/07/2026",
     "closedDate": "03/07/2026",
-    "response": "Resolved a frontend event binding issue preventing the upload button from working; please try again.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -739,8 +704,8 @@
     "subject": "Two-factor authentication issue",
     "content": "I'm not receiving the OTP code on my phone when trying to log in with 2FA enabled.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Trung bình",
+    "statusCode": "closed",
+    "SLAcode": "Normal",
     "creatorUser": "tm2.png",
     "creatorName": "Ian Johnson",
     "creatorPhone": "+1-202-555-0136",
@@ -752,7 +717,6 @@
     "createdDate": "18/07/2026",
     "dueDate": "06/07/2026",
     "closedDate": "09/07/2026",
-    "response": "Reset the 2FA configuration on the account and resent a test code; please confirm delivery.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -760,8 +724,8 @@
     "subject": "Report generation timeout",
     "content": "Generating the monthly summary report times out before completion.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm3.png",
     "creatorName": "Hana Vu",
     "creatorPhone": "+1-202-555-0137",
@@ -773,7 +737,6 @@
     "createdDate": "07/07/2026",
     "dueDate": "10/07/2026",
     "closedDate": "",
-    "response": "Optimized the report generation query and increased the timeout threshold; reports should now complete secondaryfully.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -781,8 +744,8 @@
     "subject": "Login page not loading",
     "content": "The login page shows a blank white screen on both Chrome and Firefox.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Trung bình",
+    "statusCode": "closed",
+    "SLAcode": "Normal",
     "creatorUser": "tm4.png",
     "creatorName": "Zack Bui",
     "creatorPhone": "+1-202-555-0138",
@@ -794,7 +757,6 @@
     "createdDate": "04/07/2026",
     "dueDate": "08/07/2026",
     "closedDate": "08/07/2026",
-    "response": "Identified a broken script reference causing the blank page and corrected it; please clear your cache and retry.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -802,8 +764,8 @@
     "subject": "Password reset not working",
     "content": "I requested a password reset email several times but it never arrived in my inbox or spam folder.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Thấp",
+    "statusCode": "closed",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Elena Wilson",
     "creatorPhone": "+1-202-555-0139",
@@ -815,7 +777,6 @@
     "createdDate": "08/07/2026",
     "dueDate": "19/07/2026",
     "closedDate": "08/07/2026",
-    "response": "Resolved the delivery issue by whitelisting the sender domain and resent the reset email; please confirm receipt.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -823,8 +784,8 @@
     "subject": "Unable to upload attachment",
     "content": "Every time I try to attach a file larger than 5MB the upload just fails silently with no error message.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Cao",
+    "statusCode": "open",
+    "SLAcode": "High",
     "creatorUser": "tm1.png",
     "creatorName": "Alice Lopez",
     "creatorPhone": "+1-202-555-0140",
@@ -836,7 +797,6 @@
     "createdDate": "02/07/2026",
     "dueDate": "11/07/2026",
     "closedDate": "",
-    "response": "Increased the upload size limit and redeployed the file service; please retry the upload and confirm.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -844,8 +804,8 @@
     "subject": "Cannot change profile picture",
     "content": "The upload button for changing my profile picture doesn't respond when clicked.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Thấp",
+    "statusCode": "processing",
+    "SLAcode": "Low",
     "creatorUser": "tm2.png",
     "creatorName": "Elena Thomas",
     "creatorPhone": "+1-202-555-0141",
@@ -857,7 +817,6 @@
     "createdDate": "16/07/2026",
     "dueDate": "07/07/2026",
     "closedDate": "",
-    "response": "Resolved a frontend event binding issue preventing the upload button from working; please try again.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -865,8 +824,8 @@
     "subject": "Invoice PDF corrupted",
     "content": "The invoice PDF I downloaded won't open and shows a corrupted file error.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Trung bình",
+    "statusCode": "closed",
+    "SLAcode": "Normal",
     "creatorUser": "tm3.png",
     "creatorName": "Ian Johnson",
     "creatorPhone": "+1-202-555-0142",
@@ -878,7 +837,6 @@
     "createdDate": "08/07/2026",
     "dueDate": "16/07/2026",
     "closedDate": "14/07/2026",
-    "response": "Regenerated the invoice PDF using the corrected template; the new file should open without issues.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -886,8 +844,8 @@
     "subject": "Incorrect tax calculation",
     "content": "The tax amount shown at checkout doesn't match the rate listed for my region.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Trung bình",
+    "statusCode": "closed",
+    "SLAcode": "Normal",
     "creatorUser": "tm4.png",
     "creatorName": "Maria Tran",
     "creatorPhone": "+1-202-555-0143",
@@ -899,7 +857,6 @@
     "createdDate": "12/07/2026",
     "dueDate": "14/07/2026",
     "closedDate": "14/07/2026",
-    "response": "Corrected the tax rate table for the affected region and reprocessed the calculation; please verify the new total.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -907,8 +864,8 @@
     "subject": "Incorrect tax calculation",
     "content": "The tax amount shown at checkout doesn't match the rate listed for my region.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Trung bình",
+    "statusCode": "open",
+    "SLAcode": "Normal",
     "creatorUser": "tm5.png",
     "creatorName": "Diana Smith",
     "creatorPhone": "+1-202-555-0144",
@@ -920,7 +877,6 @@
     "createdDate": "11/07/2026",
     "dueDate": "04/07/2026",
     "closedDate": "",
-    "response": "Corrected the tax rate table for the affected region and reprocessed the calculation; please verify the new total.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -928,8 +884,8 @@
     "subject": "Duplicate charge on account",
     "content": "I was charged twice for the same subscription renewal this month.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Trung bình",
+    "statusCode": "closed",
+    "SLAcode": "Normal",
     "creatorUser": "tm1.png",
     "creatorName": "Pedro Brown",
     "creatorPhone": "+1-202-555-0145",
@@ -941,7 +897,6 @@
     "createdDate": "05/07/2026",
     "dueDate": "14/07/2026",
     "closedDate": "06/07/2026",
-    "response": "Confirmed the duplicate charge and processed a refund for the extra transaction; refund should appear within 5 business days.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -949,8 +904,8 @@
     "subject": "Cannot change profile picture",
     "content": "The upload button for changing my profile picture doesn't respond when clicked.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Trung bình",
+    "statusCode": "open",
+    "SLAcode": "Normal",
     "creatorUser": "tm2.png",
     "creatorName": "Ravi Anderson",
     "creatorPhone": "+1-202-555-0146",
@@ -962,7 +917,6 @@
     "createdDate": "18/07/2026",
     "dueDate": "04/07/2026",
     "closedDate": "",
-    "response": "Resolved a frontend event binding issue preventing the upload button from working; please try again.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -970,8 +924,8 @@
     "subject": "Password reset not working",
     "content": "I requested a password reset email several times but it never arrived in my inbox or spam folder.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Cao",
+    "statusCode": "open",
+    "SLAcode": "High",
     "creatorUser": "tm3.png",
     "creatorName": "Derek Ho",
     "creatorPhone": "+1-202-555-0147",
@@ -983,7 +937,6 @@
     "createdDate": "06/07/2026",
     "dueDate": "14/07/2026",
     "closedDate": "",
-    "response": "Resolved the delivery issue by whitelisting the sender domain and resent the reset email; please confirm receipt.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -991,8 +944,8 @@
     "subject": "Duplicate charge on account",
     "content": "I was charged twice for the same subscription renewal this month.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Cao",
+    "statusCode": "processing",
+    "SLAcode": "High",
     "creatorUser": "tm4.png",
     "creatorName": "Fatima Dang",
     "creatorPhone": "+1-202-555-0148",
@@ -1004,7 +957,6 @@
     "createdDate": "06/07/2026",
     "dueDate": "13/07/2026",
     "closedDate": "",
-    "response": "Confirmed the duplicate charge and processed a refund for the extra transaction; refund should appear within 5 business days.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1012,8 +964,8 @@
     "subject": "API rate limit errors",
     "content": "Our integration is hitting rate limit errors much sooner than expected during normal usage.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Trung bình",
+    "statusCode": "processing",
+    "SLAcode": "Normal",
     "creatorUser": "tm5.png",
     "creatorName": "Alice Taylor",
     "creatorPhone": "+1-202-555-0149",
@@ -1025,7 +977,6 @@
     "createdDate": "14/07/2026",
     "dueDate": "18/07/2026",
     "closedDate": "",
-    "response": "Reviewed the account's API usage and increased the rate limit tier; please monitor for further errors.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1033,8 +984,8 @@
     "subject": "Duplicate charge on account",
     "content": "I was charged twice for the same subscription renewal this month.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Cao",
+    "statusCode": "processing",
+    "SLAcode": "High",
     "creatorUser": "tm1.png",
     "creatorName": "Fatima Johnson",
     "creatorPhone": "+1-202-555-0150",
@@ -1046,7 +997,6 @@
     "createdDate": "02/07/2026",
     "dueDate": "19/07/2026",
     "closedDate": "",
-    "response": "Confirmed the duplicate charge and processed a refund for the extra transaction; refund should appear within 5 business days.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1054,8 +1004,8 @@
     "subject": "Wrong currency displayed",
     "content": "My invoices are showing USD instead of my local currency.",
     "attachedFile": "invoice.pdf",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm2.png",
     "creatorName": "Do Van I",
     "creatorPhone": "+1-202-555-0051",
@@ -1067,7 +1017,6 @@
     "createdDate": "03/04/2026",
     "dueDate": "08/04/2026",
     "closedDate": "",
-    "response": "Updated the account's regional settings and corrected the currency display on new invoices.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1075,8 +1024,8 @@
     "subject": "Wrong currency displayed",
     "content": "My invoices are showing USD instead of my local currency.",
     "attachedFile": "screenshot.png",
-    "actions": "Đang xử lý",
-    "priority": "Thấp",
+    "statusCode": "processing",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Jordan Mai",
     "creatorPhone": "+1-202-555-0052",
@@ -1088,7 +1037,6 @@
     "createdDate": "28/06/2022",
     "dueDate": "10/07/2022",
     "closedDate": "",
-    "response": "Updated the account's regional settings and corrected the currency display on new invoices.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1096,8 +1044,8 @@
     "subject": "Dashboard charts not loading",
     "content": "The analytics dashboard shows a blank space where the charts should be, no error message.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Cao",
+    "statusCode": "open",
+    "SLAcode": "High",
     "creatorUser": "tm2.png",
     "creatorName": "Dang Van G",
     "creatorPhone": "+1-202-555-0053",
@@ -1109,7 +1057,6 @@
     "createdDate": "31/10/2024",
     "dueDate": "12/11/2024",
     "closedDate": "",
-    "response": "Found a broken data endpoint feeding the chart component and restored it; charts should render correctly now.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1117,8 +1064,8 @@
     "subject": "Cannot reopen closed ticket",
     "content": "I need to reopen a ticket that was closed prematurely but there's no reopen option.",
     "attachedFile": "screenshot.png",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Ryan Bui",
     "creatorPhone": "+1-202-555-0054",
@@ -1130,7 +1077,6 @@
     "createdDate": "09/05/2024",
     "dueDate": "15/05/2024",
     "closedDate": "",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1138,8 +1084,8 @@
     "subject": "Push notifications delayed",
     "content": "Push notifications for new replies sometimes arrive hours late.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Cao",
+    "statusCode": "closed",
+    "SLAcode": "High",
     "creatorUser": "tm2.png",
     "creatorName": "Tyler Duong",
     "creatorPhone": "+1-202-555-0055",
@@ -1151,7 +1097,6 @@
     "createdDate": "30/11/2025",
     "dueDate": "09/12/2025",
     "closedDate": "06/12/2025",
-    "response": "Resolved a queue backlog in the notification service; delivery times should now be near-instant.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1159,8 +1104,8 @@
     "subject": "Two-factor authentication code not received",
     "content": "I never receive the SMS code needed to complete two-factor login.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Trung bình",
+    "statusCode": "open",
+    "SLAcode": "Normal",
     "creatorUser": "tm1.png",
     "creatorName": "Pham Thi D",
     "creatorPhone": "+1-202-555-0056",
@@ -1172,7 +1117,6 @@
     "createdDate": "18/02/2024",
     "dueDate": "22/02/2024",
     "closedDate": "",
-    "response": "Switched the account to an alternate SMS gateway after confirming carrier delivery issues; please retest.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1180,8 +1124,8 @@
     "subject": "Cannot merge duplicate tickets",
     "content": "There's no option to merge two tickets that were accidentally created for the same issue.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Trung bình",
+    "statusCode": "processing",
+    "SLAcode": "Normal",
     "creatorUser": "tm1.png",
     "creatorName": "Sophia Truong",
     "creatorPhone": "+1-202-555-0057",
@@ -1193,7 +1137,6 @@
     "createdDate": "29/07/2024",
     "dueDate": "09/08/2024",
     "closedDate": "",
-    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1201,8 +1144,8 @@
     "subject": "Report filter resets unexpectedly",
     "content": "Every time I navigate away and back, my saved report filters are cleared.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Ngo Thi J",
     "creatorPhone": "+1-202-555-0058",
@@ -1214,7 +1157,6 @@
     "createdDate": "11/01/2024",
     "dueDate": "23/01/2024",
     "closedDate": "",
-    "response": "Fixed a session-storage bug that was clearing filters on navigation; filters should now persist.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1222,8 +1164,8 @@
     "subject": "Export to Excel fails",
     "content": "Clicking 'Export to Excel' spins forever and never downloads a file.",
     "attachedFile": "error-report.png",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm3.png",
     "creatorName": "Bui Thi H",
     "creatorPhone": "+1-202-555-0059",
@@ -1235,7 +1177,6 @@
     "createdDate": "13/06/2022",
     "dueDate": "19/06/2022",
     "closedDate": "",
-    "response": "Fixed a timeout in the export job for large datasets; please retry the export and let us know.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1243,8 +1184,8 @@
     "subject": "Wrong currency displayed",
     "content": "My invoices are showing USD instead of my local currency.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Trung bình",
+    "statusCode": "closed",
+    "SLAcode": "Normal",
     "creatorUser": "tm3.png",
     "creatorName": "Noah Chen",
     "creatorPhone": "+1-202-555-0060",
@@ -1256,7 +1197,6 @@
     "createdDate": "30/11/2022",
     "dueDate": "08/12/2022",
     "closedDate": "06/12/2022",
-    "response": "Updated the account's regional settings and corrected the currency display on new invoices.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1264,8 +1204,8 @@
     "subject": "Incorrect user role assigned",
     "content": "My account shows 'Viewer' permissions instead of the 'Editor' role I was granted.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Thấp",
+    "statusCode": "processing",
+    "SLAcode": "Low",
     "creatorUser": "tm1.png",
     "creatorName": "Ryan Bui",
     "creatorPhone": "+1-202-555-0061",
@@ -1277,7 +1217,6 @@
     "createdDate": "01/06/2025",
     "dueDate": "14/06/2025",
     "closedDate": "",
-    "response": "Corrected the role assignment in the admin panel; your account now has Editor permissions.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1285,8 +1224,8 @@
     "subject": "Cannot reopen closed ticket",
     "content": "I need to reopen a ticket that was closed prematurely but there's no reopen option.",
     "attachedFile": "invoice.pdf",
-    "actions": "Đang xử lý",
-    "priority": "Cao",
+    "statusCode": "processing",
+    "SLAcode": "High",
     "creatorUser": "tm4.png",
     "creatorName": "Vu Thi F",
     "creatorPhone": "+1-202-555-0062",
@@ -1298,7 +1237,6 @@
     "createdDate": "17/02/2024",
     "dueDate": "24/02/2024",
     "closedDate": "",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1306,8 +1244,8 @@
     "subject": "Cannot reopen closed ticket",
     "content": "I need to reopen a ticket that was closed prematurely but there's no reopen option.",
     "attachedFile": "error-report.png",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm1.png",
     "creatorName": "Kevin Nguyen",
     "creatorPhone": "+1-202-555-0063",
@@ -1319,7 +1257,6 @@
     "createdDate": "15/04/2026",
     "dueDate": "18/04/2026",
     "closedDate": "",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1327,8 +1264,8 @@
     "subject": "Email template rendering broken",
     "content": "Outgoing notification emails show raw HTML tags instead of formatted text.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Trung bình",
+    "statusCode": "closed",
+    "SLAcode": "Normal",
     "creatorUser": "tm2.png",
     "creatorName": "Le Van C",
     "creatorPhone": "+1-202-555-0064",
@@ -1340,7 +1277,6 @@
     "createdDate": "07/03/2025",
     "dueDate": "21/03/2025",
     "closedDate": "13/03/2025",
-    "response": "Fixed a template-engine misconfiguration causing raw tags to leak into emails; sent a test email for confirmation.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1348,8 +1284,8 @@
     "subject": "Calendar sync not working",
     "content": "Ticket due dates aren't syncing to my connected Google Calendar.",
     "attachedFile": "invoice.pdf",
-    "actions": "Hoàn thành",
-    "priority": "Thấp",
+    "statusCode": "closed",
+    "SLAcode": "Low",
     "creatorUser": "tm2.png",
     "creatorName": "Noah Chen",
     "creatorPhone": "+1-202-555-0065",
@@ -1361,7 +1297,6 @@
     "createdDate": "27/06/2026",
     "dueDate": "02/07/2026",
     "closedDate": "01/07/2026",
-    "response": "Fixed an expired sync token that was blocking calendar updates; sync should resume automatically.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1369,8 +1304,8 @@
     "subject": "Cannot reopen closed ticket",
     "content": "I need to reopen a ticket that was closed prematurely but there's no reopen option.",
     "attachedFile": "screenshot.png",
-    "actions": "Đang xử lý",
-    "priority": "Trung bình",
+    "statusCode": "processing",
+    "SLAcode": "Normal",
     "creatorUser": "tm5.png",
     "creatorName": "Emma Ly",
     "creatorPhone": "+1-202-555-0066",
@@ -1382,7 +1317,6 @@
     "createdDate": "27/05/2024",
     "dueDate": "08/06/2024",
     "closedDate": "",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1390,8 +1324,8 @@
     "subject": "Cannot merge duplicate tickets",
     "content": "There's no option to merge two tickets that were accidentally created for the same issue.",
     "attachedFile": "error-report.png",
-    "actions": "Mở",
-    "priority": "Cao",
+    "statusCode": "open",
+    "SLAcode": "High",
     "creatorUser": "tm4.png",
     "creatorName": "Ethan Ho",
     "creatorPhone": "+1-202-555-0067",
@@ -1403,7 +1337,6 @@
     "createdDate": "06/07/2022",
     "dueDate": "09/07/2022",
     "closedDate": "",
-    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1411,8 +1344,8 @@
     "subject": "Wrong currency displayed",
     "content": "My invoices are showing USD instead of my local currency.",
     "attachedFile": "screenshot.png",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm4.png",
     "creatorName": "Vu Thi F",
     "creatorPhone": "+1-202-555-0068",
@@ -1424,7 +1357,6 @@
     "createdDate": "06/05/2025",
     "dueDate": "10/05/2025",
     "closedDate": "",
-    "response": "Updated the account's regional settings and corrected the currency display on new invoices.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1432,8 +1364,8 @@
     "subject": "Report filter resets unexpectedly",
     "content": "Every time I navigate away and back, my saved report filters are cleared.",
     "attachedFile": "invoice.pdf",
-    "actions": "Đang xử lý",
-    "priority": "Trung bình",
+    "statusCode": "processing",
+    "SLAcode": "Normal",
     "creatorUser": "tm3.png",
     "creatorName": "Ethan Ho",
     "creatorPhone": "+1-202-555-0069",
@@ -1445,7 +1377,6 @@
     "createdDate": "07/02/2025",
     "dueDate": "10/02/2025",
     "closedDate": "",
-    "response": "Fixed a session-storage bug that was clearing filters on navigation; filters should now persist.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1453,8 +1384,8 @@
     "subject": "Wrong currency displayed",
     "content": "My invoices are showing USD instead of my local currency.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Thấp",
+    "statusCode": "processing",
+    "SLAcode": "Low",
     "creatorUser": "tm3.png",
     "creatorName": "Tyler Duong",
     "creatorPhone": "+1-202-555-0070",
@@ -1466,7 +1397,6 @@
     "createdDate": "05/08/2025",
     "dueDate": "13/08/2025",
     "closedDate": "",
-    "response": "Updated the account's regional settings and corrected the currency display on new invoices.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1474,8 +1404,8 @@
     "subject": "Slow page load times",
     "content": "Pages in the admin panel take over 10 seconds to load during peak hours.",
     "attachedFile": "log-file.txt",
-    "actions": "Hoàn thành",
-    "priority": "Cao",
+    "statusCode": "closed",
+    "SLAcode": "High",
     "creatorUser": "tm1.png",
     "creatorName": "Noah Chen",
     "creatorPhone": "+1-202-555-0071",
@@ -1487,7 +1417,6 @@
     "createdDate": "24/06/2026",
     "dueDate": "05/07/2026",
     "closedDate": "27/06/2026",
-    "response": "Added caching to the most-requested admin endpoints, cutting load times significantly during peak hours.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1495,8 +1424,8 @@
     "subject": "Wrong currency displayed",
     "content": "My invoices are showing USD instead of my local currency.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Trung bình",
+    "statusCode": "processing",
+    "SLAcode": "Normal",
     "creatorUser": "tm5.png",
     "creatorName": "Brandon Vu",
     "creatorPhone": "+1-202-555-0072",
@@ -1508,7 +1437,6 @@
     "createdDate": "01/06/2025",
     "dueDate": "07/06/2025",
     "closedDate": "",
-    "response": "Updated the account's regional settings and corrected the currency display on new invoices.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1516,8 +1444,8 @@
     "subject": "Cannot merge duplicate tickets",
     "content": "There's no option to merge two tickets that were accidentally created for the same issue.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Tyler Duong",
     "creatorPhone": "+1-202-555-0073",
@@ -1529,7 +1457,6 @@
     "createdDate": "02/01/2022",
     "dueDate": "14/01/2022",
     "closedDate": "",
-    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1537,8 +1464,8 @@
     "subject": "Calendar sync not working",
     "content": "Ticket due dates aren't syncing to my connected Google Calendar.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Cao",
+    "statusCode": "open",
+    "SLAcode": "High",
     "creatorUser": "tm3.png",
     "creatorName": "Zoe Trinh",
     "creatorPhone": "+1-202-555-0074",
@@ -1550,7 +1477,6 @@
     "createdDate": "22/09/2026",
     "dueDate": "28/09/2026",
     "closedDate": "",
-    "response": "Fixed an expired sync token that was blocking calendar updates; sync should resume automatically.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1558,8 +1484,8 @@
     "subject": "Mobile app freezes on login",
     "content": "The mobile app freezes on the loading screen right after I enter my credentials.",
     "attachedFile": "error-report.png",
-    "actions": "Đang xử lý",
-    "priority": "Cao",
+    "statusCode": "processing",
+    "SLAcode": "High",
     "creatorUser": "tm4.png",
     "creatorName": "Le Van C",
     "creatorPhone": "+1-202-555-0075",
@@ -1571,7 +1497,6 @@
     "createdDate": "22/05/2022",
     "dueDate": "02/06/2022",
     "closedDate": "",
-    "response": "Identified a memory leak triggered on login and shipped a patched app version; please update and retest.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1579,8 +1504,8 @@
     "subject": "Two-factor authentication code not received",
     "content": "I never receive the SMS code needed to complete two-factor login.",
     "attachedFile": "log-file.txt",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Grace Tan",
     "creatorPhone": "+1-202-555-0076",
@@ -1592,7 +1517,6 @@
     "createdDate": "05/12/2022",
     "dueDate": "12/12/2022",
     "closedDate": "",
-    "response": "Switched the account to an alternate SMS gateway after confirming carrier delivery issues; please retest.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1600,8 +1524,8 @@
     "subject": "Dark mode display glitch",
     "content": "Some buttons are invisible against the background when dark mode is enabled.",
     "attachedFile": "screenshot.png",
-    "actions": "Hoàn thành",
-    "priority": "Cao",
+    "statusCode": "closed",
+    "SLAcode": "High",
     "creatorUser": "tm5.png",
     "creatorName": "Zoe Trinh",
     "creatorPhone": "+1-202-555-0077",
@@ -1613,7 +1537,6 @@
     "createdDate": "13/11/2025",
     "dueDate": "19/11/2025",
     "closedDate": "18/11/2025",
-    "response": "Fixed contrast issues in the dark mode theme for the affected buttons; please refresh and confirm.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1621,8 +1544,8 @@
     "subject": "Cannot merge duplicate tickets",
     "content": "There's no option to merge two tickets that were accidentally created for the same issue.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Thấp",
+    "statusCode": "closed",
+    "SLAcode": "Low",
     "creatorUser": "tm1.png",
     "creatorName": "Noah Chen",
     "creatorPhone": "+1-202-555-0078",
@@ -1634,7 +1557,6 @@
     "createdDate": "23/05/2026",
     "dueDate": "29/05/2026",
     "closedDate": "25/05/2026",
-    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1642,8 +1564,8 @@
     "subject": "Cannot reset password",
     "content": "I've tried resetting my password three times but the reset link always expires before I click it.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Thấp",
+    "statusCode": "processing",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Bui Thi H",
     "creatorPhone": "+1-202-555-0079",
@@ -1655,7 +1577,6 @@
     "createdDate": "28/03/2026",
     "dueDate": "31/03/2026",
     "closedDate": "",
-    "response": "Extended the reset-link expiry window and resent a fresh link; please confirm you're able to log in now.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1663,8 +1584,8 @@
     "subject": "Dashboard charts not loading",
     "content": "The analytics dashboard shows a blank space where the charts should be, no error message.",
     "attachedFile": "log-file.txt",
-    "actions": "Mở",
-    "priority": "Cao",
+    "statusCode": "open",
+    "SLAcode": "High",
     "creatorUser": "tm1.png",
     "creatorName": "Jordan Mai",
     "creatorPhone": "+1-202-555-0080",
@@ -1676,7 +1597,6 @@
     "createdDate": "08/11/2026",
     "dueDate": "12/11/2026",
     "closedDate": "",
-    "response": "Found a broken data endpoint feeding the chart component and restored it; charts should render correctly now.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1684,8 +1604,8 @@
     "subject": "Mobile app freezes on login",
     "content": "The mobile app freezes on the loading screen right after I enter my credentials.",
     "attachedFile": "log-file.txt",
-    "actions": "Hoàn thành",
-    "priority": "Thấp",
+    "statusCode": "closed",
+    "SLAcode": "Low",
     "creatorUser": "tm2.png",
     "creatorName": "Grace Tan",
     "creatorPhone": "+1-202-555-0081",
@@ -1697,7 +1617,6 @@
     "createdDate": "09/01/2025",
     "dueDate": "14/01/2025",
     "closedDate": "14/01/2025",
-    "response": "Identified a memory leak triggered on login and shipped a patched app version; please update and retest.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1705,8 +1624,8 @@
     "subject": "Calendar sync not working",
     "content": "Ticket due dates aren't syncing to my connected Google Calendar.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Trung bình",
+    "statusCode": "open",
+    "SLAcode": "Normal",
     "creatorUser": "tm4.png",
     "creatorName": "Sophia Truong",
     "creatorPhone": "+1-202-555-0082",
@@ -1718,7 +1637,6 @@
     "createdDate": "25/01/2026",
     "dueDate": "29/01/2026",
     "closedDate": "",
-    "response": "Fixed an expired sync token that was blocking calendar updates; sync should resume automatically.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1726,8 +1644,8 @@
     "subject": "Unable to upload large files",
     "content": "Files larger than 10MB fail to upload with a generic error.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Trung bình",
+    "statusCode": "closed",
+    "SLAcode": "Normal",
     "creatorUser": "tm4.png",
     "creatorName": "Olivia Perez",
     "creatorPhone": "+1-202-555-0083",
@@ -1739,7 +1657,6 @@
     "createdDate": "21/04/2022",
     "dueDate": "04/05/2022",
     "closedDate": "23/04/2022",
-    "response": "Raised the upload size limit and improved the error message for oversized files; please retry your upload.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1747,8 +1664,8 @@
     "subject": "Report filter resets unexpectedly",
     "content": "Every time I navigate away and back, my saved report filters are cleared.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Trung bình",
+    "statusCode": "processing",
+    "SLAcode": "Normal",
     "creatorUser": "tm1.png",
     "creatorName": "Sophia Truong",
     "creatorPhone": "+1-202-555-0084",
@@ -1760,7 +1677,6 @@
     "createdDate": "25/05/2026",
     "dueDate": "31/05/2026",
     "closedDate": "",
-    "response": "Fixed a session-storage bug that was clearing filters on navigation; filters should now persist.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1768,8 +1684,8 @@
     "subject": "Cannot reopen closed ticket",
     "content": "I need to reopen a ticket that was closed prematurely but there's no reopen option.",
     "attachedFile": "error-report.png",
-    "actions": "Hoàn thành",
-    "priority": "Cao",
+    "statusCode": "closed",
+    "SLAcode": "High",
     "creatorUser": "tm2.png",
     "creatorName": "Olivia Perez",
     "creatorPhone": "+1-202-555-0085",
@@ -1781,7 +1697,6 @@
     "createdDate": "25/07/2026",
     "dueDate": "04/08/2026",
     "closedDate": "29/07/2026",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1789,8 +1704,8 @@
     "subject": "Export to Excel fails",
     "content": "Clicking 'Export to Excel' spins forever and never downloads a file.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Thấp",
+    "statusCode": "closed",
+    "SLAcode": "Low",
     "creatorUser": "tm1.png",
     "creatorName": "Pham Thi D",
     "creatorPhone": "+1-202-555-0086",
@@ -1802,7 +1717,6 @@
     "createdDate": "28/08/2025",
     "dueDate": "08/09/2025",
     "closedDate": "29/08/2025",
-    "response": "Fixed a timeout in the export job for large datasets; please retry the export and let us know.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1810,8 +1724,8 @@
     "subject": "Mobile app freezes on login",
     "content": "The mobile app freezes on the loading screen right after I enter my credentials.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Trung bình",
+    "statusCode": "open",
+    "SLAcode": "Normal",
     "creatorUser": "tm4.png",
     "creatorName": "Grace Tan",
     "creatorPhone": "+1-202-555-0087",
@@ -1823,7 +1737,6 @@
     "createdDate": "14/03/2026",
     "dueDate": "23/03/2026",
     "closedDate": "",
-    "response": "Identified a memory leak triggered on login and shipped a patched app version; please update and retest.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1831,8 +1744,8 @@
     "subject": "Search results incomplete",
     "content": "Searching for tickets by keyword only returns a fraction of the matching results.",
     "attachedFile": "invoice.pdf",
-    "actions": "Hoàn thành",
-    "priority": "Cao",
+    "statusCode": "closed",
+    "SLAcode": "High",
     "creatorUser": "tm3.png",
     "creatorName": "Marcus Lee",
     "creatorPhone": "+1-202-555-0088",
@@ -1844,7 +1757,6 @@
     "createdDate": "20/07/2024",
     "dueDate": "27/07/2024",
     "closedDate": "27/07/2024",
-    "response": "Reindexed the search service after discovering a stale index; full results should now appear.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1852,8 +1764,8 @@
     "subject": "Cannot reopen closed ticket",
     "content": "I need to reopen a ticket that was closed prematurely but there's no reopen option.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Thấp",
+    "statusCode": "processing",
+    "SLAcode": "Low",
     "creatorUser": "tm2.png",
     "creatorName": "Grace Tan",
     "creatorPhone": "+1-202-555-0089",
@@ -1865,7 +1777,6 @@
     "createdDate": "24/01/2026",
     "dueDate": "31/01/2026",
     "closedDate": "",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1873,8 +1784,8 @@
     "subject": "Dashboard charts not loading",
     "content": "The analytics dashboard shows a blank space where the charts should be, no error message.",
     "attachedFile": "",
-    "actions": "Đang xử lý",
-    "priority": "Thấp",
+    "statusCode": "processing",
+    "SLAcode": "Low",
     "creatorUser": "tm1.png",
     "creatorName": "Mia Nguyen",
     "creatorPhone": "+1-202-555-0090",
@@ -1886,7 +1797,6 @@
     "createdDate": "05/10/2026",
     "dueDate": "08/10/2026",
     "closedDate": "",
-    "response": "Found a broken data endpoint feeding the chart component and restored it; charts should render correctly now.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1894,8 +1804,8 @@
     "subject": "Push notifications delayed",
     "content": "Push notifications for new replies sometimes arrive hours late.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Thấp",
+    "statusCode": "closed",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Zoe Trinh",
     "creatorPhone": "+1-202-555-0091",
@@ -1907,7 +1817,6 @@
     "createdDate": "19/11/2022",
     "dueDate": "22/11/2022",
     "closedDate": "22/11/2022",
-    "response": "Resolved a queue backlog in the notification service; delivery times should now be near-instant.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1915,8 +1824,8 @@
     "subject": "Search results incomplete",
     "content": "Searching for tickets by keyword only returns a fraction of the matching results.",
     "attachedFile": "log-file.txt",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm2.png",
     "creatorName": "Le Van C",
     "creatorPhone": "+1-202-555-0092",
@@ -1928,7 +1837,6 @@
     "createdDate": "06/04/2024",
     "dueDate": "10/04/2024",
     "closedDate": "",
-    "response": "Reindexed the search service after discovering a stale index; full results should now appear.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1936,8 +1844,8 @@
     "subject": "Mobile app freezes on login",
     "content": "The mobile app freezes on the loading screen right after I enter my credentials.",
     "attachedFile": "invoice.pdf",
-    "actions": "Đang xử lý",
-    "priority": "Thấp",
+    "statusCode": "processing",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Tran Thi B",
     "creatorPhone": "+1-202-555-0093",
@@ -1949,7 +1857,6 @@
     "createdDate": "17/06/2022",
     "dueDate": "26/06/2022",
     "closedDate": "",
-    "response": "Identified a memory leak triggered on login and shipped a patched app version; please update and retest.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -1957,8 +1864,8 @@
     "subject": "Push notifications delayed",
     "content": "Push notifications for new replies sometimes arrive hours late.",
     "attachedFile": "invoice.pdf",
-    "actions": "Đang xử lý",
-    "priority": "Thấp",
+    "statusCode": "processing",
+    "SLAcode": "Low",
     "creatorUser": "tm3.png",
     "creatorName": "Kevin Nguyen",
     "creatorPhone": "+1-202-555-0094",
@@ -1970,7 +1877,6 @@
     "createdDate": "23/02/2026",
     "dueDate": "08/03/2026",
     "closedDate": "",
-    "response": "Resolved a queue backlog in the notification service; delivery times should now be near-instant.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -1978,8 +1884,8 @@
     "subject": "Email template rendering broken",
     "content": "Outgoing notification emails show raw HTML tags instead of formatted text.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Trung bình",
+    "statusCode": "open",
+    "SLAcode": "Normal",
     "creatorUser": "tm2.png",
     "creatorName": "Marcus Lee",
     "creatorPhone": "+1-202-555-0095",
@@ -1991,7 +1897,6 @@
     "createdDate": "07/10/2025",
     "dueDate": "20/10/2025",
     "closedDate": "",
-    "response": "Fixed a template-engine misconfiguration causing raw tags to leak into emails; sent a test email for confirmation.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -1999,8 +1904,8 @@
     "subject": "Subscription renewal failed",
     "content": "My subscription didn't renew automatically and I lost access.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Cao",
+    "statusCode": "closed",
+    "SLAcode": "High",
     "creatorUser": "tm4.png",
     "creatorName": "Nguyen Van A",
     "creatorPhone": "+1-202-555-0096",
@@ -2012,7 +1917,6 @@
     "createdDate": "26/06/2025",
     "dueDate": "08/07/2025",
     "closedDate": "28/06/2025",
-    "response": "Reprocessed the failed payment and restored full access to your subscription.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -2020,8 +1924,8 @@
     "subject": "Cannot reopen closed ticket",
     "content": "I need to reopen a ticket that was closed prematurely but there's no reopen option.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm2.png",
     "creatorName": "Do Van I",
     "creatorPhone": "+1-202-555-0097",
@@ -2033,7 +1937,6 @@
     "createdDate": "16/12/2026",
     "dueDate": "20/12/2026",
     "closedDate": "",
-    "response": "Enabled ticket reopening for closed tickets within 30 days and reopened the ticket you flagged.",
     "topicName": "Hỗ trợ ứng dụng"
   },
   {
@@ -2041,8 +1944,8 @@
     "subject": "Cannot merge duplicate tickets",
     "content": "There's no option to merge two tickets that were accidentally created for the same issue.",
     "attachedFile": "error-report.png",
-    "actions": "Hoàn thành",
-    "priority": "Cao",
+    "statusCode": "closed",
+    "SLAcode": "High",
     "creatorUser": "tm5.png",
     "creatorName": "Noah Chen",
     "creatorPhone": "+1-202-555-0098",
@@ -2054,7 +1957,6 @@
     "createdDate": "11/12/2025",
     "dueDate": "18/12/2025",
     "closedDate": "18/12/2025",
-    "response": "Enabled the ticket-merge feature for your account and merged the duplicate tickets as requested.",
     "topicName": "Hỗ trợ kĩ thuật"
   },
   {
@@ -2062,8 +1964,8 @@
     "subject": "Incorrect SLA countdown",
     "content": "The SLA timer on my ticket shows a countdown that doesn't match the stated due date.",
     "attachedFile": "",
-    "actions": "Mở",
-    "priority": "Thấp",
+    "statusCode": "open",
+    "SLAcode": "Low",
     "creatorUser": "tm5.png",
     "creatorName": "Brandon Vu",
     "creatorPhone": "+1-202-555-0099",
@@ -2075,7 +1977,6 @@
     "createdDate": "06/09/2026",
     "dueDate": "19/09/2026",
     "closedDate": "",
-    "response": "Corrected a timezone mismatch in the SLA calculation; the countdown now reflects the correct due date.",
     "topicName": "Hỗ trợ mạng"
   },
   {
@@ -2083,8 +1984,8 @@
     "subject": "Two-factor authentication code not received",
     "content": "I never receive the SMS code needed to complete two-factor login.",
     "attachedFile": "",
-    "actions": "Hoàn thành",
-    "priority": "Cao",
+    "statusCode": "closed",
+    "SLAcode": "High",
     "creatorUser": "tm1.png",
     "creatorName": "Jordan Mai",
     "creatorPhone": "+1-202-555-0100",
@@ -2096,7 +1997,6 @@
     "createdDate": "07/02/2025",
     "dueDate": "12/02/2025",
     "closedDate": "12/02/2025",
-    "response": "Switched the account to an alternate SMS gateway after confirming carrier delivery issues; please retest.",
     "topicName": "Hỗ trợ ứng dụng"
   }
 ]

@@ -4,6 +4,7 @@ import { Component, TemplateRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
@@ -32,7 +33,7 @@ interface Person {
   ticketName?: string;
   ticketContent?: string;
   slaCode?: string;
-  statusCode?: string;
+  statusCode: string;
   assignedDate?: string;
   assignedTo?: string;
   closedBy?: string;
@@ -40,7 +41,6 @@ interface Person {
   subject: string;
   content: string;
   attachedFile: string;
-  actions: string;
   priority: string;
   creatorUser: string;
   creatorName: string;
@@ -53,11 +53,28 @@ interface Person {
   createdDate: string;
   dueDate: string;
   closedDate: string;
-  response?: string;
   topicName: string;
 }
 
-type SortField = 'id' | 'assignedName' | 'priority' | 'actions' | 'createdDate' | 'dueDate' | 'topicName';
+interface TicketResponse {
+  ticketId: string;
+  responseId: string;
+  content: string;
+}
+
+interface Topic {
+  id: string;
+  topicName: string;
+  SLA: string;
+  departmentCode: string;
+}
+
+interface Department {
+  departmentCode: string;
+  departmentName: string;
+}
+
+type SortField = 'id' | 'assignedName' | 'priority' | 'statusCode' | 'createdDate' | 'dueDate' | 'topicName';
 type SortOrder = 'asc' | 'desc';
 
 @Component({
@@ -126,7 +143,9 @@ type SortOrder = 'asc' | 'desc';
                     [(ngModel)]="topicFilter"
                     (ngModelChange)="filterByTopic()" nzPlaceHolder="Tìm theo chủ đề" nzAllowClear
                   >
-                    <nz-option *ngFor="let t of topicFilterOptions" [nzValue]="t" [nzLabel]="t"></nz-option>
+                    <nz-option-group *ngFor="let group of topicFilterGroups" [nzLabel]="group.departmentName">
+                      <nz-option *ngFor="let topic of group.topics" [nzValue]="topic" [nzLabel]="topic"></nz-option>
+                    </nz-option-group>
                   </nz-select>
                 </div>
                 <div class="inline-flex items-center">
@@ -135,10 +154,7 @@ type SortOrder = 'asc' | 'desc';
                     [(ngModel)]="priorityFilter"
                     (ngModelChange)="filterByPriority()" nzPlaceHolder="Tìm theo ưu tiên" nzAllowClear
                   >
-                    <nz-option nzValue="Gấp" nzLabel="Gấp"></nz-option>
-                    <nz-option nzValue="Cao" nzLabel="Cao"></nz-option>
-                    <nz-option nzValue="Trung bình" nzLabel="Trung bình"></nz-option>
-                    <nz-option nzValue="Thấp" nzLabel="Thấp"></nz-option>
+                    <nz-option *ngFor="let p of priorityOptions" [nzValue]="p" [nzLabel]="p"></nz-option>
                   </nz-select>
                 </div>
                 <div class="inline-flex items-center">
@@ -148,9 +164,7 @@ type SortOrder = 'asc' | 'desc';
                     (ngModelChange)="onStatusFilterChange($event)" nzPlaceHolder="Tìm theo trạng thái" nzAllowClear nzMode="multiple"
                   >
                     <nz-option-group nzLabel="Trạng thái xử lý">
-                      <nz-option nzValue="open" nzLabel="Mở"></nz-option>
-                      <nz-option nzValue="progress" nzLabel="Đang xử lý"></nz-option>
-                      <nz-option nzValue="close" nzLabel="Hoàn thành"></nz-option>
+                      <nz-option *ngFor="let status of statusOptions" [nzValue]="status.statusCode" [nzLabel]="status.statusName"></nz-option>
                     </nz-option-group>
                     <nz-option-group nzLabel="Tiến độ">
                       <nz-option nzValue="ontrack" nzLabel="Đúng tiến độ"></nz-option>
@@ -188,7 +202,7 @@ type SortOrder = 'asc' | 'desc';
                         <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('topicName')">Chủ đề{{ sortArrow('topicName') }}</th>
                         <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('assignedName')">Người xử lý{{ sortArrow('assignedName') }}</th>
                         <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('priority')">Ưu tiên{{ sortArrow('priority') }}</th>
-                        <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('actions')">Trạng thái{{ sortArrow('actions') }}</th>
+                        <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('statusCode')">Trạng thái{{ sortArrow('statusCode') }}</th>
                         <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('createdDate')">Ngày tạo{{ sortArrow('createdDate') }}</th>
                         <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('dueDate')">Ngày đến hạn{{ sortArrow('dueDate') }}</th>
                       </tr>
@@ -215,9 +229,9 @@ type SortOrder = 'asc' | 'desc';
                         <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.priority }}</td>
                         <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
                         <span
-                            class="inline-flex items-center justify-center bg-{{ getStatusColor(person.actions) }}/10 text-{{ getStatusColor(person.actions) }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize"
+                            class="inline-flex items-center justify-center bg-{{ getStatusColor(person.statusCode) }}/10 text-{{ getStatusColor(person.statusCode) }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize"
                           >
-                            {{ person.actions }}
+                            {{ statusNameByCode[person.statusCode] || person.statusCode }}
                           </span>
                           <span
                             class="block mt-1 text-[11px] font-medium capitalize bg-{{ getScheduleStatusColor(person) }}/10 text-{{ getScheduleStatusColor(person) }} px-2 py-0.5 rounded-[15px] w-fit"
@@ -258,8 +272,8 @@ type SortOrder = 'asc' | 'desc';
               <nz-form-item *ngIf="newTicketDepartment">
                 <nz-form-control>
                   <nz-form-label nzRequired class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Chủ đề:</nz-form-label>
-                  <nz-select class="min-w-[260px] capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[50px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[5px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-theme-gray dark:[&>.ant-select-arrow]:text-white/60" [(ngModel)]="newTicketTopic" nzPlaceHolder="Chọn chủ đề" name="chuDe">
-                    <nz-option *ngFor="let topic of topicOptions" [nzValue]="topic" [nzLabel]="topic"></nz-option>
+                  <nz-select class="min-w-[260px] capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[50px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[5px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-theme-gray dark:[&>.ant-select-arrow]:text-white/60" [(ngModel)]="newTicketTopic" (ngModelChange)="onNewTicketTopicChange()" nzPlaceHolder="Chọn chủ đề" name="chuDe">
+                    <nz-option *ngFor="let topic of newTicketTopicOptions" [nzValue]="topic" [nzLabel]="topic"></nz-option>
                   </nz-select>
                 </nz-form-control>
               </nz-form-item>
@@ -267,12 +281,7 @@ type SortOrder = 'asc' | 'desc';
               <nz-form-item>
                 <nz-form-control>
                 <nz-form-label nzRequired class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Ưu tiên:</nz-form-label>
-                  <nz-select class="min-w-[260px] capitalize [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[50px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[5px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-theme-gray dark:[&>.ant-select-arrow]:text-white/60" nzPlaceHolder="Chọn mức độ ưu tiên" name="uuTien" ngModel>
-                    <nz-option nzValue="Gấp" nzLabel="Gấp"></nz-option>
-                    <nz-option nzValue="Cao" nzLabel="Cao"></nz-option>
-                    <nz-option nzValue="Trung bình" nzLabel="Trung bình"></nz-option>
-                    <nz-option nzValue="Thấp" nzLabel="Thấp"></nz-option>
-                  </nz-select>
+                  <input class="h-[50px] border-normal dark:border-white/10 px-[20px] placeholder-shown:text-light-extra dark:placeholder-shown:text-white/60 rounded-[5px] dark:bg-white/10 dark:text-white/[.87] bg-white dark:bg-slate-800" nz-input [value]="newTicketPriority || ''" disabled placeholder="Ưu tiên tự động theo chủ đề" />
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
@@ -325,8 +334,8 @@ type SortOrder = 'asc' | 'desc';
           <div class="flex flex-col gap-[18px]" *ngIf="selectedTicket as ticket">
             <div class="flex items-center justify-between flex-wrap gap-[10px]">
               <span class="text-[13px] font-medium text-theme-gray dark:text-white/60">Trạng thái:
-                <span class="inline-flex items-center justify-center bg-{{ getStatusColor(ticket.actions) }}/10 text-{{ getStatusColor(ticket.actions) }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize">
-                  {{ ticket.actions }}
+                <span class="inline-flex items-center justify-center bg-{{ getStatusColor(ticket.statusCode) }}/10 text-{{ getStatusColor(ticket.statusCode) }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize">
+                  {{ statusNameByCode[ticket.statusCode] || ticket.statusCode }}
                 </span>
                 <span class="inline-flex items-center ms-1 text-[11px] font-medium capitalize bg-{{ getScheduleStatusColor(ticket) }}/10 text-{{ getScheduleStatusColor(ticket) }} px-2 py-0.5 rounded-[15px]">
                   {{ getScheduleStatus(ticket) }}
@@ -385,21 +394,23 @@ type SortOrder = 'asc' | 'desc';
               <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Tệp đính kèm</div>
               <div class="text-[15px] text-primary font-medium">{{ ticket.attachedFile }}</div>
             </div>
-            <div *ngIf="ticket.response" class="pt-[18px] border-t border-regular dark:border-white/10">
+            <div *ngIf="selectedTicketResponses.length" class="pt-[18px] border-t border-regular dark:border-white/10">
               <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-[15px]">Phản hồi</div>
-              <div class="flex items-start w-full gap-[10px]">
-                <div class="rounded-full relative inline-flex items-center justify-center">
-                  <img src="assets/images/avatars/{{ ticket.assignedUser }}" class="bg-gray dark:bg-white/10 w-[30px] h-[30px] rounded-full" alt="{{ ticket.assignedName }}">
-                </div>
-                <div class="flex items-center justify-between flex-wrap w-full">
-                  <div>
-                    <h6 class="text-[14px] font-medium leading-[1.4285714286] text-dark dark:text-white/[.87]">{{ ticket.assignedName }}</h6>
-                    <div class="text-limit">
-                      <p class="text-[16px] font-normal leading-[1.6875] text-theme-gray dark:text-white/60 whitespace-pre-line">{{ ticket.response }}</p>
-                    </div>
+              <div class="space-y-[18px]">
+                <div *ngFor="let response of selectedTicketResponses" class="flex items-start w-full gap-[10px]">
+                  <div class="rounded-full relative inline-flex items-center justify-center">
+                    <img src="assets/images/avatars/{{ ticket.assignedUser }}" class="bg-gray dark:bg-white/10 w-[30px] h-[30px] rounded-full" alt="{{ ticket.assignedName }}">
                   </div>
-                  <div class="last-chat-time" *ngIf="ticket.closedDate">
-                    <small class="text-light dark:text-white/60">{{ ticket.closedDate }}</small>
+                  <div class="flex items-center justify-between flex-wrap w-full">
+                    <div>
+                      <h6 class="text-[14px] font-medium leading-[1.4285714286] text-dark dark:text-white/[.87]">{{ ticket.assignedName }}</h6>
+                      <div class="text-limit">
+                        <p class="text-[16px] font-normal leading-[1.6875] text-theme-gray dark:text-white/60 whitespace-pre-line">{{ response.content }}</p>
+                      </div>
+                    </div>
+                    <div class="last-chat-time" *ngIf="ticket.closedDate">
+                      <small class="text-light dark:text-white/60">{{ ticket.closedDate }}</small>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -440,6 +451,8 @@ export class MyTicketsComponent implements OnInit {
 
   viewModalRef?: NzModalRef;
   selectedTicket: Person | null = null;
+  selectedTicketResponses: TicketResponse[] = [];
+  responseMap: { [ticketId: string]: TicketResponse[] } = {};
 
   sortField: SortField | null = null;
   sortOrder: SortOrder = 'asc';
@@ -449,30 +462,45 @@ export class MyTicketsComponent implements OnInit {
 
   // Options for the "Phòng ban" dropdown in the Tạo Ticket modal; the
   // "Chủ đề" field only renders once one of these has been picked.
-  departmentOptions: string[] = ['P.CNTT', 'P.QTTH', 'P.QTNS'];
+  departmentOptions: string[] = [];
+  departmentNameByCode: { [key: string]: string } = {};
+  departmentCodeByName: { [key: string]: string } = {};
   newTicketDepartment: string | null = null;
+
+  allTopics: Topic[] = [];
+  newTicketTopicOptions: string[] = [];
+
+  // SLA master data used to derive priority values from SLA codes.
+  slaOptions: string[] = [];
+  slaPriorityByCode: { [key: string]: string } = {};
+  slaPriorityByValue: { [key: string]: string } = {};
+  slaCodeByPriority: { [key: string]: string } = {};
+  priorityOptions: string[] = [];
+  topicByName: { [key: string]: Topic } = {};
+  newTicketPriority: string | null = null;
 
   // Options for the "Chủ đề" dropdown in the Tạo Ticket modal; the rest of
   // the form only renders once one of these has been picked.
   topicOptions: string[] = [];
+  topicNameById: { [key: string]: string } = {};
   newTicketTopic: string | null = null;
   newTicketAttachedFile: string | null = null;
 
-  // Maps the dropdown's filter values to the actual Vietnamese/English
-  // values stored in the `actions` field of the JSON data.
-  private readonly statusMap: { [key: string]: string } = {
+  statusOptions: { statusCode: string; statusName: string }[] = [];
+  statusNameByCode: { [key: string]: string } = {
     open: 'Mở',
-    close: 'Hoàn thành',
-    progress: 'Đang xử lý'
+    processing: 'Đang xử lý',
+    closed: 'Hoàn thành'
   };
+  private readonly statusActionCodes: string[] = ['open', 'processing', 'closed'];
 
   // Color token (matches the existing bg-{color}/10 text-{color} badge pattern) for each
-  // possible `actions` value. The JSON no longer carries a separate `status` field — the
-  // badge color is derived natively from `actions` instead.
-  private readonly actionsColorMap: { [key: string]: string } = {
-    'Mở': 'secondary',
-    'Đang xử lý': 'warning',
-    'Hoàn thành': 'success'
+  // possible `statusCode` value. The JSON no longer carries a separate `status` field — the
+  // badge color is derived natively from `statusCode` instead.
+  private readonly statusCodeColorMap: { [key: string]: string } = {
+    open: 'secondary',
+    processing: 'warning',
+    closed: 'success'
   };
 
   // Maps the dropdown's schedule-status filter values to the labels
@@ -494,9 +522,9 @@ export class MyTicketsComponent implements OnInit {
   // Custom status ranking so the Trạng thái column sorts in a logical
   // lifecycle order (Mở -> Quá hạn -> Đóng) instead of alphabetically.
   private readonly statusRank: { [key: string]: number } = {
-    'Mở': 1,
-    'Đang xử lý': 2,
-    'Hoàn thành': 3
+    open: 1,
+    processing: 2,
+    closed: 3
   };
 
   constructor(private http: HttpClient, private modal: NzModalService) {}
@@ -507,17 +535,7 @@ export class MyTicketsComponent implements OnInit {
     return this.filteredPeople.slice(start, start + this.pageSize);
   }
 
-  /** Unique list of topic names present in the loaded ticket data, used for
-   * the topic filter dropdown. */
-  get topicFilterOptions(): string[] {
-    const seen = new Set<string>();
-    for (const p of this.people) {
-      if (p.topicName) {
-        seen.add(p.topicName);
-      }
-    }
-    return Array.from(seen.values());
-  }
+  topicFilterGroups: { departmentName: string; topics: string[] }[] = [];
 
   onPageIndexChange(pageIndex: number): void {
     this.pageIndex = pageIndex;
@@ -525,6 +543,7 @@ export class MyTicketsComponent implements OnInit {
 
   viewTicket(person: Person): void {
     this.selectedTicket = person;
+    this.selectedTicketResponses = this.getResponsesByTicketId(person.id);
     this.viewModalRef = this.modal.create({
       nzTitle: this.detailTplTitle,
       nzContent: this.detailTplContent,
@@ -537,6 +556,7 @@ export class MyTicketsComponent implements OnInit {
     // (whichever way it was closed), so the content doesn't disappear mid-animation.
     this.viewModalRef.afterClose.subscribe(() => {
       this.selectedTicket = null;
+      this.selectedTicketResponses = [];
     });
   }
 
@@ -547,26 +567,105 @@ export class MyTicketsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.http.get<Person[]>('assets/data/features/ticket-table.json').subscribe(
-      (data) => {
-        this.people = this.normalizeTicketData(data);
+    forkJoin({
+      tickets: this.http.get<Person[]>('assets/data/features/ticket-table.json'),
+      responses: this.http.get<TicketResponse[]>('assets/data/features/response-table.json'),
+      statuses: this.http.get<{ statusCode: string; statusName: string }[]>('assets/data/features/status-table.json'),
+      topics: this.http.get<Topic[]>('assets/data/features/topic-table.json'),
+      departments: this.http.get<Department[]>('assets/data/features/department-table.json'),
+      sla: this.http.get<{ SLAcode: string; SLApriority: string; SLAvalue: string }[]>('assets/data/features/SLA-table.json')
+    }).subscribe(
+      ({ tickets, statuses, topics, departments, sla, responses }) => {
+        this.statusOptions = statuses;
+        this.statusNameByCode = statuses.reduce((map, item) => {
+          map[item.statusCode] = item.statusName;
+          return map;
+        }, { ...this.statusNameByCode });
+        this.responseMap = responses.reduce((map, item) => {
+          if (!map[item.ticketId]) {
+            map[item.ticketId] = [];
+          }
+          map[item.ticketId].push(item);
+          return map;
+        }, {} as { [ticketId: string]: TicketResponse[] });
+
+        this.allTopics = topics;
+        this.topicOptions = topics
+          .filter((topic) => topic?.topicName)
+          .map((topic) => topic.topicName);
+
+        this.topicByName = topics.reduce((map, topic) => {
+          map[topic.topicName] = topic;
+          return map;
+        }, {} as { [key: string]: Topic });
+
+        this.topicFilterGroups = this.buildTopicFilterGroups(topics);
+
+        this.topicNameById = topics.reduce((map, topic) => {
+          map[topic.id] = topic.topicName;
+          return map;
+        }, {} as { [key: string]: string });
+
+        this.departmentOptions = departments
+          .filter((department) => department?.departmentName)
+          .map((department) => department.departmentName);
+
+        this.departmentNameByCode = departments.reduce((map, department) => {
+          map[department.departmentCode] = department.departmentName;
+          return map;
+        }, {} as { [key: string]: string });
+
+        this.departmentCodeByName = departments.reduce((map, department) => {
+          map[department.departmentName] = department.departmentCode;
+          return map;
+        }, {} as { [key: string]: string });
+
+        this.topicFilterGroups = this.buildTopicFilterGroups(topics);
+
+        this.slaPriorityByCode = sla.reduce((map, item) => {
+          map[item.SLAcode] = item.SLApriority;
+          return map;
+        }, {} as { [key: string]: string });
+
+        this.slaPriorityByValue = sla.reduce((map, item) => {
+          map[item.SLAvalue] = item.SLApriority;
+          return map;
+        }, {} as { [key: string]: string });
+
+        this.slaCodeByPriority = sla.reduce((map, item) => {
+          map[item.SLApriority] = item.SLAcode;
+          return map;
+        }, {} as { [key: string]: string });
+
+        this.priorityOptions = sla.map((item) => item.SLApriority);
+        this.slaOptions = sla.map((item) => item.SLAcode);
+
+        this.people = this.normalizeTicketData(tickets);
         this.filteredPeople = this.applyAll();
       },
       (error) => {
         console.log('Error reading JSON file:', error);
       }
     );
+  }
 
-    this.http.get<any[]>('assets/data/features/topic-table.json').subscribe(
-      (topics) => {
-        this.topicOptions = topics
-          .filter((topic) => topic?.topicName)
-          .map((topic) => topic.topicName);
-      },
-      (error) => {
-        console.log('Error reading topic JSON file:', error);
+  private buildTopicFilterGroups(topics: Topic[]): { departmentName: string; topics: string[] }[] {
+    const grouped = new Map<string, Set<string>>();
+    for (const topic of topics) {
+      const departmentName = this.departmentNameByCode[topic.departmentCode] ?? topic.departmentCode ?? 'Khác';
+      if (!grouped.has(departmentName)) {
+        grouped.set(departmentName, new Set());
       }
-    );
+      if (topic.topicName) {
+        grouped.get(departmentName)?.add(topic.topicName);
+      }
+    }
+    return Array.from(grouped.entries())
+      .map(([departmentName, topics]) => ({
+        departmentName,
+        topics: Array.from(topics).sort((a, b) => a.localeCompare(b))
+      }))
+      .sort((a, b) => a.departmentName.localeCompare(b.departmentName));
   }
 
   private normalizeTicketData(data: any[]): Person[] {
@@ -575,16 +674,15 @@ export class MyTicketsComponent implements OnInit {
       ticketId: item.ticketId ?? item.id ?? '',
       id: item.id ?? item.ticketId ?? '',
       topicId: item.topicId ?? undefined,
-      topicName: item.topicName ?? item.topicId ?? '',
+      topicName: this.topicNameById[item.topicId] ?? item.topicName ?? item.topicId ?? '',
       departmentCode: item.departmentCode ?? item.creatorDept ?? item.assignedDept ?? '',
       ticketName: item.ticketName ?? item.subject ?? '',
       subject: item.subject ?? item.ticketName ?? '',
       ticketContent: item.ticketContent ?? item.content ?? '',
       content: item.content ?? item.ticketContent ?? '',
-      slaCode: item.slaCode ?? item.priority ?? '',
-      priority: item.priority ?? item.slaCode ?? '',
-      statusCode: item.statusCode ?? item.actions ?? '',
-      actions: item.actions ?? item.statusCode ?? '',
+      slaCode: item.slaCode ?? item.SLAcode ?? '',
+      priority: this.slaPriorityByCode[item.slaCode ?? item.SLAcode ?? ''] ?? '',
+      statusCode: item.statusCode ?? item.statusCode ?? '',
       assignedDate: item.assignedDate ?? undefined,
       assignedTo: item.assignedTo ?? item.assignedUser ?? '',
       assignedUser: item.assignedUser ?? item.assignedTo ?? '',
@@ -595,11 +693,14 @@ export class MyTicketsComponent implements OnInit {
       creatorUser: item.creatorUser ?? item.createdBy ?? undefined,
       closedBy: item.closedBy ?? undefined,
       attachedFile: item.attachedFile ?? '',
-      response: item.response ?? '',
       createdDate: item.createdDate ?? '',
       dueDate: item.dueDate ?? '',
       closedDate: item.closedDate ?? ''
     } as Person));
+  }
+
+  private getResponsesByTicketId(ticketId: string): TicketResponse[] {
+    return this.responseMap[ticketId] ?? [];
   }
 
   onSearchChange(): void {
@@ -619,7 +720,7 @@ export class MyTicketsComponent implements OnInit {
    */
   onStatusFilterChange(values: string[]): void {
     const previous = this.statusFilter;
-    let constrained = this.keepLatestPerGroup(values, previous, Object.keys(this.statusMap));
+    let constrained = this.keepLatestPerGroup(values, previous, this.statusActionCodes);
     constrained = this.keepLatestPerGroup(constrained, previous, Object.keys(this.scheduleStatusMap));
     this.statusFilter = constrained;
     this.filterByStatus();
@@ -713,9 +814,9 @@ export class MyTicketsComponent implements OnInit {
     return this.getScheduleStatus(person) === 'Trễ hạn' ? 'danger' : 'success';
   }
 
-  /** Color token (matches the existing bg-{color}/10 text-{color} badge pattern) for the ticket's action status, derived natively from `actions`. */
-  getStatusColor(actions: string): string {
-    return this.actionsColorMap[actions] ?? 'secondary';
+  /** Color token (matches the existing bg-{color}/10 text-{color} badge pattern) for the ticket's action status, derived natively from `statusCode`. */
+  getStatusColor(statusCode: string): string {
+    return this.statusCodeColorMap[statusCode] ?? 'secondary';
   }
 
   /** Checks whether a "dd/MM/yyyy" date string falls within a [start, end] range (inclusive, day-level precision). */
@@ -732,7 +833,7 @@ export class MyTicketsComponent implements OnInit {
   /** Runs the combined pipeline: search by id-or-name -> filter by status/priority/date ranges -> sort. */
   private applyAll(): Person[] {
     const searchQuery = this.searchValue.trim().toLowerCase();
-    const selectedAction = this.statusFilter.find((v) => this.statusMap[v]);
+    const selectedAction = this.statusFilter.find((v) => this.statusActionCodes.includes(v));
     const selectedSchedule = this.statusFilter.find((v) => this.scheduleStatusMap[v]);
 
     let result = this.people.filter((person) => {
@@ -741,7 +842,7 @@ export class MyTicketsComponent implements OnInit {
         person.creatorName.toLowerCase().includes(searchQuery) ||
         person.assignedName.toLowerCase().includes(searchQuery);
       const matchesStatus =
-        (!selectedAction || person.actions === this.statusMap[selectedAction]) &&
+        (!selectedAction || person.statusCode === selectedAction) &&
         (!selectedSchedule || this.getScheduleStatus(person) === this.scheduleStatusMap[selectedSchedule]);
       const matchesPriority = !this.priorityFilter || person.priority === this.priorityFilter;
       const matchesTopic = !this.topicFilter || person.topicName === this.topicFilter;
@@ -774,8 +875,8 @@ export class MyTicketsComponent implements OnInit {
         case 'topicName':
           comparison = a.topicName.localeCompare(b.topicName);
           break;
-        case 'actions':
-          comparison = (this.statusRank[a.actions] ?? 0) - (this.statusRank[b.actions] ?? 0);
+        case 'statusCode':
+          comparison = (this.statusRank[a.statusCode] ?? 0) - (this.statusRank[b.statusCode] ?? 0);
           break;
         case 'createdDate':
           comparison = this.parseDate(a.createdDate) - this.parseDate(b.createdDate);
@@ -819,6 +920,24 @@ export class MyTicketsComponent implements OnInit {
    * stale "Chủ đề" selection from a different department can't linger. */
   onNewTicketDepartmentChange(): void {
     this.newTicketTopic = null;
+    this.newTicketPriority = null;
+    const deptCode = this.newTicketDepartment ? this.departmentCodeByName[this.newTicketDepartment] : undefined;
+    this.newTicketTopicOptions = deptCode
+      ? this.allTopics
+          .filter((topic) => topic.departmentCode === deptCode)
+          .map((topic) => topic.topicName)
+      : [];
+  }
+
+  onNewTicketTopicChange(): void {
+    const selectedTopic = this.newTicketTopic ? this.topicByName[this.newTicketTopic] : undefined;
+    if (!selectedTopic) {
+      this.newTicketPriority = null;
+      return;
+    }
+
+    const slaValue = selectedTopic.SLA;
+    this.newTicketPriority = this.slaPriorityByValue[slaValue] ?? null;
   }
 
   /** Captures the chosen file's name for the create-ticket form without actually

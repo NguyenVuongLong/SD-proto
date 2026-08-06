@@ -1,0 +1,22 @@
+[
+    {
+        "SLAcode": "Urgent",
+        "SLApriority": "Gấp",
+        "SLAvalue": "24"
+    },
+    {
+        "SLAcode": "High",
+        "SLApriority": "Cao",
+        "SLAvalue": "48"
+    },
+    {
+        "SLAcode": "Normal",
+        "SLApriority": "Trung bình",
+        "SLAvalue": "72"
+    },
+    {
+        "SLAcode": "Low",
+        "SLApriority": "Thấp",
+        "SLAvalue": "96"
+    }
+]

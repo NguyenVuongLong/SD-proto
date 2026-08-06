@@ -1,0 +1,14 @@
+[
+    {
+        "statusCode": "open",
+        "statusName": "Mở"
+    },
+    {
+        "statusCode": "processing",
+        "statusName": "Đang xử lý"
+    },
+    {
+        "statusCode": "closed",
+        "statusName": "Hoàn thành"
+    }
+]

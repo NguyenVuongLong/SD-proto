@@ -28,8 +28,8 @@ interface Ticket {
   subject: string;
   content: string;
   attachedFile: string;
-  actions: string;
-  priority: string;
+  statusCode: string;
+  SLAcode: string;
   creatorUser: string;
   creatorName: string;
   creatorPhone: string;
@@ -41,12 +41,12 @@ interface Ticket {
   createdDate: string;
   dueDate: string;
   closedDate: string;
-  response: string;
 }
 
 interface TicketStats {
   total: number;
   open: number;
+  processing: number;
   overdue: number;
   closed: number;
 }
@@ -56,6 +56,7 @@ interface TicketTrendPoint {
   sortValue: number;
   total: number;
   open: number;
+  processing: number;
   overdue: number;
   closed: number;
 }
@@ -127,21 +128,17 @@ function getBucketInfo(date: Date, granularity: Granularity): { key: string; lab
     </nz-range-picker>
   </div>
 
-  <div nz-row [nzGutter]="25">
-    <div nz-col class="mb-[25px]" nzXs="24" nzMd="12" nzXXl="6">
-      <div bordered="false"
-        class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
+  <div class="flex flex-wrap -mx-[12.5px] mb-[25px]">
+    <div class="w-full sm:w-1/2 lg:w-1/5 px-[12.5px] mb-[25px]">
+      <div class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
         <div class="flex justify-between">
-          <div
-            class="flex items-center justify-center order-2 bg-primary/10 text-primary w-[58px] h-[58px] rounded-2xl">
-            <div
-              class="fill-primary  flex items-center">
+          <div class="flex items-center justify-center order-2 bg-primary/10 text-primary w-[58px] h-[58px] rounded-2xl">
+            <div class="fill-primary  flex items-center">
               <svg-icon class="w-[30px] h-[30px] [&>svg]:w-full [&>svg]:h-full" src="assets/images/svg/unicons-line/ticket.svg"></svg-icon>
             </div>
           </div>
           <div>
-            <h4
-              class="mb-0 text-3xl max-lg:text-[26px] max-sm:text-2xl font-semibold leading-normal text-dark dark:text-white/[.87]">
+            <h4 class="mb-0 text-3xl max-lg:text-[26px] max-sm:text-2xl font-semibold leading-normal text-dark dark:text-white/[.87]">
               <span> {{ stats.total }} </span>
             </h4>
             <span class="font-normal text-body dark:text-white/60 text-15">Tổng số ticket</span>
@@ -150,20 +147,16 @@ function getBucketInfo(date: Date, granularity: Granularity): { key: string; lab
       </div>
     </div>
 
-    <div nz-col class="mb-[25px]" nzXs="24" nzMd="12" nzXXl="6">
-      <div bordered="false"
-        class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
+    <div class="w-full sm:w-1/2 lg:w-1/5 px-[12.5px] mb-[25px]">
+      <div class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
         <div class="flex justify-between">
-          <div
-            class="flex items-center justify-center order-2 bg-secondary/10 text-secondary w-[58px] h-[58px] rounded-2xl">
-            <div
-              class="fill-secondary  flex items-center">
+          <div class="flex items-center justify-center order-2 bg-secondary/10 text-secondary w-[58px] h-[58px] rounded-2xl">
+            <div class="fill-secondary  flex items-center">
               <svg-icon class="w-[30px] h-[30px] [&>svg]:w-full [&>svg]:h-full" src="assets/images/svg/unicons-line/ticket.svg"></svg-icon>
             </div>
           </div>
           <div>
-            <h4
-              class="mb-0 text-3xl max-lg:text-[26px] max-sm:text-2xl font-semibold leading-normal text-dark dark:text-white/[.87]">
+            <h4 class="mb-0 text-3xl max-lg:text-[26px] max-sm:text-2xl font-semibold leading-normal text-dark dark:text-white/[.87]">
               <span> {{ stats.open }} </span>
             </h4>
             <span class="font-normal text-body dark:text-white/60 text-15">Ticket mở</span>
@@ -172,20 +165,34 @@ function getBucketInfo(date: Date, granularity: Granularity): { key: string; lab
       </div>
     </div>
 
-    <div nz-col class="mb-[25px]" nzXs="24" nzMd="12" nzXXl="6">
-      <div bordered="false"
-        class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
+    <div class="w-full sm:w-1/2 lg:w-1/5 px-[12.5px] mb-[25px]">
+      <div class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
         <div class="flex justify-between">
-          <div
-            class="flex items-center justify-center order-2 bg-warning/10 text-warning w-[58px] h-[58px] rounded-2xl">
-            <div
-              class="fill-warning  flex items-center">
+          <div class="flex items-center justify-center order-2 bg-warning/10 text-warning w-[58px] h-[58px] rounded-2xl">
+            <div class="fill-warning  flex items-center">
               <svg-icon class="w-[30px] h-[30px] [&>svg]:w-full [&>svg]:h-full" src="assets/images/svg/unicons-line/ticket.svg"></svg-icon>
             </div>
           </div>
           <div>
-            <h4
-              class="mb-0 text-3xl max-lg:text-[26px] max-sm:text-2xl font-semibold leading-normal text-dark dark:text-white/[.87]">
+            <h4 class="mb-0 text-3xl max-lg:text-[26px] max-sm:text-2xl font-semibold leading-normal text-dark dark:text-white/[.87]">
+              <span> {{ stats.processing }} </span>
+            </h4>
+            <span class="font-normal text-body dark:text-white/60 text-15">Ticket đang xử lý</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full sm:w-1/2 lg:w-1/5 px-[12.5px] mb-[25px]">
+      <div class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
+        <div class="flex justify-between">
+          <div class="flex items-center justify-center order-2 bg-warning/10 text-warning w-[58px] h-[58px] rounded-2xl">
+            <div class="fill-warning  flex items-center">
+              <svg-icon class="w-[30px] h-[30px] [&>svg]:w-full [&>svg]:h-full" src="assets/images/svg/unicons-line/ticket.svg"></svg-icon>
+            </div>
+          </div>
+          <div>
+            <h4 class="mb-0 text-3xl max-lg:text-[26px] max-sm:text-2xl font-semibold leading-normal text-dark dark:text-white/[.87]">
               <span> {{ stats.overdue }} </span>
             </h4>
             <span class="font-normal text-body dark:text-white/60 text-15">Ticket overdue</span>
@@ -194,20 +201,16 @@ function getBucketInfo(date: Date, granularity: Granularity): { key: string; lab
       </div>
     </div>
 
-    <div nz-col class="mb-[25px]" nzXs="24" nzMd="12" nzXXl="6">
-      <div bordered="false"
-        class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
+    <div class="w-full sm:w-1/2 lg:w-1/5 px-[12.5px] mb-[25px]">
+      <div class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
         <div class="flex justify-between">
-          <div
-            class="flex items-center justify-center order-2 bg-success/10 text-success w-[58px] h-[58px] rounded-2xl">
-            <div
-              class="fill-success  flex items-center">
+          <div class="flex items-center justify-center order-2 bg-success/10 text-success w-[58px] h-[58px] rounded-2xl">
+            <div class="fill-success  flex items-center">
               <svg-icon class="w-[30px] h-[30px] [&>svg]:w-full [&>svg]:h-full" src="assets/images/svg/unicons-line/ticket.svg"></svg-icon>
             </div>
           </div>
           <div>
-            <h4
-              class="mb-0 text-3xl max-lg:text-[26px] max-sm:text-2xl font-semibold leading-normal text-dark dark:text-white/[.87]">
+            <h4 class="mb-0 text-3xl max-lg:text-[26px] max-sm:text-2xl font-semibold leading-normal text-dark dark:text-white/[.87]">
               <span> {{ stats.closed }} </span>
             </h4>
             <span class="font-normal text-body dark:text-white/60 text-15">Ticket đóng</span>
@@ -268,7 +271,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('ticketTrendChart') ticketTrendChartRef!: ElementRef<HTMLCanvasElement>;
   private chart: Chart | null = null;
   tickets: Ticket[] = ticketData as Ticket[];
-  stats: TicketStats = { total: 0, open: 0, overdue: 0, closed: 0 };
+  stats: TicketStats = { total: 0, open: 0, processing: 0, overdue: 0, closed: 0 };
   trend: TicketTrendPoint[] = [];
   granularity: Granularity = 'day';
   dateRange: Date[] | null = null;
@@ -344,6 +347,15 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             pointRadius: 4
           },
           {
+            label: 'Ticket đang xử lý',
+            data: this.trend.map(p => p.processing),
+            borderColor: '#F59E0B',
+            backgroundColor: 'rgba(245, 158, 11, 0.12)',
+            tension: 0.35,
+            fill: false,
+            pointRadius: 4
+          },
+          {
             label: 'Ticket overdue',
             data: this.trend.map(p => p.overdue),
             borderColor: '#FFB53D',
@@ -384,20 +396,17 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const total = tickets.length;
 
-    // "Hoàn thành" (closed) covers tickets explicitly closed by the requester.
-    const closed = tickets.filter(t => t.actions === 'Hoàn thành').length;
+    const closed = tickets.filter(t => t.statusCode === 'closed').length;
+    const open = tickets.filter(t => t.statusCode === 'open').length;
+    const processing = tickets.filter(t => t.statusCode === 'processing').length;
 
-    // Still active tickets: anything not closed (covers both "Mở" and "Đang xử lý").
-    const activeTickets = tickets.filter(t => t.actions !== 'Hoàn thành');
-    const open = activeTickets.length;
-
-    // Overdue: still active AND the due date has already passed.
+    const activeTickets = tickets.filter(t => t.statusCode === 'open' || t.statusCode === 'processing');
     const overdue = activeTickets.filter(t => {
       const due = parseVnDate(t.dueDate);
       return due !== null && due < today;
     }).length;
 
-    return { total, open, overdue, closed };
+    return { total, open, processing, overdue, closed };
   }
 
   private computeTrend(tickets: Ticket[], granularity: Granularity): TicketTrendPoint[] {
@@ -426,6 +435,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           sortValue: bucket.sortValue,
           total: bucketStats.total,
           open: bucketStats.open,
+          processing: bucketStats.processing,
           overdue: bucketStats.overdue,
           closed: bucketStats.closed
         };

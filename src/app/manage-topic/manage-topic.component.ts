@@ -2,6 +2,7 @@ import { Component, TemplateRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
@@ -22,11 +23,16 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
 
+interface Department {
+  departmentCode: string;
+  departmentName: string;
+}
+
 interface Topic {
   id: string;
   topicName: string;
   topicDescription: string;
-  department: string;
+  departmentCode: string;
   status: string; // 'active' | 'inactive'
   assignedEmployee: string;
   SLA: string;
@@ -111,6 +117,17 @@ type SortOrder = 'asc' | 'desc';
                   </div>
                   <div class="inline-flex items-center">
                     <nz-select
+                      class="min-w-[200px] [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
+                      [(ngModel)]="departmentFilter"
+                      (ngModelChange)="filterByDepartment()"
+                      nzPlaceHolder="Tìm theo phòng ban"
+                      nzAllowClear
+                    >
+                      <nz-option *ngFor="let deptName of departmentOptions" [nzValue]="deptName" [nzLabel]="deptName"></nz-option>
+                    </nz-select>
+                  </div>
+                  <div class="inline-flex items-center">
+                    <nz-select
                       class="min-w-[160px] [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[40px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[20px] [&>.ant-select-arrow]:text-light dark:[&>.ant-select-arrow]:text-white/60"
                       [(ngModel)]="slaFilter"
                       (ngModelChange)="filterBySLA()" nzPlaceHolder="Tìm theo SLA" nzAllowClear
@@ -149,7 +166,7 @@ type SortOrder = 'asc' | 'desc';
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">#{{ topic.id }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent text-dark dark:text-white/[.87]">{{ topic.topicName }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent max-w-[280px] truncate">{{ topic.topicDescription }}</td>
-                          <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ topic.department }}</td>
+                          <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ getDepartmentName(topic.departmentCode) }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ topic.assignedEmployee }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
                             <ng-container *ngIf="topic.SLA; else noSla" [ngSwitch]="getSlaPriorityLabel(topic.SLA)">
@@ -218,14 +235,14 @@ type SortOrder = 'asc' | 'desc';
               <nz-form-item>
                 <nz-form-control>
                   <nz-form-label class="text-[15px] font-semibold text-dark dark:text-white/[.87] capitalize mb-[10px]">Phòng ban:</nz-form-label>
-                  <input
-                    class="h-[50px] border-normal dark:border-white/10 px-[20px] placeholder-shown:text-light-extra dark:placeholder-shown:text-white/60 rounded-[5px] dark:bg-white/10 dark:text-white/[.87]"
-                    type="text"
-                    nz-input
-                    placeholder="Phòng ban"
+                  <nz-select
+                    class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
+                    [(ngModel)]="newTopicDraft.departmentCode"
                     name="department"
-                    [(ngModel)]="newTopicDraft.department"
-                  />
+                    nzPlaceHolder="Chọn phòng ban"
+                  >
+                    <nz-option *ngFor="let dept of departments" [nzValue]="dept.departmentCode" [nzLabel]="dept.departmentName"></nz-option>
+                  </nz-select>
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
@@ -310,14 +327,16 @@ type SortOrder = 'asc' | 'desc';
               </div>
               <div>
                 <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Phòng ban</div>
-                <div *ngIf="!editingTopicDetails" class="text-[15px] font-medium text-dark dark:text-white/[.87]">{{ topic.department }}</div>
-                <input
+                <div *ngIf="!editingTopicDetails" class="text-[15px] font-medium text-dark dark:text-white/[.87]">{{ getDepartmentName(topic.departmentCode) }}</div>
+                <nz-select
                   *ngIf="editingTopicDetails"
-                  class="h-[44px] w-full border-normal dark:border-white/10 px-[15px] rounded-[6px] dark:bg-white/10 dark:text-white/[.87]"
-                  nz-input
-                  placeholder="Phòng ban"
+                  class="w-full [&>nz-select-top-control]:border-normal dark:[&>nz-select-top-control]:border-white/10 [&>nz-select-top-control]:bg-white [&>nz-select-top-control]:dark:bg-white/10 [&>nz-select-top-control]:shadow-none [&>nz-select-top-control]:text-dark [&>nz-select-top-control]:dark:text-white/60 [&>nz-select-top-control]:h-[44px] [&>nz-select-top-control]:flex [&>nz-select-top-control]:items-center [&>nz-select-top-control]:rounded-[6px] [&>nz-select-top-control]:px-[15px]"
                   [(ngModel)]="editTopicDepartment"
-                />
+                  name="editTopicDepartment"
+                  nzPlaceHolder="Chọn phòng ban"
+                >
+                  <nz-option *ngFor="let dept of departments" [nzValue]="dept.departmentCode" [nzLabel]="dept.departmentName"></nz-option>
+                </nz-select>
               </div>
               <div>
                 <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Nhân viên phụ trách</div>
@@ -448,10 +467,10 @@ export class ManageTopicComponent implements OnInit {
   editTopicAssignedEmployee = '';
   editTopicSLA = '';
 
-  newTopicDraft: { topicName: string; topicDescription: string; department: string; status: string; assignedEmployee: string; SLA: string } = {
+  newTopicDraft: { topicName: string; topicDescription: string; departmentCode: string; status: string; assignedEmployee: string; SLA: string } = {
     topicName: '',
     topicDescription: '',
-    department: '',
+    departmentCode: '',
     status: 'active',
     assignedEmployee: '',
     SLA: ''
@@ -489,6 +508,9 @@ export class ManageTopicComponent implements OnInit {
     inactive: 'danger'
   };
 
+  departments: Department[] = [];
+  departmentMap: Record<string, string> = {};
+
   // Custom status ranking so the Trạng thái column sorts active-before-inactive
   // instead of relying on alphabetical order.
   private readonly statusRank: { [key: string]: number } = {
@@ -511,17 +533,26 @@ export class ManageTopicComponent implements OnInit {
 
   /** Unique list of departments represented in the loaded topic data. */
   get departmentOptions(): string[] {
-    return Array.from(new Set(this.topics.map((t) => t.department))).filter(Boolean);
+    return Array.from(new Set(this.topics.map((t) => this.getDepartmentName(t.departmentCode)))).filter(Boolean);
   }
 
   ngOnInit(): void {
-    this.http.get<Topic[]>('assets/data/features/topic-table.json').subscribe(
-      (data) => {
-        this.topics = data.map((topic) => this.normalizeTopic(topic));
+    forkJoin({
+      topics: this.http.get<Topic[]>('assets/data/features/topic-table.json'),
+      departments: this.http.get<Department[]>('assets/data/features/department-table.json')
+    }).subscribe(
+      ({ topics, departments }) => {
+        this.departments = departments;
+        this.departmentMap = this.departments.reduce((map, department) => {
+          map[department.departmentCode] = department.departmentName;
+          return map;
+        }, {} as Record<string, string>);
+
+        this.topics = topics.map((topic) => this.normalizeTopic(topic));
         this.filteredTopics = this.applyAll();
       },
       (error) => {
-        console.log('Error reading JSON file:', error);
+        console.log('Error reading JSON files:', error);
       }
     );
   }
@@ -548,6 +579,10 @@ export class ManageTopicComponent implements OnInit {
   filterByDepartment(): void {
     this.pageIndex = 1;
     this.filteredTopics = this.applyAll();
+  }
+
+  getDepartmentName(departmentCode: string): string {
+    return this.departmentMap[departmentCode] || departmentCode || '';
   }
 
   filterBySLA(): void {
@@ -579,13 +614,14 @@ export class ManageTopicComponent implements OnInit {
     const searchQuery = this.searchValue.trim().toLowerCase();
 
     let result = this.topics.filter((topic) => {
+      const departmentName = this.getDepartmentName(topic.departmentCode);
       const matchesSearch = !searchQuery ||
         topic.topicName.toLowerCase().includes(searchQuery) ||
         topic.topicDescription.toLowerCase().includes(searchQuery) ||
         topic.assignedEmployee.toLowerCase().includes(searchQuery) ||
-        topic.department.toLowerCase().includes(searchQuery);
+        departmentName.toLowerCase().includes(searchQuery);
       const matchesStatus = !this.statusFilter || topic.status === this.statusFilter;
-      const matchesDepartment = !this.departmentFilter || topic.department === this.departmentFilter;
+      const matchesDepartment = !this.departmentFilter || departmentName === this.departmentFilter;
       const matchesEmployee = !this.employeeFilter || topic.assignedEmployee === this.employeeFilter;
       const matchesSLA = !this.slaFilter || topic.SLA === this.slaFilter;
       return matchesSearch && matchesStatus && matchesDepartment && matchesEmployee && matchesSLA;
@@ -610,7 +646,7 @@ export class ManageTopicComponent implements OnInit {
           comparison = a.topicName.localeCompare(b.topicName);
           break;
         case 'department':
-          comparison = a.department.localeCompare(b.department);
+          comparison = this.getDepartmentName(a.departmentCode).localeCompare(this.getDepartmentName(b.departmentCode));
           break;
         case 'assignedEmployee':
           comparison = a.assignedEmployee.localeCompare(b.assignedEmployee);
@@ -651,7 +687,7 @@ export class ManageTopicComponent implements OnInit {
     this.editingTopicDetails = false;
     this.editTopicName = topic.topicName;
     this.editTopicDescription = topic.topicDescription;
-    this.editTopicDepartment = topic.department;
+    this.editTopicDepartment = topic.departmentCode;
     this.editTopicAssignedEmployee = topic.assignedEmployee;
     this.editTopicSLA = topic.SLA;
     this.viewModalRef = this.modal.create({
@@ -675,7 +711,7 @@ export class ManageTopicComponent implements OnInit {
     }
     this.editTopicName = this.selectedTopic.topicName;
     this.editTopicDescription = this.selectedTopic.topicDescription;
-    this.editTopicDepartment = this.selectedTopic.department;
+    this.editTopicDepartment = this.selectedTopic.departmentCode;
     this.editTopicAssignedEmployee = this.selectedTopic.assignedEmployee;
     this.editTopicSLA = this.selectedTopic.SLA;
     this.editingTopicDetails = true;
@@ -693,7 +729,7 @@ export class ManageTopicComponent implements OnInit {
 
     this.selectedTopic.topicName = updatedName;
     this.selectedTopic.topicDescription = this.editTopicDescription.trim();
-    this.selectedTopic.department = this.editTopicDepartment.trim();
+    this.selectedTopic.departmentCode = this.editTopicDepartment.trim();
     this.selectedTopic.assignedEmployee = this.editTopicAssignedEmployee.trim();
     this.selectedTopic.SLA = this.editTopicSLA;
     this.editingTopicDetails = false;
@@ -706,7 +742,7 @@ export class ManageTopicComponent implements OnInit {
     }
     this.editTopicName = this.selectedTopic.topicName;
     this.editTopicDescription = this.selectedTopic.topicDescription;
-    this.editTopicDepartment = this.selectedTopic.department;
+    this.editTopicDepartment = this.selectedTopic.departmentCode;
     this.editTopicAssignedEmployee = this.selectedTopic.assignedEmployee;
     this.editTopicSLA = this.selectedTopic.SLA;
     this.editingTopicDetails = false;
@@ -716,7 +752,7 @@ export class ManageTopicComponent implements OnInit {
     this.newTopicDraft = {
       topicName: '',
       topicDescription: '',
-      department: '',
+      departmentCode: '',
       status: 'active',
       assignedEmployee: '',
       SLA: ''
@@ -746,7 +782,7 @@ export class ManageTopicComponent implements OnInit {
       id: nextId,
       topicName,
       topicDescription: this.newTopicDraft.topicDescription.trim(),
-      department: this.newTopicDraft.department.trim(),
+      departmentCode: this.newTopicDraft.departmentCode.trim(),
       status: this.newTopicDraft.status || 'active',
       assignedEmployee: this.newTopicDraft.assignedEmployee.trim(),
       SLA: this.newTopicDraft.SLA

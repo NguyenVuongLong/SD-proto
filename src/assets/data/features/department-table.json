@@ -1,0 +1,22 @@
+[
+    {
+        "departmentCode": "D001",
+        "departmentName": "Phòng Dịch vụ khách hàng"
+    },
+    {
+        "departmentCode": "D002",
+        "departmentName": "Phòng Kế toán"
+    },
+    {
+        "departmentCode": "D003",
+        "departmentName": "Phòng Nhân sự"
+    },
+    {
+        "departmentCode": "D004",
+        "departmentName": "Phòng Marketing"
+    },
+    {
+        "departmentCode": "D005",
+        "departmentName": "Phòng Công nghệ thông tin"
+    }
+]

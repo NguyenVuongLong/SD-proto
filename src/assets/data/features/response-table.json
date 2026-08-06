@@ -1,0 +1,22 @@
+[
+    {
+        "ticketId": "01",
+        "responseId": "0101",
+        "content": "This is message #1"
+    },
+    {
+        "ticketId": "01",
+        "responseId": "0102",
+        "content": "This is message #2"
+    },
+    {
+        "ticketId": "02",
+        "responseId": "0201",
+        "content": "This is message #1"
+    },
+    {
+        "ticketId": "02",
+        "responseId": "0202",
+        "content": "This is message #2"
+    }
+]
