@@ -14,10 +14,16 @@ import { DateHelper } from '../utils/date.helper';
 export class AuthService extends BaseService {
   private authenticatedUser: UserModel | null = null;
 
+  /**
+   * Khởi tạo service xác thực với HttpClient và cấu hình cơ sở.
+   */
   constructor(http: HttpClient) {
     super(http);
   }
 
+  /**
+   * Đăng nhập người dùng bằng username và password.
+   */
   login(username: string, password: string): Observable<UserModel> {
     return defer(() => {
       const query = [
@@ -39,6 +45,9 @@ export class AuthService extends BaseService {
     });
   }
 
+  /**
+   * Gửi yêu cầu lưu thông tin xác thực ban đầu cho nhân viên.
+   */
   saveAuthRequest(employeeCode: string, idNo: string, username: string, password: string): Observable<ReturnModel> {
     return defer(() => this.restClient.post<ReturnModel>(`${this.damtcVersion}/auth/saveauthrequest`, {
       EmployeeCode: employeeCode,
@@ -48,6 +57,9 @@ export class AuthService extends BaseService {
     }));
   }
 
+  /**
+   * Gửi yêu cầu lưu mật khẩu mới cho tài khoản hiện tại.
+   */
   savePassRequest(employeeCode: string, idNo: string, username: string, password: string): Observable<ReturnModel> {
     return defer(() => this.restClient.post<ReturnModel>(`${this.damtcVersion}/auth/savepassrequest`, {
       EmployeeCode: employeeCode,
@@ -57,6 +69,9 @@ export class AuthService extends BaseService {
     }));
   }
 
+  /**
+   * Thay đổi mật khẩu của người dùng hiện tại.
+   */
   changePassword(username: string, oldPassword: string, newPassword: string): Observable<UserModel> {
     return defer(() => this.restClient.post<UserModel>(`${this.damtcVersion}/auth/changepassword`, {
       Username: EncryptHelper.aesEncrypt(username),
@@ -65,31 +80,49 @@ export class AuthService extends BaseService {
     }));
   }
 
+  /**
+   * Đăng xuất người dùng và xóa dữ liệu phiên hiện tại.
+   */
   logout(): void {
     this.authenticatedUser = null;
     StorageHelper.remove(AUTHENTICATED_USER_STORAGE_KEY);
   }
 
+  /**
+   * Xóa toàn bộ session hiện tại để bắt đầu phiên mới.
+   */
   clearSession(): void {
     this.authenticatedUser = null;
     StorageHelper.remove(AUTHENTICATED_USER_STORAGE_KEY);
     StorageHelper.remove(AUTH_LOGIN_DATE_STORAGE_KEY);
   }
 
+  /**
+   * Kiểm tra xem người dùng hiện tại có đang xác thực trong ngày không.
+   */
   isAuthenticated(): boolean {
     return StorageHelper.get(AUTH_LOGIN_DATE_STORAGE_KEY) === DateHelper.format(new Date(), 'yyyyMMdd')
       && SessionHelper.getStoredUser<UserModel>() !== null;
   }
 
+  /**
+   * Trả về thông tin người dùng đang đăng nhập nếu có.
+   */
   currentUser(): UserModel | null {
     this.authenticatedUser ??= SessionHelper.getStoredUser<UserModel>();
     return this.authenticatedUser;
   }
 
+  /**
+   * Trả về tên hiển thị của người dùng đăng nhập.
+   */
   currentUserName(): string {
     return this.currentUserFullName();
   }
 
+  /**
+   * Lấy tên đầy đủ của người dùng dựa trên các trường dữ liệu có sẵn.
+   */
   currentUserFullName(): string {
     const user = this.currentUser();
     const fullName = user?.Fullname
@@ -111,6 +144,9 @@ export class AuthService extends BaseService {
     return combinedName || user?.UserName || user?.userName || 'Bạn';
   }
 
+  /**
+   * Trả về username của người dùng đang đăng nhập.
+   */
   currentUsername(): string {
     const user = this.currentUser();
     return user?.UserName

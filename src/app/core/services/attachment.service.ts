@@ -12,9 +12,14 @@ export class AttachmentService {
   private readonly baseUrl = `${environment.apiUrl}/attachments`;
   private readonly infoCache = new Map<string, Observable<AttachmentInfo | null>>();
 
+  /**
+   * Khởi tạo service upload tệp và inject HttpClient.
+   */
   constructor(private http: HttpClient) {}
 
-  /** Returns a user-facing error, or null when the file may be uploaded. */
+  /**
+   * Kiểm tra tính hợp lệ của tệp trước khi upload.
+   */
   validate(file: File): string | null {
     if (file.size <= 0) {
       return `Tệp "${file.name}" không có nội dung.`;
@@ -24,7 +29,9 @@ export class AttachmentService {
       : null;
   }
 
-  /** Keeps the valid files and reports each rejected one through `onReject`. */
+  /**
+   * Lọc các tệp hợp lệ và thông báo cho các tệp bị từ chối.
+   */
   filterValid(files: File[], onReject: (message: string) => void): File[] {
     return files.filter((file) => {
       const error = this.validate(file);
@@ -35,6 +42,9 @@ export class AttachmentService {
     });
   }
 
+  /**
+   * Tải một tệp lên server kèm thông tin người upload.
+   */
   upload(file: File, uploadedBy: string): Observable<AttachmentInfo> {
     const body = new FormData();
     body.append('file', file, file.name);
@@ -42,12 +52,16 @@ export class AttachmentService {
     return this.http.post<AttachmentInfo>(this.baseUrl, body);
   }
 
-  /** Uploads sequentially-independent files together; any failure fails the whole batch. */
+  /**
+   * Tải nhiều tệp cùng lúc trong một batch.
+   */
   uploadAll(files: File[], uploadedBy: string): Observable<AttachmentInfo[]> {
     return files.length ? forkJoin(files.map((file) => this.upload(file, uploadedBy))) : of([]);
   }
 
-  /** Emits null when the file no longer exists on the server. */
+  /**
+   * Lấy thông tin chi tiết của tệp theo ID, nếu tệp không còn tồn tại thì trả về null.
+   */
   getInfo(fileId: string): Observable<AttachmentInfo | null> {
     let info$ = this.infoCache.get(fileId);
     if (!info$) {
@@ -63,11 +77,16 @@ export class AttachmentService {
     return info$;
   }
 
+  /**
+   * Tạo đường dẫn tải xuống cho một tệp cụ thể.
+   */
   downloadUrl(fileId: string): string {
     return `${this.baseUrl}/${encodeURIComponent(fileId)}`;
   }
 
-  /** Prefers the API's own message (for example the size limit) over a generic one. */
+  /**
+   * Trả về thông báo lỗi thân thiện từ API hoặc fallback mặc định.
+   */
   errorMessage(error: unknown, fallback = 'Không thể tải tệp lên. Vui lòng thử lại.'): string {
     const message = (error as { error?: { message?: unknown } })?.error?.message;
     return typeof message === 'string' && message ? message : fallback;

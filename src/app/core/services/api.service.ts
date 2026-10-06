@@ -33,6 +33,9 @@ export class ApiService {
   private readonly baseUrl = environment.apiUrl;
   private employeesByCode = new Map<string, { employeeCode: string; employeeName: string }>();
 
+  /**
+   * Khởi tạo service và inject các dependency cần thiết.
+   */
   constructor(protected http: HttpClient, private auth: AuthService) {}
 
   /**
@@ -95,10 +98,16 @@ export class ApiService {
     );
   }
 
+  /**
+   * Lấy nhật ký thao tác của một ticket.
+   */
   getTicketActionLogs(ticketId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/tickets/${encodeURIComponent(ticketId)}/actions`);
   }
 
+  /**
+   * Lấy danh sách các hành động hỗ trợ có sẵn.
+   */
   getTicketActions(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/actions`);
   }
@@ -145,6 +154,9 @@ export class ApiService {
     return this.http.get<any[]>(`${this.baseUrl}/departments`);
   }
 
+  /**
+   * Lấy danh sách nhân viên đang hoạt động và chuẩn hóa dữ liệu.
+   */
   getEmployees(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/employees`).pipe(
       map((employees) => {
@@ -352,20 +364,29 @@ export class ApiService {
     };
   }
 
+  /**
+   * Chuyển đổi tên mức ưu tiên sang mã SLA tương ứng.
+   */
   private priorityCode(priority?: string): string | undefined {
     return PRIORITY_TO_SLA_CODE[priority ?? ''];
   }
 
+  /**
+   * Trả về tên người dùng hiện tại từ dịch vụ xác thực.
+   */
   currentUserName(): string {
     return this.auth.currentUserName();
   }
 
+  /**
+   * Trả về username hiện tại của người dùng đang đăng nhập.
+   */
   currentUsername(): string {
     return this.auth.currentUsername();
   }
 
   /**
-   * Chuyển đổi mã SLA sang tên mức độ ưu tiên tiếng Việt
+   * Chuyển đổi mã SLA sang tên mức độ ưu tiên tiếng Việt.
    * @param code - Mã SLA (Urgent, High, Normal, Low)
    * @returns Tên mức độ ưu tiên (Gấp, Cao, Trung bình, Thấp)
    */
