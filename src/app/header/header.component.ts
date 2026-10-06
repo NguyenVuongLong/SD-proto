@@ -1,91 +1,75 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import authorMenu from '../../assets/data/global/header/author-menu.json';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { SessionHelper } from '../core/auth/session.helper';
+import { UserModel } from '../core/models';
+import { AuthService } from '../shared/services/auth.service';
 
 @Component({
   selector: 'app-header',
   styleUrls: ['./header.component.scss'],
   template: `
-  <div class="flex w-full">
+  <div class="flex w-full items-center justify-between">
     <button nz-button nzType="text" class="app-shell__menu-button" (click)="onToggle()">
       ☰
     </button>
-    <div>
-      <span class="flex items-center cursor-pointer text-light whitespace-nowrap" nz-dropdown [nzDropdownMenu]="profile">
-        <nz-avatar [nzIcon]="'user'" nzSrc="assets/images/avatars/thumbs.png"></nz-avatar>
-        <span class="me-1.5 ms-2.5 text-body dark:text-white/60 text-sm font-medium max-md:hidden">Md. Rafiq</span>
-        <span class="[&>svg]:w-[10px] [&>svg]:h-[10px] [&>svg]:max-md:ms-[5px]" nz-icon nzType="down" nzTheme="outline"></span>
-      </span>
-      <nz-dropdown-menu #profile="nzDropdownMenu">
-        <div class="min-w-[310px] max-sm:min-w-full pt-4 px-[15px] py-[12px] bg-white dark:bg-[#1b1e2b] shadow-[0_2px_8px_rgba(0,0,0,.15)] dark:shadow-[0_5px_30px_rgba(1,4,19,.60)] rounded-4">
-          <figure
-            class="flex items-center text-sm rounded-[8px] bg-section dark:bg-white/10 py-[20px] px-[25px] mb-[12px]">
-            <nz-avatar [nzIcon]="'user'" nzSrc="assets/images/avatars/thumbs.png" class="me-4"></nz-avatar>
-            <figcaption>
-              <h1 class="text-dark dark:text-white/[.87] mb-0.5 text-sm">Md. Rafiq</h1>
-              <p class="mb-0 text-xs text-body dark:text-white/60">UI Expert</p>
-            </figcaption>
-          </figure>
-          <ul nz-menu class="mb-0 bg-transparent shadow-none">
-            <li class="p-0 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-white/10 rounded-4" nz-menu-item>
-              <a
-                [routerLink]="['/dashboard']"
-                class="inline-flex items-center text-light dark:text-white/60 hover:text-primary hover:ps-6 w-full px-2.5 py-3 text-sm transition-all ease-in-out delay-150">
-                <i nz-icon nzType="dashboard" nzTheme="outline" class="h-fit me-4 [&>svg]:w-[18px] [&>svg]:h-[18px]"></i>
-                Dashboard
-              </a>
-            </li>
-            <li class="p-0 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-white/10 rounded-4" nz-menu-item>
-              <a
-                [routerLink]="['/my-tickets']"
-                class="inline-flex items-center text-light dark:text-white/60 hover:text-primary hover:ps-6 w-full px-2.5 py-3 text-sm transition-all ease-in-out delay-150">
-                <i nz-icon nzType="form" nzTheme="outline" class="h-fit me-4 [&>svg]:w-[18px] [&>svg]:h-[18px]"></i>
-                My Tickets
-              </a>
-            </li>
-            <li class="p-0 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-white/10 rounded-4" nz-menu-item>
-              <a
-                [routerLink]="['/manage-tickets']"
-                class="inline-flex items-center text-light dark:text-white/60 hover:text-primary hover:ps-6 w-full px-2.5 py-3 text-sm transition-all ease-in-out delay-150">
-                <i nz-icon nzType="customer-service" nzTheme="outline" class="h-fit me-4 [&>svg]:w-[18px] [&>svg]:h-[18px]"></i>
-                Quản lý Ticket
-              </a>
-            </li>
-            <li class="p-0 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-white/10 rounded-4" nz-menu-item>
-              <a
-                [routerLink]="['/monitor-ticket']"
-                class="inline-flex items-center text-light dark:text-white/60 hover:text-primary hover:ps-6 w-full px-2.5 py-3 text-sm transition-all ease-in-out delay-150">
-                <i nz-icon nzType="search" nzTheme="outline" class="h-fit me-4 [&>svg]:w-[18px] [&>svg]:h-[18px]"></i>
-                Giám sát Ticket
-              </a>
-            </li>
-            <li class="p-0 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-white/10 rounded-4" nz-menu-item>
-              <a
-                [routerLink]="['/manage-topic']"
-                class="inline-flex items-center text-light dark:text-white/60 hover:text-primary hover:ps-6 w-full px-2.5 py-3 text-sm transition-all ease-in-out delay-150">
-                <i nz-icon nzType="appstore" nzTheme="outline" class="h-fit me-4 [&>svg]:w-[18px] [&>svg]:h-[18px]"></i>
-                Quản lý Chủ đề
-              </a>
-            </li>
-          </ul>
-          <a
-            class="flex items-center justify-center text-sm font-medium bg-[#f4f5f7] dark:bg-[#32333f] h-[50px] text-light hover:text-primary dark:hover:text-white/60 dark:text-white/[.87] mx-[-15px] mb-[-15px] rounded-b-6"
-            href="#" (click)="signOut()">
-            Sign Out</a>
-        </div>
-      </nz-dropdown-menu>
+    <div class="flex items-center gap-3">
+      <img
+        class="app-header__profile-picture"
+        [src]="src"
+        [alt]="fullname"
+        (error)="onProfilePictureError()"
+      />
+      <span class="hidden text-sm sm:block">{{ fullname }}</span>
+      <button nz-button nzType="text" class="inline-flex items-center gap-2" aria-label="Đăng xuất" (click)="logout()">
+        <i class="inline-flex items-center justify-center" nz-icon nzType="logout"></i>
+        <span>Đăng xuất</span>
+      </button>
     </div>
   </div>
   `
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   @Output() toggleMenu = new EventEmitter<void>();
-  appAuthorMenu = authorMenu.appAuthorMenu;
+
+  fullname = 'Bạn';
+  employeeCode = '';
+  gender: string | number | undefined;
+  src = SessionHelper.getAvatar();
+
+  constructor(private auth: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    const user: UserModel | null = SessionHelper.getUser();
+    if (!user) {
+      return;
+    }
+
+    this.fullname = user.Fullname
+      || user.fullname
+      || user.FullName
+      || user.fullName
+      || user.EmployeeName
+      || user.employeeName
+      || user.DisplayName
+      || user.displayName
+      || user.UserName
+      || user.userName
+      || 'Bạn';
+    this.employeeCode = user.EmployeeCode || user.employeeCode || '';
+    this.gender = user.Gender ?? user.gender;
+    this.src = SessionHelper.getAvatar(this.gender, this.employeeCode);
+  }
+
+  onProfilePictureError(): void {
+    this.src = SessionHelper.getAvatar(this.gender);
+  }
 
   onToggle(): void {
     this.toggleMenu.emit();
   }
 
-  signOut(): void {
-    console.log('User signed out!');
+  logout(): void {
+    this.auth.logout();
+    void this.router.navigate(['/login']);
   }
 }

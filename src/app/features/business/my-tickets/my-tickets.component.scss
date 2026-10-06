@@ -1,0 +1,21 @@
+.detail-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 12px;
+}
+
+.detail-footer .ant-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    line-height: 1;
+}
+
+.detail-footer .ant-btn i,
+.detail-footer .ant-btn span {
+    display: inline-flex;
+    align-items: center;
+}

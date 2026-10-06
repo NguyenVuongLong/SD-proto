@@ -1,6 +1,11 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
+import { REMEMBERED_USERNAME_STORAGE_KEY } from '../core/auth/auth.constants';
+import { StorageHelper } from '../core/auth/storage.helper';
+import { AuthService } from '../shared/services/auth.service';
+import { NotificationService } from '../core/services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -43,12 +48,11 @@ import { Router } from '@angular/router';
                 </nz-form-item>
                 <div class="login-form__actions">
                   <label nz-checkbox formControlName="remember" class="login-form__checkbox">
-                    <span>Giữ tôi đăng nhập</span>
+                    Ghi nhớ tên đăng nhập
                   </label>
                 </div>
-                <button nz-button type="submit" class="login-form__submit">
-                  <i class="fas fa-cog fa-spin"></i>
-                  Đăng nhập
+                <button nz-button type="submit" class="login-form__submit" [disabled]="isSubmitting">
+                  {{ isSubmitting ? 'Đang đăng nhập...' : 'Đăng nhập' }}
                 </button>
               </form>
             </div>
@@ -60,35 +64,63 @@ import { Router } from '@angular/router';
   `
 })
 
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   validateForm!: FormGroup;
+  isSubmitting = false;
+  passwordVisible = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private auth: AuthService,
+    private notifications: NotificationService
+  ) {}
 
   submitForm(): void {
-    if (this.validateForm.valid) {
-      console.log('submit', this.validateForm.value);
-      this.router.navigate(['/dashboard']).then(() => {
-        window.location.reload();
-      });
-    } else {
+    if (this.validateForm.invalid || this.isSubmitting) {
       Object.values(this.validateForm.controls).forEach((control) => {
         if (control.invalid) {
           control.markAsDirty();
           control.updateValueAndValidity({ onlySelf: true });
         }
       });
+      return;
     }
+
+    const userName = String(this.validateForm.get('userName')?.value ?? '').trim();
+    const password = String(this.validateForm.get('password')?.value ?? '');
+    const rememberUsername = Boolean(this.validateForm.get('remember')?.value);
+    this.isSubmitting = true;
+
+    this.auth.login(userName, password).pipe(
+      finalize(() => this.isSubmitting = false)
+    ).subscribe({
+        next: (response) => {
+          if (response.Code !== 'Success') {
+            this.notifications.error(response.Message || response.message || 'Tên đăng nhập hoặc mật khẩu không đúng.');
+            return;
+          }
+
+          if (rememberUsername) {
+            StorageHelper.set(REMEMBERED_USERNAME_STORAGE_KEY, userName);
+          } else {
+            StorageHelper.remove(REMEMBERED_USERNAME_STORAGE_KEY);
+          }
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          this.notifications.error('Không thể kết nối đến dịch vụ xác thực. Vui lòng thử lại.');
+        }
+      });
   }
 
-  passwordVisible = false;
-  password?: string;
-
   ngOnInit(): void {
+    this.auth.clearSession();
+    const rememberedUsername = StorageHelper.get(REMEMBERED_USERNAME_STORAGE_KEY) ?? '';
     this.validateForm = this.fb.group({
-      userName: ['admin', [Validators.required]],
-      password: ['a', [Validators.required]],
-      remember: [true],
+      userName: [rememberedUsername, [Validators.required]],
+      password: ['', [Validators.required]],
+      remember: [Boolean(rememberedUsername)]
     });
   }
 }

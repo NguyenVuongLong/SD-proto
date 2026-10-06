@@ -1,25 +1,45 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { MyTicketsComponent } from './my-tickets/my-tickets.component';
-import { ManageTicketComponent } from './manage-ticket/manage-ticket.component';
-import { MonitorTicketComponent } from './monitor-ticket/monitor-ticket.component';
-import { ManageTopicComponent } from './manage-topic/manage-topic.component';
+import { AuthGuard } from './core/auth/auth.guard';
 
-const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'my-tickets', component: MyTicketsComponent },
-  { path: 'manage-tickets', component: ManageTicketComponent },
-  { path: 'monitor-ticket', component: MonitorTicketComponent },
-  { path: 'manage-topic', component: ManageTopicComponent },
+export const appRoutes: Routes = [
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  {
+    path: '',
+    loadChildren: () => import('./features/auth/auth.module').then(({ AuthModule }) => AuthModule)
+  },
+  {
+    path: '',
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () => import('@business/dashboard/dashboard.component').then(({ DashboardComponent }) => DashboardComponent)
+      },
+      {
+        path: 'my-tickets',
+        loadComponent: () => import('@business/my-tickets/my-tickets.component').then(({ MyTicketsComponent }) => MyTicketsComponent)
+      },
+      {
+        path: 'manage-tickets',
+        loadComponent: () => import('@business/manage-ticket/manage-ticket.component').then(({ ManageTicketComponent }) => ManageTicketComponent)
+      },
+      {
+        path: 'monitor-ticket',
+        loadComponent: () => import('@business/monitor-ticket/monitor-ticket.component').then(({ MonitorTicketComponent }) => MonitorTicketComponent)
+      },
+      {
+        path: 'manage-topic',
+        loadComponent: () => import('@business/manage-topic/manage-topic.component').then(({ ManageTopicComponent }) => ManageTopicComponent)
+      }
+    ]
+  },
   { path: '**', redirectTo: 'login' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(appRoutes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

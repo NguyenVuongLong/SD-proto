@@ -535,6 +535,22 @@
 .ant-select-item-option-active:not(.ant-select-item-option-disabled){
   @apply text-primary bg-primary/10 font-semibold dark:text-white/[.87] dark:bg-white/10 ltr:pl-[20px] rtl:pr-[20px];
 }
+
+.topic-change-dropdown .ant-select-item-option-selected:not(.ant-select-item-option-disabled){
+  @apply text-body bg-transparent font-normal dark:text-white/60 dark:bg-transparent;
+}
+
+.topic-change-dropdown .ant-select-item-option-active:not(.ant-select-item-option-disabled){
+  @apply text-primary bg-primary/10 font-semibold dark:text-white/[.87] dark:bg-white/10;
+}
+
+.priority-change-dropdown .ant-select-item-option-selected:not(.ant-select-item-option-disabled){
+  @apply text-body bg-transparent font-normal dark:text-white/60 dark:bg-transparent;
+}
+
+.priority-change-dropdown .ant-select-item-option-active:not(.ant-select-item-option-disabled){
+  @apply text-primary bg-primary/10 font-semibold dark:text-white/[.87] dark:bg-white/10;
+}
 // Multiple select
 .ant-select-multiple .ant-select-selection-item{
   @apply dark:bg-white/10 dark:border-white/10
