@@ -26,7 +26,7 @@ import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-om-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-om-perfect-scrollbar';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { DEFAULT_EDITOR_INIT, TINYMCE_API_KEY } from '@shared/config';
-import { buildTopicFilterGroups, createEmployeeLookups, formatEmployeeName, formatVnDate, keepLatestPerGroup, parseVnDate, PaginationState } from '@shared/utils';
+import { buildTopicFilterGroups, createEmployeeLookups, formatEmployeeName, formatVnDate, isTopicActive, keepLatestPerGroup, parseVnDate, PaginationState } from '@shared/utils';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -58,8 +58,11 @@ interface Person {
   assignedPhone: string;
   assignedDept: string;
   createdDate: string;
+  createdTime?: string;
   dueDate: string;
+  dueTime?: string;
   closedDate: string;
+  closedTime?: string;
   response?: string;
   topicName: string;
 }
@@ -198,7 +201,7 @@ type SortOrder = 'asc' | 'desc';
                         </tr>
                       </thead>
                       <tbody>
-                        <tr class="group max-lg:whitespace-nowrap cursor-pointer" *ngFor="let person of pagedPeople" (click)="viewTicket(person)">
+                        <tr class="table-row-separator group max-lg:whitespace-nowrap cursor-pointer" *ngFor="let person of pagedPeople" (click)="viewTicket(person)">
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">#{{ person.id }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.subject }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.topicName }}</td>
@@ -218,19 +221,27 @@ type SortOrder = 'asc' | 'desc';
                           </td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.priority }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
-                          <span
-                              class="inline-flex items-center justify-center bg-{{ getStatusColor(person.statusCode) }}/10 text-{{ getStatusColor(person.statusCode) }} min-h-[24px] px-3 text-xs font-medium rounded-[15px] capitalize"
-                            >
-                              {{ statusNameByCode[person.statusCode] || person.statusCode }}
-                            </span>
-                            <span
-                              class="block mt-1 text-[11px] font-medium capitalize bg-{{ getScheduleStatusColor(person) }}/10 text-{{ getScheduleStatusColor(person) }} px-2 py-0.5 rounded-[15px] w-fit"
-                            >
-                              {{ getScheduleStatus(person) }}
-                            </span>
+                            <div class="flex flex-col items-center gap-1">
+                              <span
+                                class="inline-flex w-[110px] h-[24px] max-md:w-[100px] max-md:h-[22px] max-sm:w-[90px] max-sm:h-[20px] items-center justify-center text-center bg-{{ getStatusColor(person.statusCode) }}/10 text-{{ getStatusColor(person.statusCode) }} text-[15px] max-md:text-[13px] max-sm:text-[11px] font-medium rounded-[15px] capitalize whitespace-nowrap"
+                              >
+                                {{ statusNameByCode[person.statusCode] || person.statusCode }}
+                              </span>
+                              <span
+                                class="inline-flex w-[110px] h-[24px] max-md:w-[100px] max-md:h-[22px] max-sm:w-[90px] max-sm:h-[20px] items-center justify-center text-center text-[15px] max-md:text-[13px] max-sm:text-[11px] font-medium capitalize bg-{{ getScheduleStatusColor(person) }}/10 text-{{ getScheduleStatusColor(person) }} rounded-[15px] whitespace-nowrap"
+                              >
+                                {{ getScheduleStatus(person) }}
+                              </span>
+                            </div>
                           </td>
-                          <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.createdDate }}</td>
-                          <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.dueDate }}</td>
+                          <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
+                            <div>{{ person.createdDate }}</div>
+                            <small *ngIf="person.createdTime" class="block text-[12px] text-light dark:text-white/50">{{ person.createdTime }}</small>
+                          </td>
+                          <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
+                            <div>{{ person.dueDate }}</div>
+                            <small *ngIf="person.dueTime" class="block text-[12px] text-light dark:text-white/50">{{ person.dueTime }}</small>
+                          </td>
                         </tr>
                       </tbody>
                     </nz-table>
@@ -301,14 +312,17 @@ type SortOrder = 'asc' | 'desc';
                 <div>
                   <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Ngày tạo</div>
                   <div class="text-[15px] text-dark dark:text-white/[.87]">{{ ticket.createdDate }}</div>
+                  <small *ngIf="ticket.createdTime" class="block text-[12px] text-light dark:text-white/50">{{ ticket.createdTime }}</small>
                 </div>
                 <div>
                   <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Ngày đến hạn</div>
                   <div class="text-[15px] text-dark dark:text-white/[.87]">{{ ticket.dueDate }}</div>
+                  <small *ngIf="ticket.dueTime" class="block text-[12px] text-light dark:text-white/50">{{ ticket.dueTime }}</small>
                 </div>
                 <div>
                   <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Ngày hoàn thành</div>
                   <div class="text-[15px] text-dark dark:text-white/[.87]">{{ ticket.closedDate || 'Chưa hoàn thành' }}</div>
+                  <small *ngIf="ticket.closedTime" class="block text-[12px] text-light dark:text-white/50">{{ ticket.closedTime }}</small>
                 </div>
               </div>
               <div *ngIf="ticket.attachedFile">
@@ -437,7 +451,7 @@ type SortOrder = 'asc' | 'desc';
                   nzDropdownClassName="topic-change-dropdown"
                   nzPlaceHolder="Chọn chủ đề"
                 >
-                  <nz-option-group *ngFor="let group of topicFilterGroups" [nzLabel]="group.departmentName">
+                  <nz-option-group *ngFor="let group of activeTopicGroups" [nzLabel]="group.departmentName">
                     <nz-option *ngFor="let t of group.topics" [nzValue]="t" [nzLabel]="t"></nz-option>
                   </nz-option-group>
                 </nz-select>
@@ -561,6 +575,7 @@ export class ManageTicketComponent implements OnInit {
   // chỉ hiển thị khi đã chọn một chủ đề.
   topicOptions: string[] = [];
   topicFilterGroups: { departmentName: string; topics: string[] }[] = [];
+  activeTopicGroups: { departmentName: string; topics: string[] }[] = [];
   topicNameById: { [key: string]: string } = {};
   topicAssigneeByName: { [key: string]: string } = {};
   departmentNameByCode: { [key: string]: string } = {};
@@ -821,7 +836,7 @@ export class ManageTicketComponent implements OnInit {
     if (!this.selectedTicket || this.selectedTicket.statusCode === 'closed') {
       return;
     }
-    this.updateSelectedTicket({ statusCode: 'closed', closedDate: formatVnDate(new Date()) });
+    this.updateSelectedTicket({ statusCode: 'closed' });
   }
 
   // Chú thích ngắn: đánh dấu ticket là đóng và lưu ngày đóng hiện tại.
@@ -947,18 +962,10 @@ export class ManageTicketComponent implements OnInit {
     const key = createdBy.toLowerCase();
     const employeeCode = this.employeeCodeByUserName[key];
     const employeeName = this.employeeNameByUserName[key];
-    if (employeeCode || employeeName) {
-      return formatEmployeeName(employeeCode ?? createdBy, employeeName ?? fallbackName);
+    if (employeeName) {
+      return formatEmployeeName(employeeCode ?? createdBy, employeeName);
     }
 
-    {
-      const currentCode = this.auth.currentUsername();
-      const currentName = this.auth.currentUserName();
-      if ([currentCode, currentName, this.getCurrentUserName()].some((value) =>
-        createdBy.toLowerCase() === String(value ?? '').trim().toLowerCase())) {
-        return formatEmployeeName(currentCode, currentName);
-      }
-    }
     return createdBy;
   }
 
@@ -987,6 +994,7 @@ export class ManageTicketComponent implements OnInit {
         }, {} as { [ticketId: string]: TicketResponse[] });
 
         this.topicOptions = topics
+          .filter((topic) => isTopicActive(topic))
           .map((topic) => topic.topicName)
           .filter((topicName): topicName is string => !!topicName);
 
@@ -996,6 +1004,10 @@ export class ManageTicketComponent implements OnInit {
         }, {} as { [key: string]: string });
 
         this.topicFilterGroups = buildTopicFilterGroups(topics, this.departmentNameByCode);
+        this.activeTopicGroups = buildTopicFilterGroups(
+          topics.filter((topic) => isTopicActive(topic)),
+          this.departmentNameByCode
+        );
 
         this.topicNameById = topics.reduce((map, topic) => {
           map[topic.id] = topic.topicName;
@@ -1075,8 +1087,11 @@ export class ManageTicketComponent implements OnInit {
       attachedFile: item.attachedFile ?? '',
       response: item.response ?? '',
       createdDate: item.createdDate ?? '',
+      createdTime: item.createdTime ?? '',
       dueDate: item.dueDate ?? '',
-      closedDate: item.closedDate ?? ''
+      dueTime: item.dueTime ?? '',
+      closedDate: item.closedDate ?? '',
+      closedTime: item.closedTime ?? ''
     } as Person));
   }
 

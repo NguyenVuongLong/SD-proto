@@ -167,7 +167,7 @@ type SortOrder = 'asc' | 'desc';
                         </tr>
                       </thead>
                       <tbody>
-                        <tr class="group max-lg:whitespace-nowrap cursor-pointer" *ngFor="let topic of pagedTopics" (click)="viewTopic(topic)">
+                        <tr class="table-row-separator group max-lg:whitespace-nowrap cursor-pointer" *ngFor="let topic of pagedTopics" (click)="viewTopic(topic)">
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">#{{ topic.id }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent text-dark dark:text-white/[.87]">{{ topic.topicName }}</td>
                           <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent max-w-[280px] truncate" [innerHTML]="topic.topicDescription"></td>

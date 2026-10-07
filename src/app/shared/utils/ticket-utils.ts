@@ -3,6 +3,10 @@ export interface TopicGroupItem {
   topicName: string;
 }
 
+export function isTopicActive(topic: { status?: string } | null | undefined): boolean {
+  return topic?.status?.trim().toLowerCase() === 'active';
+}
+
 export interface TopicGroup {
   departmentName: string;
   topics: string[];

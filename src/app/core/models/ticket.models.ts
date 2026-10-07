@@ -17,8 +17,11 @@ export interface Ticket {
   assignedPhone?: string;
   assignedDept?: string;
   createdDate?: string;
+  createdTime?: string;
   dueDate?: string;
+  dueTime?: string;
   closedDate?: string;
+  closedTime?: string;
   topicName?: string;
 }
 

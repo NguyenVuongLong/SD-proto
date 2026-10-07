@@ -16,3 +16,10 @@ body {
   margin: 0;
 }
 
+.table-row-separator:not(:last-child) > td {
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.dark .table-row-separator:not(:last-child) > td {
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.12);
+}
