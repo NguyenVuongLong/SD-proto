@@ -152,7 +152,7 @@ type SortOrder = 'asc' | 'desc';
                   </div>
                 </div>
               </div>
-              <perfect-scrollbar>
+              <perfect-scrollbar class="table-header-sticky">
                   <div class="w-full max-2xl:overflow-x-auto max-h-[450px]">
                     <nz-table #basicTable [nzData]="filteredTopics" [nzFrontPagination]="false" [nzShowPagination]="false">
                       <thead>
@@ -353,7 +353,7 @@ type SortOrder = 'asc' | 'desc';
                   name="editAssignedEmployee"
                   nzPlaceHolder="Chọn nhân viên phụ trách"
                 >
-                    <nz-option *ngFor="let e of employeeOptionsForDepartment(editTopicDepartment)" [nzValue]="e" [nzLabel]="getEmployeeLabel(e)"></nz-option>
+                    <nz-option *ngFor="let e of employeeOptionsForDepartmentIncludingCurrent(editTopicDepartment, editTopicAssignedEmployee)" [nzValue]="e" [nzLabel]="getEmployeeLabel(e)"></nz-option>
                 </nz-select>
               </div>
               <div>
@@ -586,6 +586,12 @@ export class ManageTopicComponent implements OnInit {
         employee.employeeCode === employeeCode && employee.departmentCode === selectedDepartment
       );
     });
+  }
+
+  employeeOptionsForDepartmentIncludingCurrent(departmentCode: string, currentEmployee: string): string[] {
+    const options = this.employeeOptionsForDepartment(departmentCode);
+    const currentValue = currentEmployee.trim();
+    return currentValue && !options.includes(currentValue) ? [...options, currentValue] : options;
   }
 
   employeeOptionsForDepartmentName(departmentName: string): string[] {

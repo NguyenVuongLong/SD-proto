@@ -31,9 +31,13 @@ export class AuthService extends BaseService {
         `Password=${encodeURIComponent(EncryptHelper.aesEncrypt(password))}`,
         `AppCode=${encodeURIComponent(EncryptHelper.aesEncrypt('E-INTRANET'))}`
       ].join('&');
-      const endpoint = `${this.damtcVersion}/auth/authenticate?${query}`;
+      const endpoint = `${this.damtcVersion}/auth/login`;
 
-      return this.restClient.get<UserModel>(endpoint).pipe(
+      return this.restClient.post<UserModel>(endpoint, {
+        Username: EncryptHelper.aesEncrypt(username),
+        Password: EncryptHelper.aesEncrypt(password),
+        AppCode: EncryptHelper.aesEncrypt('E-INTRANET')
+      }).pipe(
         tap(response => {
           if (response?.Code === 'Success') {
             this.authenticatedUser = response;

@@ -12,6 +12,8 @@ module.exports = {
         pink: '#f2eafb',
         warning: '#FA8B0C',
         danger: '#FF4D4F',
+        gray: '#808080',
+        teal: '#14B8A6',
         info: '#00AAFF',
         link: '#1890ff',
         dark: '#0A0A0A',

@@ -10,11 +10,9 @@ export interface Ticket {
   priority?: string;
   creatorUser?: string;
   creatorName?: string;
-  creatorPhone?: string;
   creatorDept?: string;
   assignedUser?: string;
   assignedName?: string;
-  assignedPhone?: string;
   assignedDept?: string;
   createdDate?: string;
   createdTime?: string;
@@ -23,6 +21,30 @@ export interface Ticket {
   closedDate?: string;
   closedTime?: string;
   topicName?: string;
+}
+
+export interface TicketPerson extends Ticket {
+  ticketId: string;
+  departmentCode?: string;
+  ticketName?: string;
+  ticketContent?: string;
+  assignedDate?: string;
+  assignedTo?: string;
+  closedBy?: string;
+  createdBy?: string;
+  attachedFile: string;
+  priority: string;
+  creatorUser: string;
+  creatorName: string;
+  creatorDept: string;
+  assignedUser: string;
+  assignedName: string;
+  assignedDept: string;
+  createdDate: string;
+  dueDate: string;
+  closedDate: string;
+  topicName: string;
+  response?: string;
 }
 
 export interface TicketResponse {
@@ -58,6 +80,7 @@ export interface Employee {
   employeeCode: string;
   employeeName: string;
   userName?: string;
+  gender?: string | number;
   departmentCode: string;
   status: string;
 }

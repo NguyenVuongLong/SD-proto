@@ -23,6 +23,13 @@ export class NotificationService {
   }
 
   /**
+   * Hiển thị cảnh báo.
+   */
+  warning(content: string): void {
+    this.message.warning(content);
+  }
+
+  /**
    * Hiển thị thông báo thông tin.
    */
   info(content: string): void {

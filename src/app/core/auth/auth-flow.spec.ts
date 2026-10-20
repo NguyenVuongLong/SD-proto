@@ -7,6 +7,7 @@ import { appRoutes } from '../../app-routing.module';
 import { authRoutes } from '../../features/auth/auth.module';
 import { HeaderComponent } from '../../header/header.component';
 import { LoginComponent } from '../../login/login.component';
+import { ForgetPassComponent } from '../../login/forget-pass.component';
 import { NotificationService } from '../services/notification.service';
 import { AuthGuard } from './auth.guard';
 import {
@@ -22,6 +23,7 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../../shared/services/auth.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ApiService } from '../services/api.service';
+import { createEmployeeLookups } from '../../shared/utils/ticket-utils';
 
 describe('Authentication flow', () => {
   let auth: AuthService;
@@ -71,16 +73,17 @@ describe('Authentication flow', () => {
   }
 
   function expectLoginRequest() {
-    return http.expectOne(request =>
-      request.method === 'GET'
-      && request.url.startsWith(`${endpointUrl}/damtc/auth/authenticate?`)
-    );
+    return http.expectOne(`${endpointUrl}/damtc/auth/login`);
   }
 
   function createLoginComponent(): LoginComponent {
     const component = new LoginComponent(new FormBuilder(), router, auth, notifications);
     component.ngOnInit();
     return component;
+  }
+
+  function createForgetPassComponent(): ForgetPassComponent {
+    return new ForgetPassComponent(new FormBuilder(), router, auth, notifications);
   }
 
   it('Base64-stores and decodes UTF-8 values', () => {
@@ -108,18 +111,18 @@ describe('Authentication flow', () => {
     expect(SessionHelper.getStoredUser()).toBeNull();
   });
 
-  it('GETs the encoded AES credentials and app code, then stores success response and date', () => {
+  it('POSTs the encoded AES credentials and app code, then stores success response and date', () => {
     const response = { Code: 'Success', Message: 'OK', UserName: 'alice', EmployeeName: 'Alice' };
     auth.login('alice', 'secret').subscribe();
 
     const request = expectLoginRequest();
-    expect(request.request.method).toBe('GET');
+    expect(request.request.method).toBe('POST');
     expect(request.request.headers.get('Content-Type')).toBe('application/json');
     expect(request.request.headers.get('Cache-Control')).toContain('no-cache');
-    const query = new URLSearchParams(new URL(request.request.urlWithParams).search);
-    expect(decrypt(query.get('Username') ?? '')).toBe('alice');
-    expect(decrypt(query.get('Password') ?? '')).toBe('secret');
-    expect(decrypt(query.get('AppCode') ?? '')).toBe('E-INTRANET');
+    expect(Object.keys(request.request.body)).toEqual(['Username', 'Password', 'AppCode']);
+    expect(decrypt(request.request.body.Username)).toBe('alice');
+    expect(decrypt(request.request.body.Password)).toBe('secret');
+    expect(decrypt(request.request.body.AppCode)).toBe('E-INTRANET');
     request.flush(response);
 
     expect(SessionHelper.getStoredUser()).toEqual(response);
@@ -168,6 +171,22 @@ describe('Authentication flow', () => {
     expect(header.src).toBe(`${endpointUrl}/hr/emp/getavatar?employeecode=EMP-ADA`);
   });
 
+  it('builds an assigned employee avatar from that employee code and gender', () => {
+    const employeeLookups = createEmployeeLookups([{
+      userName: 'ada',
+      employeeCode: 'EMP-ADA',
+      employeeName: 'Ada Lovelace',
+      gender: 'F'
+    }]);
+
+    expect(SessionHelper.getAvatar(
+      employeeLookups.genders['ada'],
+      employeeLookups.codes['ada']
+    )).toBe(`${endpointUrl}/hr/emp/getavatar?employeecode=EMP-ADA`);
+    expect(SessionHelper.getAvatar(employeeLookups.genders['ada']))
+      .toBe('assets/images/avatars/girl.svg');
+  });
+
   it('uses the gender-based SVG fallback when the employee avatar fails', () => {
     StorageHelper.set(AUTHENTICATED_USER_STORAGE_KEY, JSON.stringify({ Fullname: 'Ada Lovelace', Gender: 'F' }));
     const header = new HeaderComponent(auth, router);
@@ -211,6 +230,48 @@ describe('Authentication flow', () => {
     passRequest.flush({ Code: 'Success' });
   });
 
+  it('validates matching passwords before sending a password-reset request', () => {
+    const component = createForgetPassComponent();
+    component.resetForm.setValue({
+      employeeCode: 'EMP-2',
+      idNo: 'ID-2',
+      userName: 'bob',
+      password: 'new-pass',
+      confirmPassword: 'different-pass'
+    });
+
+    component.submitForm();
+
+    expect(component.resetForm.get('confirmPassword')?.hasError('passwordMismatch')).toBeTrue();
+    http.expectNone(`${endpointUrl}/damtc/auth/savepassrequest`);
+  });
+
+  it('sends a valid reset request and returns to login on success', () => {
+    spyOn(router, 'navigate').and.resolveTo(true);
+    const component = createForgetPassComponent();
+    component.resetForm.setValue({
+      employeeCode: ' EMP-2 ',
+      idNo: ' ID-2 ',
+      userName: ' bob ',
+      password: 'new-pass',
+      confirmPassword: 'new-pass'
+    });
+
+    component.submitForm();
+
+    const request = http.expectOne(`${endpointUrl}/damtc/auth/savepassrequest`);
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body.EmployeeCode).toBe('EMP-2');
+    expect(request.request.body.IdNo).toBe('ID-2');
+    expect(decrypt(request.request.body.Username)).toBe('bob');
+    expect(decrypt(request.request.body.Password)).toBe('new-pass');
+    request.flush({ Code: 'Success', Message: 'Request accepted' });
+
+    expect(notifications.success).toHaveBeenCalledWith('Request accepted');
+    expect(router.navigate).toHaveBeenCalledWith(['/login']);
+    expect(component.isSubmitting).toBeFalse();
+  });
+
   it('posts AES-encrypted credentials to change-password endpoint', () => {
     auth.changePassword('alice', 'old-secret', 'new-secret').subscribe();
     const request = http.expectOne(`${endpointUrl}/damtc/auth/changepassword`);
@@ -223,7 +284,7 @@ describe('Authentication flow', () => {
     request.flush({ Code: 'Success' });
   });
 
-  it('uses the new authenticated username for ticket, response, and update payloads', () => {
+  it('uses the new authenticated username for ticket, response, topic, and update payloads', () => {
     const returnedUser = {
       Code: 'Success',
       UserName: 'auth-alice',
@@ -246,6 +307,11 @@ describe('Authentication flow', () => {
     const createResponseRequest = http.expectOne('/api/tickets/T-1/responses');
     expect(createResponseRequest.request.body.createdBy).toBe('auth-alice');
     createResponseRequest.flush({ responseId: 'R-1', createdBy: 'auth-alice' });
+
+    api.createTopic({ topicName: 'New topic' }).subscribe();
+    const createTopicRequest = http.expectOne('/api/topics');
+    expect(createTopicRequest.request.body.createdBy).toBe('auth-alice');
+    createTopicRequest.flush({ id: 'TOPIC-1' });
 
     api.updateTicket('T-1', { statusCode: 'Open' }).subscribe();
     const updateTicketRequest = http.expectOne('/api/tickets/T-1');
@@ -270,7 +336,7 @@ describe('Authentication flow', () => {
     expect(component.validateForm.invalid).toBeTrue();
     expect(component.validateForm.get('userName')?.dirty).toBeTrue();
     expect(component.validateForm.get('password')?.dirty).toBeTrue();
-    http.expectNone(request => request.url.startsWith(`${endpointUrl}/damtc/auth/authenticate?`));
+    http.expectNone(`${endpointUrl}/damtc/auth/login`);
   });
 
   it('saves a remembered username only after successful login', () => {
@@ -387,6 +453,7 @@ describe('Authentication flow', () => {
     const protectedAppRoute = appRoutes.find(route => route.canActivate?.includes(AuthGuard));
 
     expect(authRoutes.some(route => route.path === 'login' && route.component === LoginComponent)).toBeTrue();
+    expect(authRoutes.some(route => route.path === 'forget-pass' && route.component === ForgetPassComponent)).toBeTrue();
     expect(publicAuthRoute?.canActivate).toBeUndefined();
     expect(publicAuthRoute?.canActivateChild).toBeUndefined();
     expect(protectedAppRoute?.canActivate).toContain(AuthGuard);

@@ -50,6 +50,7 @@ import { NotificationService } from '../core/services/notification.service';
                   <label nz-checkbox formControlName="remember" class="login-form__checkbox">
                     Ghi nhớ tên đăng nhập
                   </label>
+                  <a routerLink="/forget-pass" class="login-form__forgot">Quên mật khẩu?</a>
                 </div>
                 <button nz-button type="submit" class="login-form__submit" [disabled]="isSubmitting">
                   {{ isSubmitting ? 'Đang đăng nhập...' : 'Đăng nhập' }}

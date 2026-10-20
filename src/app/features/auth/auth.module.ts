@@ -11,13 +11,15 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { Routes } from '@angular/router';
 import { LoginComponent } from '../../login/login.component';
+import { ForgetPassComponent } from '../../login/forget-pass.component';
 
 export const authRoutes: Routes = [
-  { path: 'login', component: LoginComponent }
+  { path: 'login', component: LoginComponent },
+  { path: 'forget-pass', component: ForgetPassComponent }
 ];
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginComponent, ForgetPassComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

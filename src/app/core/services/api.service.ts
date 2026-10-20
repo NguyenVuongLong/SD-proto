@@ -4,19 +4,20 @@ import { Observable, forkJoin, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../shared/services/auth.service';
 
-const PRIORITY_TO_SLA_CODE: Record<string, string> = {
-  Gấp: 'Urgent',
-  Cao: 'High',
-  'Trung bình': 'Normal',
-  Thấp: 'Low'
+const SLA_CODE_TO_PRIORITY: Record<string, string> = {
+  '01': 'Gấp',
+  '02': 'Cao',
+  '03': 'Trung bình',
+  '04': 'Thấp'
 };
 
-const SLA_CODE_TO_PRIORITY: Record<string, string> = {
-  Urgent: 'Gấp',
-  High: 'Cao',
-  Normal: 'Trung bình',
-  Low: 'Thấp'
-};
+const PRIORITY_TO_SLA_CODE = Object.entries(SLA_CODE_TO_PRIORITY).reduce<Record<string, string>>(
+  (mapping, [code, priority]) => {
+    mapping[priority] = code;
+    return mapping;
+  },
+  {}
+);
 
 interface SupportData {
   tickets: any[];
@@ -166,6 +167,7 @@ export class ApiService {
             employeeCode: employee.employeeCode ?? employee.EmployeeCode ?? '',
             employeeName: employee.employeeName ?? employee.EmployeeName ?? '',
             userName: employee.userName ?? employee.UserName ?? employee.username ?? employee.Username ?? '',
+            gender: employee.gender ?? employee.Gender,
             departmentCode: employee.departmentCode ?? employee.DepartmentCode ?? '',
             status: employee.status ?? employee.Status ?? ''
           };
@@ -298,7 +300,10 @@ export class ApiService {
    * @returns Observable chứa chủ đề đã được tạo
    */
   createTopic(topic: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/topics`, topic);
+    return this.http.post(`${this.baseUrl}/topics`, {
+      ...topic,
+      createdBy: this.currentUsername()
+    });
   }
 
   /**
@@ -350,9 +355,7 @@ export class ApiService {
         : ticket.assignedName ?? ticket.AssignedName ?? assignedCode,
       creatorUser: ticket.createdBy ?? ticket.CreatedBy ?? '',
       creatorName: ticket.createdBy ?? ticket.creatorName ?? ticket.CreatorName ?? '',
-      creatorPhone: '',
       creatorDept: ticket.departmentCode ?? ticket.DepartmentCode ?? '',
-      assignedPhone: '',
       assignedDept: ticket.departmentCode ?? ticket.DepartmentCode ?? '',
       assignedDate: ticket.assignedDate ?? ticket.AssignedDate ?? '',
       closedBy: ticket.closedBy ?? ticket.ClosedBy ?? '',
@@ -387,7 +390,7 @@ export class ApiService {
 
   /**
    * Chuyển đổi mã SLA sang tên mức độ ưu tiên tiếng Việt.
-   * @param code - Mã SLA (Urgent, High, Normal, Low)
+   * @param code - Mã SLA (01, 02, 03, 04)
    * @returns Tên mức độ ưu tiên (Gấp, Cao, Trung bình, Thấp)
    */
   private priorityForCode(code: string): string {

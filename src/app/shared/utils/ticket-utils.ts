@@ -16,6 +16,7 @@ export interface EmployeeLookupItem {
   userName?: string;
   employeeCode?: string;
   employeeName?: string;
+  gender?: string | number;
 }
 
 export function buildTopicFilterGroups(
@@ -67,25 +68,31 @@ export function keepLatestPerGroup(values: string[], previous: string[], group: 
 export function createEmployeeLookups(employees: EmployeeLookupItem[]): {
   codes: Record<string, string>;
   names: Record<string, string>;
+  genders: Record<string, string | number>;
 } {
   const codes: Record<string, string> = {};
   const names: Record<string, string> = {};
+  const genders: Record<string, string | number> = {};
 
   for (const employee of employees) {
     const code = (employee.employeeCode ?? '').trim();
     const name = (employee.employeeName ?? '').trim();
     const userName = (employee.userName ?? '').trim().toLowerCase();
+    const gender = employee.gender;
     if (userName) {
       codes[userName] = code;
       names[userName] = name;
+      if (gender !== undefined) genders[userName] = gender;
     }
     if (code) {
-      codes[code.toLowerCase()] = code;
-      names[code.toLowerCase()] = name;
+      const normalizedCode = code.toLowerCase();
+      codes[normalizedCode] = code;
+      names[normalizedCode] = name;
+      if (gender !== undefined) genders[normalizedCode] = gender;
     }
   }
 
-  return { codes, names };
+  return { codes, names, genders };
 }
 
 export function formatEmployeeName(code: string, name: string): string {

@@ -6,6 +6,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { TicketService } from '../../../core/services/ticket.service';
+import { Ticket as OracleTicket } from '../../../core/models/ticket.models';
 import {
   Chart,
   LineController,
@@ -21,33 +22,14 @@ import {
 // Đăng ký Chart.js có thể tree-shake — chỉ import những thành phần cần cho biểu đồ đường.
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend, Filler);
 
-// Hình dạng mỗi dòng trong ticket-table.json — JSON không xuất kiểu này;
-// khai báo ở đây để có kiểm tra kiểu và gợi ý khi đọc dữ liệu.
-interface Ticket {
-  id: string;
-  subject: string;
-  content: string;
-  attachedFile: string;
-  statusCode: string;
-  SLAcode: string;
-  creatorUser: string;
-  creatorName: string;
-  creatorPhone: string;
-  creatorDept: string;
-  assignedUser: string;
-  assignedName: string;
-  assignedPhone: string;
-  assignedDept: string;
-  createdDate: string;
-  dueDate: string;
-  closedDate: string;
-}
+type Ticket = OracleTicket & Required<Pick<OracleTicket, 'createdDate' | 'dueDate' | 'closedDate'>>;
 
 interface TicketStats {
   total: number;
   open: number;
   processing: number;
   overdue: number;
+  completed: number;
   closed: number;
 }
 
@@ -58,6 +40,7 @@ interface TicketTrendPoint {
   open: number;
   processing: number;
   overdue: number;
+  completed: number;
   closed: number;
 }
 
@@ -132,7 +115,7 @@ function getBucketInfo(date: Date, granularity: Granularity): { key: string; lab
   </div>
 
   <div class="flex flex-wrap -mx-[12.5px] mb-[25px]">
-    <div class="w-full sm:w-1/2 lg:w-1/5 px-[12.5px] mb-[25px]">
+    <div class="w-full sm:w-1/2 lg:w-1/6 px-[12.5px] mb-[25px]">
       <div class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
         <div class="flex justify-between">
           <div class="flex items-center justify-center order-2 bg-primary/10 text-primary w-[58px] h-[58px] rounded-2xl">
@@ -150,7 +133,7 @@ function getBucketInfo(date: Date, granularity: Granularity): { key: string; lab
       </div>
     </div>
 
-    <div class="w-full sm:w-1/2 lg:w-1/5 px-[12.5px] mb-[25px]">
+    <div class="w-full sm:w-1/2 lg:w-1/6 px-[12.5px] mb-[25px]">
       <div class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
         <div class="flex justify-between">
           <div class="flex items-center justify-center order-2 bg-secondary/10 text-secondary w-[58px] h-[58px] rounded-2xl">
@@ -168,7 +151,7 @@ function getBucketInfo(date: Date, granularity: Granularity): { key: string; lab
       </div>
     </div>
 
-    <div class="w-full sm:w-1/2 lg:w-1/5 px-[12.5px] mb-[25px]">
+    <div class="w-full sm:w-1/2 lg:w-1/6 px-[12.5px] mb-[25px]">
       <div class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
         <div class="flex justify-between">
           <div class="flex items-center justify-center order-2 bg-warning/10 text-warning w-[58px] h-[58px] rounded-2xl">
@@ -186,11 +169,11 @@ function getBucketInfo(date: Date, granularity: Granularity): { key: string; lab
       </div>
     </div>
 
-    <div class="w-full sm:w-1/2 lg:w-1/5 px-[12.5px] mb-[25px]">
+    <div class="w-full sm:w-1/2 lg:w-1/6 px-[12.5px] mb-[25px]">
       <div class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
         <div class="flex justify-between">
-          <div class="flex items-center justify-center order-2 bg-warning/10 text-warning w-[58px] h-[58px] rounded-2xl">
-            <div class="fill-warning  flex items-center">
+          <div class="flex items-center justify-center order-2 bg-danger/10 text-danger w-[58px] h-[58px] rounded-2xl">
+            <div class="fill-danger  flex items-center">
               <svg-icon class="w-[30px] h-[30px] [&>svg]:w-full [&>svg]:h-full" src="assets/images/svg/unicons-line/ticket.svg"></svg-icon>
             </div>
           </div>
@@ -204,11 +187,29 @@ function getBucketInfo(date: Date, granularity: Granularity): { key: string; lab
       </div>
     </div>
 
-    <div class="w-full sm:w-1/2 lg:w-1/5 px-[12.5px] mb-[25px]">
+    <div class="w-full sm:w-1/2 lg:w-1/6 px-[12.5px] mb-[25px]">
       <div class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
         <div class="flex justify-between">
           <div class="flex items-center justify-center order-2 bg-success/10 text-success w-[58px] h-[58px] rounded-2xl">
-            <div class="fill-success  flex items-center">
+            <div class="fill-success flex items-center">
+              <svg-icon class="w-[30px] h-[30px] [&>svg]:w-full [&>svg]:h-full" src="assets/images/svg/unicons-line/ticket.svg"></svg-icon>
+            </div>
+          </div>
+          <div>
+            <h4 class="mb-0 text-3xl max-lg:text-[26px] max-sm:text-2xl font-semibold leading-normal text-dark dark:text-white/[.87]">
+              <span> {{ stats.completed }} </span>
+            </h4>
+            <span class="font-normal text-body dark:text-white/60 text-15">Ticket hoàn thành</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full sm:w-1/2 lg:w-1/6 px-[12.5px] mb-[25px]">
+      <div class="px-[25px] py-[39.50px] bg-white dark:bg-white/10 rounded-10 relative text-[15px] text-theme-gray dark:text-white/60 leading-6">
+        <div class="flex justify-between">
+          <div class="flex items-center justify-center order-2 bg-gray/10 text-gray w-[58px] h-[58px] rounded-2xl">
+            <div class="fill-gray  flex items-center">
               <svg-icon class="w-[30px] h-[30px] [&>svg]:w-full [&>svg]:h-full" src="assets/images/svg/unicons-line/ticket.svg"></svg-icon>
             </div>
           </div>
@@ -274,7 +275,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('ticketTrendChart') ticketTrendChartRef!: ElementRef<HTMLCanvasElement>;
   private chart: Chart | null = null;
   tickets: Ticket[] = [];
-  stats: TicketStats = { total: 0, open: 0, processing: 0, overdue: 0, closed: 0 };
+  stats: TicketStats = { total: 0, open: 0, processing: 0, overdue: 0, completed: 0, closed: 0 };
   trend: TicketTrendPoint[] = [];
   granularity: Granularity = 'day';
   dateRange: Date[] | null = null;
@@ -382,8 +383,17 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           {
             label: 'Ticket overdue',
             data: this.trend.map(p => p.overdue),
-            borderColor: '#FFB53D',
-            backgroundColor: 'rgba(255, 181, 61, 0.12)',
+            borderColor: '#FF4D4F',
+            backgroundColor: 'rgba(255, 77, 79, 0.12)',
+            tension: 0.35,
+            fill: false,
+            pointRadius: 4
+          },
+          {
+            label: 'Ticket hoàn thành',
+            data: this.trend.map(p => p.completed),
+            borderColor: '#01B81A',
+            backgroundColor: 'rgba(1, 184, 26, 0.12)',
             tension: 0.35,
             fill: false,
             pointRadius: 4
@@ -391,8 +401,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           {
             label: 'Ticket đóng',
             data: this.trend.map(p => p.closed),
-            borderColor: '#2BC155',
-            backgroundColor: 'rgba(43, 193, 85, 0.12)',
+            borderColor: '#808080',
+            backgroundColor: 'rgba(128, 128, 128, 0.12)',
             tension: 0.35,
             fill: false,
             pointRadius: 4
@@ -423,6 +433,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     const total = tickets.length;
 
     const closed = tickets.filter(t => t.statusCode === 'closed').length;
+    const completed = tickets.filter(t => t.statusCode === 'completed').length;
     const open = tickets.filter(t => t.statusCode === 'open').length;
     const processing = tickets.filter(t => t.statusCode === 'processing').length;
 
@@ -432,7 +443,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       return due !== null && due < today;
     }).length;
 
-    return { total, open, processing, overdue, closed };
+    return { total, open, processing, overdue, completed, closed };
   }
 
   // Gom các ticket theo bucket (theo `granularity`) và trả về mảng điểm xu hướng.
@@ -464,6 +475,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           open: bucketStats.open,
           processing: bucketStats.processing,
           overdue: bucketStats.overdue,
+          completed: bucketStats.completed,
           closed: bucketStats.closed
         };
       });

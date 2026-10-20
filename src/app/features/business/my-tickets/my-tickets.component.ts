@@ -4,12 +4,14 @@ import { Component, TemplateRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TicketService } from '../../../core/services/ticket.service';
+import { SessionHelper } from '../../../core/auth/session.helper';
 import { AuthService } from '../../../shared/services/auth.service';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { DialogService } from '../../../core/services/dialog.service';
 import { AttachmentService } from '../../../core/services/attachment.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { AttachmentListComponent } from '../../../shared/components/attachment-list.component';
+import { TicketPerson } from '../../../core/models/ticket.models';
 import { finalize, of, switchMap } from 'rxjs';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
@@ -33,39 +35,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
 
-interface Person {
-  ticketId: string;
-  id: string;
-  topicId?: string;
-  departmentCode?: string;
-  ticketName?: string;
-  ticketContent?: string;
-  slaCode?: string;
-  statusCode: string;
-  assignedDate?: string;
-  assignedTo?: string;
-  closedBy?: string;
-  createdBy?: string;
-  subject: string;
-  content: string;
-  attachedFile: string;
-  priority: string;
-  creatorUser: string;
-  creatorName: string;
-  creatorPhone: string;
-  creatorDept: string;
-  assignedUser: string;
-  assignedName: string;
-  assignedPhone: string;
-  assignedDept: string;
-  createdDate: string;
-  createdTime?: string;
-  dueDate: string;
-  dueTime?: string;
-  closedDate: string;
-  closedTime?: string;
-  topicName: string;
-}
+type Person = TicketPerson;
 
 interface TicketResponse {
   ticketId: string;
@@ -196,17 +166,17 @@ type SortOrder = 'asc' | 'desc';
                 </div>
               </div>
             </div>
-            <perfect-scrollbar>
+            <perfect-scrollbar class="table-header-sticky">
                 <div class="w-full max-2xl:overflow-x-auto max-h-[450px]">
                   <nz-table #basicTable [nzData]="filteredPeople" [nzFrontPagination]="false" [nzShowPagination]="false">
                     <thead>
                       <tr>
-                        <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden rounded-s-[10px] capitalize cursor-pointer select-none" (click)="toggleSort('id')">Mã Ticket{{ sortArrow('id') }}</th>
+                        <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden rounded-s-[10px] capitalize cursor-pointer select-none" (click)="toggleSort('id')">Mã{{ sortArrow('id') }}</th>
                         <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize">Tiêu đề</th>
-                        <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('topicName')">Chủ đề{{ sortArrow('topicName') }}</th>
-                        <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('assignedName')">Người xử lý{{ sortArrow('assignedName') }}</th>
                         <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('priority')">Ưu tiên{{ sortArrow('priority') }}</th>
                         <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('statusCode')">Trạng thái{{ sortArrow('statusCode') }}</th>
+                        <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('topicName')">Chủ đề{{ sortArrow('topicName') }}</th>
+                        <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('assignedName')">Người xử lý{{ sortArrow('assignedName') }}</th>
                         <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('createdDate')">Ngày tạo{{ sortArrow('createdDate') }}</th>
                         <th class="bg-regularBG dark:bg-[#323440] px-[20px] py-[16px] text-start text-dark dark:text-white/[.87] text-[15px] font-medium border-none before:hidden capitalize cursor-pointer select-none" (click)="toggleSort('dueDate')">Ngày đến hạn{{ sortArrow('dueDate') }}</th>
                       </tr>
@@ -214,22 +184,7 @@ type SortOrder = 'asc' | 'desc';
                     <tbody>
                       <tr class="table-row-separator group max-lg:whitespace-nowrap cursor-pointer" *ngFor="let person of pagedPeople" (click)="viewTicket(person)">
                         <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">#{{ person.id }}</td>
-                        <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.subject }}</td>
-                        <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.topicName }}</td>
-                        <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
-                        <div class="flex items-center">
-                          <div class="me-2.5 w-[34px] h-[34px]">
-                            <img class="min-w-[34px] h-[34px] rounded-4" src="assets/images/avatars/{{person.assignedUser}}" alt="Samsung Galaxy S8 256GB">
-                          </div>
-                          <div>
-                            <span class="font-medium capitalize text-dark dark:text-white/[.87] text-15 block">{{ person.assignedName }}</span>
-                            <div class="text-[12px] leading-[1.6] text-light dark:text-white/60 whitespace-nowrap">
-                              <div>{{ person.assignedPhone }}</div>
-                              <div>{{ departmentNameByCode[person.assignedDept] || person.assignedDept }}</div>
-                            </div>
-                          </div>
-                        </div>
-                        </td>
+                        <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent" [title]="person.subject">{{ person.subject.length > 30 ? (person.subject | slice:0:30) + '...' : person.subject }}</td>
                         <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.priority }}</td>
                         <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
                           <div class="flex flex-col items-center gap-1">
@@ -244,6 +199,23 @@ type SortOrder = 'asc' | 'desc';
                               {{ getScheduleStatus(person) }}
                             </span>
                           </div>
+                        </td>
+                        <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">{{ person.topicName }}</td>
+                        <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
+                        <div class="flex items-center">
+                          <div *ngIf="hasAssignedEmployee(person)" class="me-2.5 w-[34px] h-[34px]">
+                            <img class="min-w-[34px] h-[34px] rounded-4" [src]="getAssignedEmployeeAvatar(person)" [alt]="person.assignedName" (error)="onAssignedEmployeeAvatarError($event, person)">
+                          </div>
+                          <div *ngIf="hasAssignedEmployee(person); else unassignedPersonDepartment">
+                            <span class="font-medium capitalize text-dark dark:text-white/[.87] text-15 block">{{ person.assignedName }}</span>
+                            <div class="text-[12px] leading-[1.6] text-light dark:text-white/60 whitespace-nowrap">
+                              <div>{{ departmentNameByCode[person.assignedDept] || person.assignedDept }}</div>
+                            </div>
+                          </div>
+                          <ng-template #unassignedPersonDepartment>
+                            <span class="font-medium capitalize text-dark dark:text-white/[.87] text-15 block">{{ departmentNameByCode[person.assignedDept] || person.assignedDept }}</span>
+                          </ng-template>
+                        </div>
                         </td>
                         <td class="ltr:pr-[20px] rtl:pl-[20px] text-theme-gray dark:text-white/60 font-medium text-[15px] py-4 before:hidden border-none group-hover:bg-transparent">
                           <div>{{ person.createdDate }}</div>
@@ -377,7 +349,6 @@ type SortOrder = 'asc' | 'desc';
                   <img class="w-[28px] h-[28px] rounded-4 me-2" src="assets/images/avatars/{{ ticket.creatorUser }}" alt="{{ ticket.creatorName }}">
                   <div>
                     <span class="block text-[15px] font-medium text-dark dark:text-white/[.87]">{{ getCreatorName(ticket) }}</span>
-                    <span class="block text-[13px] text-theme-gray dark:text-white/60">{{ ticket.creatorPhone }}</span>
                     <span class="block text-[13px] text-theme-gray dark:text-white/60">{{ departmentNameByCode[ticket.creatorDept] || ticket.creatorDept }}</span>
                   </div>
                 </div>
@@ -385,12 +356,14 @@ type SortOrder = 'asc' | 'desc';
               <div>
                 <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-1">Người xử lý</div>
                 <div class="flex items-center">
-                  <img class="w-[28px] h-[28px] rounded-4 me-2" src="assets/images/avatars/{{ ticket.assignedUser }}" alt="{{ ticket.assignedName }}">
-                  <div>
+                  <img *ngIf="hasAssignedEmployee(ticket)" class="w-[28px] h-[28px] rounded-4 me-2" [src]="getAssignedEmployeeAvatar(ticket)" alt="{{ ticket.assignedName }}" (error)="onAssignedEmployeeAvatarError($event, ticket)">
+                  <div *ngIf="hasAssignedEmployee(ticket); else unassignedTicketDepartment">
                     <span class="block text-[15px] font-medium text-dark dark:text-white/[.87]">{{ ticket.assignedName }}</span>
-                    <span class="block text-[13px] text-theme-gray dark:text-white/60">{{ ticket.assignedPhone }}</span>
                     <span class="block text-[13px] text-theme-gray dark:text-white/60">{{ departmentNameByCode[ticket.assignedDept] || ticket.assignedDept }}</span>
                   </div>
+                  <ng-template #unassignedTicketDepartment>
+                    <span class="block text-[15px] font-medium text-dark dark:text-white/[.87]">{{ departmentNameByCode[ticket.assignedDept] || ticket.assignedDept }}</span>
+                  </ng-template>
                 </div>
               </div>
             </div>
@@ -419,8 +392,8 @@ type SortOrder = 'asc' | 'desc';
               <div class="text-[13px] font-semibold text-theme-gray dark:text-white/60 mb-[15px]">Phản hồi</div>
               <div class="space-y-[18px]">
                 <div *ngFor="let response of selectedTicketResponses" class="flex items-start w-full gap-[10px]">
-                  <div class="rounded-full relative inline-flex items-center justify-center">
-                    <img src="assets/images/avatars/{{ ticket.assignedUser }}" class="bg-gray dark:bg-white/10 w-[30px] h-[30px] rounded-full" alt="{{ ticket.assignedName }}">
+                  <div *ngIf="hasAssignedEmployee(ticket)" class="rounded-full relative inline-flex items-center justify-center">
+                  <img [src]="getAssignedEmployeeAvatar(ticket)" class="bg-gray dark:bg-white/10 w-[30px] h-[30px] rounded-full" alt="{{ ticket.assignedName }}" (error)="onAssignedEmployeeAvatarError($event, ticket)">
                   </div>
                   <div class="flex items-center justify-between flex-wrap w-full">
                     <div>
@@ -572,6 +545,7 @@ export class MyTicketsComponent implements OnInit {
   allTopics: Topic[] = [];
   employeeCodeByUserName: { [key: string]: string } = {};
   employeeNameByUserName: { [key: string]: string } = {};
+  employeeGenderByUserName: { [key: string]: string | number } = {};
   newTicketTopicOptions: string[] = [];
 
   // Dữ liệu SLA gốc dùng để suy ra giá trị ưu tiên từ mã SLA.
@@ -581,6 +555,8 @@ export class MyTicketsComponent implements OnInit {
   slaCodeByPriority: { [key: string]: string } = {};
   priorityOptions: string[] = [];
   topicByName: { [key: string]: Topic } = {};
+  topicDepartmentCodeById: { [key: string]: string } = {};
+  topicDepartmentCodeByName: { [key: string]: string } = {};
   newTicketPriority: string | null = null;
 
   // Các tùy chọn cho dropdown "Chủ đề" trong modal Tạo Ticket;
@@ -597,9 +573,10 @@ export class MyTicketsComponent implements OnInit {
   statusNameByCode: { [key: string]: string } = {
     open: 'Mở',
     processing: 'Đang xử lý',
-    closed: 'Hoàn thành'
+    completed: 'Hoàn thành',
+    closed: 'Đóng'
   };
-  private readonly statusActionCodes: string[] = ['open', 'processing', 'closed'];
+  private readonly statusActionCodes: string[] = ['open', 'processing', 'completed', 'closed'];
 
   // Màu badge cho từng giá trị `statusCode`.
   // Dữ liệu JSON hiện tại không chứa trường `status` riêng biệt,
@@ -607,7 +584,8 @@ export class MyTicketsComponent implements OnInit {
   private readonly statusCodeColorMap: { [key: string]: string } = {
     open: 'secondary',
     processing: 'warning',
-    closed: 'success'
+    completed: 'success',
+    closed: 'gray'
   };
 
   // Ánh xạ các giá trị bộ lọc tiến độ sang nhãn do getScheduleStatus() trả về.
@@ -626,11 +604,12 @@ export class MyTicketsComponent implements OnInit {
   };
 
   // Thứ tự trạng thái tùy chỉnh để cột Trạng thái sắp xếp theo vòng đời:
-  // Mở -> Đang xử lý -> Hoàn thành.
+  // Mở -> Đang xử lý -> Hoàn thành -> Đóng.
   private readonly statusRank: { [key: string]: number } = {
     open: 1,
     processing: 2,
-    closed: 3
+    completed: 3,
+    closed: 4
   };
 
   constructor(
@@ -710,6 +689,7 @@ export class MyTicketsComponent implements OnInit {
         const employeeLookups = createEmployeeLookups(employees ?? []);
         this.employeeCodeByUserName = employeeLookups.codes;
         this.employeeNameByUserName = employeeLookups.names;
+        this.employeeGenderByUserName = employeeLookups.genders;
         this.statusNameByCode = statuses.reduce((map, item) => {
           map[item.statusCode] = item.statusName;
           return map;
@@ -736,6 +716,14 @@ export class MyTicketsComponent implements OnInit {
 
         this.topicNameById = topics.reduce((map, topic) => {
           map[topic.id] = topic.topicName;
+          return map;
+        }, {} as { [key: string]: string });
+        this.topicDepartmentCodeById = topics.reduce((map, topic) => {
+          map[topic.id] = topic.departmentCode;
+          return map;
+        }, {} as { [key: string]: string });
+        this.topicDepartmentCodeByName = topics.reduce((map, topic) => {
+          map[topic.topicName] = topic.departmentCode;
           return map;
         }, {} as { [key: string]: string });
 
@@ -808,7 +796,8 @@ export class MyTicketsComponent implements OnInit {
       createdBy: item.createdBy ?? item.creatorName ?? '',
       creatorName: item.creatorName ?? item.createdBy ?? '',
       creatorDept: item.creatorDept ?? item.departmentCode ?? '',
-      assignedDept: item.assignedDept ?? item.departmentCode ?? '',
+      assignedDept: item.assignedDept || this.topicDepartmentCodeById[item.topicId] ||
+        this.topicDepartmentCodeByName[item.topicName] || item.departmentCode || '',
       creatorUser: item.creatorUser ?? item.createdBy ?? undefined,
       closedBy: item.closedBy ?? undefined,
       attachedFile: item.attachedFile ?? '',
@@ -819,6 +808,26 @@ export class MyTicketsComponent implements OnInit {
       closedDate: item.closedDate ?? '',
       closedTime: item.closedTime ?? ''
     } as Person));
+  }
+
+  hasAssignedEmployee(ticket: Person): boolean {
+    return !!ticket.assignedUser?.trim();
+  }
+
+  getAssignedEmployeeAvatar(ticket: Person): string {
+    const assignedUser = ticket.assignedUser?.trim().toLowerCase();
+    const employeeCode = assignedUser ? this.employeeCodeByUserName[assignedUser] : undefined;
+    const gender = assignedUser ? this.employeeGenderByUserName[assignedUser] : undefined;
+    return SessionHelper.getAvatar(gender, employeeCode);
+  }
+
+  onAssignedEmployeeAvatarError(event: Event, ticket: Person): void {
+    const image = event.target;
+    if (image instanceof HTMLImageElement) {
+      const assignedUser = ticket.assignedUser?.trim().toLowerCase();
+      const gender = assignedUser ? this.employeeGenderByUserName[assignedUser] : undefined;
+      image.src = SessionHelper.getAvatar(gender);
+    }
   }
 
   /** Lấy danh sách phản hồi cho ticket theo ticketId. */
@@ -993,7 +1002,7 @@ export class MyTicketsComponent implements OnInit {
 
   /** Màu badge cho trạng thái tiến độ, khớp với mẫu bg-{color}/10 text-{color}. */
   getScheduleStatusColor(person: Person): string {
-    return this.getScheduleStatus(person) === 'Trễ hạn' ? 'danger' : 'success';
+    return this.getScheduleStatus(person) === 'Trễ hạn' ? 'danger' : 'teal';
   }
 
   /** Màu badge cho trạng thái hành động ticket, dựa trực tiếp trên `statusCode`. */
@@ -1107,6 +1116,11 @@ export class MyTicketsComponent implements OnInit {
     const topic = this.newTicketTopic ? this.topicByName[this.newTicketTopic] : undefined;
     const ticketName = this.newTicketTitle.trim();
     const ticketContent = this.newTicketContent.trim();
+    if (ticketName.length > 100) {
+      this.notifications.warning('Tiêu đề ticket không được vượt quá 100 ký tự.');
+      return;
+    }
+
     if (!topic?.id || !isTopicActive(topic) || !ticketName || !ticketContent || this.tplModalButtonLoading) {
       return;
     }
